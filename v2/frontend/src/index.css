@@ -1,0 +1,303 @@
+@import "tailwindcss";
+
+:root {
+  /* Default to old/classic style */
+  --theme-base: #0f0f10;
+  --theme-surface: #0f0f10;
+  --theme-modal-base: #05070A;
+  --theme-modal-surface: #0B0D12;
+  --theme-input-bg: #191919;
+  --theme-element: transparent;
+  --theme-active: #10131A;
+  --theme-hover: #21262d;
+  --theme-muted: #1F232B;
+  --theme-foreground: #E6EDF3;
+  --theme-accent: #58A6FF;
+  --theme-accent-foreground: #05070A;
+  --theme-success: #3FB950;
+  --theme-danger: #F85149;
+  
+  --theme-card-bg: transparent;
+  --theme-card-hover-bg: #10131A;
+  --theme-card-border: transparent;
+  --theme-card-hover-border: rgba(255, 255, 255, 0.2);
+  --theme-scrollbar-thumb: #1F232B;
+  --theme-scrollbar-thumb-hover: #30363D;
+  --theme-scrollbar-track: #0B0D12;
+
+  --ui-rounded-sm: 4px;
+  --ui-rounded-md: 6px;
+  --ui-rounded-lg: 8px;
+  --ui-rounded-xl: 12px;
+  --theme-active-border-color: #58A6FF;
+  --theme-selected-border-color: #2563eb;
+  --theme-copied-border-color: #3FB950;
+  --theme-card-border-width: 1px;
+  --theme-active-border-width: 2px;
+  --theme-toast-success-bg: #f5f5f5;
+  --theme-toast-success-text: #000000;
+  --theme-toast-success-border: transparent;
+}
+
+:root[data-ui-style="old"] {
+  --theme-base: #0f0f10;
+  --theme-surface: #0f0f10;
+  --theme-modal-base: #05070A;
+  --theme-modal-surface: #0B0D12;
+  --theme-input-bg: #191919;
+  --theme-element: transparent;
+  --theme-active: #10131A;
+  --theme-hover: #21262d;
+  --theme-muted: #1F232B;
+  --theme-foreground: #E6EDF3;
+  --theme-accent: #58A6FF;
+  --theme-accent-foreground: #05070A;
+  --theme-success: #3FB950;
+  --theme-danger: #F85149;
+  
+  --theme-card-bg: transparent;
+  --theme-card-hover-bg: #10131A;
+  --theme-card-border: transparent;
+  --theme-card-hover-border: rgba(255, 255, 255, 0.2);
+  --theme-scrollbar-thumb: #1F232B;
+  --theme-scrollbar-thumb-hover: #30363D;
+  --theme-scrollbar-track: #0B0D12;
+
+  --ui-rounded-sm: 4px;
+  --ui-rounded-md: 6px;
+  --ui-rounded-lg: 8px;
+  --ui-rounded-xl: 12px;
+  --theme-active-border-color: #58A6FF;
+  --theme-selected-border-color: #2563eb;
+  --theme-copied-border-color: #3FB950;
+  --theme-card-border-width: 1px;
+  --theme-active-border-width: 2px;
+  --theme-toast-success-bg: #f5f5f5;
+  --theme-toast-success-text: #000000;
+  --theme-toast-success-border: transparent;
+}
+
+:root[data-ui-style="new"] {
+  --theme-base: #0f0f10;       /* ChatGPT Dark Main Background */
+  --theme-surface: #0f0f10;    /* ChatGPT Dark Sidebar/Header Background */
+  --theme-modal-base: #111111;
+  --theme-modal-surface: #171717;
+  --theme-input-bg: #212121;
+  --theme-element: #212121;    /* ChatGPT Dark Secondary/Input Background */
+  --theme-active: #2f2f2f;     /* ChatGPT Dark Accent Highlight Background */
+  --theme-hover: #3f3f3f;      /* ChatGPT Dark Hover Highlight */
+  --theme-muted: #4f4f4f;      /* ChatGPT Dark Subtle Borders */
+  --theme-foreground: #ececec; /* ChatGPT Dark Foreground Text */
+  --theme-accent: #ffffff;     /* Primary theme color is now white */
+  --theme-accent-foreground: #111111;
+  --theme-success: #10a37f;    /* ChatGPT Success Green */
+  --theme-danger: #ef4444;     /* Danger Red */
+  
+  --theme-card-bg: #212121;
+  --theme-card-hover-bg: #2f2f2f;
+  --theme-card-border: rgba(255, 255, 255, 0.08);
+  --theme-card-hover-border: rgba(255, 255, 255, 0.15);
+  --theme-scrollbar-thumb: var(--theme-active);
+  --theme-scrollbar-thumb-hover: var(--theme-hover);
+  --theme-scrollbar-track: transparent;
+
+  --ui-rounded-sm: 6px;
+  --ui-rounded-md: 8px;
+  --ui-rounded-lg: 12px;
+  --ui-rounded-xl: 16px;
+  --theme-active-border-color: #ffffff;
+  --theme-selected-border-color: #2563eb;
+  --theme-copied-border-color: #10a37f;
+  --theme-card-border-width: 1px;
+  --theme-active-border-width: 2px;
+  --theme-toast-success-bg: #f5f5f5;
+  --theme-toast-success-text: #000000;
+  --theme-toast-success-border: transparent;
+}
+
+:root[data-ui-style="new"][data-theme="light"] {
+  --theme-base: #ffffff;       /* ChatGPT Light Main Background */
+  --theme-surface: #f9f9f9;    /* ChatGPT Light Sidebar/Header Background */
+  --theme-modal-base: #ffffff;
+  --theme-modal-surface: #f9f9f9;
+  --theme-input-bg: #efefef;
+  --theme-element: #f5f5f5;    /* ChatGPT Light Secondary Background */
+  --theme-active: #efefef;     /* ChatGPT Light Accent Highlight Background */
+  --theme-hover: #e5e5e5;      /* ChatGPT Light Hover Highlight */
+  --theme-muted: #71717a;      /* ChatGPT Light Subtle Borders */
+  --theme-foreground: #18181b; /* ChatGPT Light Foreground Text */
+  --theme-accent: #18181b;     /* Primary theme color is now dark gray */
+  --theme-accent-foreground: #ffffff;
+  --theme-success: #10a37f;    /* ChatGPT Success Green */
+  --theme-danger: #ef4444;     /* Danger Red */
+  
+  --theme-card-bg: #ffffff;
+  --theme-card-hover-bg: #f9f9f9;
+  --theme-card-border: rgba(0, 0, 0, 0.08);
+  --theme-card-hover-border: rgba(0, 0, 0, 0.15);
+  --theme-scrollbar-thumb: var(--theme-active);
+  --theme-scrollbar-thumb-hover: var(--theme-hover);
+  --theme-scrollbar-track: transparent;
+  --theme-active-border-color: #18181b;
+  --theme-selected-border-color: #2563eb;
+  --theme-copied-border-color: #10a37f;
+  --theme-card-border-width: 2px;
+  --theme-active-border-width: 4px;
+  --theme-toast-success-bg: #18181b;
+  --theme-toast-success-text: #ffffff;
+  --theme-toast-success-border: transparent;
+}
+
+@theme {
+  --color-base: var(--theme-base);
+  --color-surface: var(--theme-surface);
+  --color-modal-base: var(--theme-modal-base);
+  --color-modal-surface: var(--theme-modal-surface);
+  --color-input-bg: var(--theme-input-bg);
+  --color-active-border: var(--theme-active-border-color);
+  --color-selected-border: var(--theme-selected-border-color);
+  --color-copied-border: var(--theme-copied-border-color);
+  --color-toast-success-bg: var(--theme-toast-success-bg);
+  --color-toast-success-text: var(--theme-toast-success-text);
+  --color-toast-success-border: var(--theme-toast-success-border);
+  --color-element: var(--theme-element);
+  --color-active: var(--theme-active);
+  --color-hover: var(--theme-hover);
+  --color-muted: var(--theme-muted);
+  --color-foreground: var(--theme-foreground);
+  --color-accent: var(--theme-accent);
+  --color-accent-foreground: var(--theme-accent-foreground);
+  --color-success: var(--theme-success);
+  --color-danger: var(--theme-danger);
+  
+  --color-card-bg: var(--theme-card-bg);
+  --color-card-hover-bg: var(--theme-card-hover-bg);
+  --color-card-border: var(--theme-card-border);
+  --color-card-hover-border: var(--theme-card-hover-border);
+
+  --radius-ui-sm: var(--ui-rounded-sm);
+  --radius-ui-md: var(--ui-rounded-md);
+  --radius-ui-lg: var(--ui-rounded-lg);
+  --radius-ui-xl: var(--ui-rounded-xl);
+}
+
+@layer base {
+  body {
+    background-color: var(--theme-base);
+    color: var(--theme-foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--theme-scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--theme-scrollbar-thumb);
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-scrollbar-thumb-hover);
+}
+
+/* Animation Utilities */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes fade-in-out {
+  0% { opacity: 0; transform: scale(0.6); }
+  15% { opacity: 1; transform: scale(1); }
+  85% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.8); }
+}
+
+.animate-mute-feedback {
+  animation: fade-in-out 0.8s ease-out forwards;
+}
+
+@keyframes scale-up {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-scale-up {
+  animation: scale-up 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.15s ease-out forwards;
+}
+
+/* Logo Theme Switching */
+.show-in-light { display: none; }
+.show-in-dark { display: block; }
+html[data-theme="light"] .show-in-light { display: block; }
+html[data-theme="light"] .show-in-dark { display: none; }
+
+/* Dynamic Video Card Scale & Proportional Border Radius */
+.video-card-container {
+  --card-scale: 1;
+  --card-radius: calc(var(--ui-rounded-sm) * var(--card-scale));
+  transform: scale(var(--card-scale));
+}
+.video-card-container:hover {
+  --card-scale: 1.02;
+}
+.video-card-container.is-selected-active {
+  --card-scale: 1.04;
+}
+.video-card-container.is-selected-active:hover {
+  --card-scale: 1.06;
+}
+
+.rounded-card-dynamic {
+  border-radius: var(--card-radius);
+}
+
+/* Header overlay when dropdown is open */
+header:has(.dropdown-menu-open) {
+  z-index: 50 !important;
+}
+
+/* Dim inactive video thumbnails when another video is playing/selected */
+main:has(.is-selected-active) .video-card-container:not(.is-selected-active) > div:first-child {
+  background-color: #0f0f10 !important;
+}
+
+main:has(.is-selected-active) .video-card-container:not(.is-selected-active) > div:first-child > div {
+  opacity: 0.35;
+  filter: grayscale(35%);
+  transition: opacity 0.15s ease-out, filter 0.15s ease-out;
+}
+
+/* Restore thumbnail opacity when hovered */
+main:has(.is-selected-active) .video-card-container:not(.is-selected-active):hover > div:first-child > div {
+  opacity: 1;
+  filter: none;
+}
+
