@@ -63,7 +63,7 @@ export default function ShortcutsTab({ keybindings, saveKeybindings, resetKeybin
     },
     {
       titleKey: 'shortcut_group_nav',
-      keys: ['prevVideo', 'nextVideo', 'jumpToNextShared', 'markShared', 'openNoteFinder']
+      keys: ['prevVideo', 'nextVideo', 'jumpToNextShared', 'markShared', 'openNoteFinder', 'toggleTemplates']
     },
     {
       titleKey: 'shortcut_group_ops',

@@ -1,8 +1,9 @@
-import React from 'react';
-import { ChevronUp, ChevronDown, ChevronRight, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { ChevronUp, ChevronDown, ChevronRight, X, Star } from 'lucide-react';
 import { IconCheck, IconCopy } from '../Icons';
 import Button from '../ui/Button';
 import MentionMenu from './MentionMenu';
+import SaveTemplateDialog from '../TemplateMode/SaveTemplateDialog';
 import { t } from '../../utils/translations';
 
 export default function NotesEditor({
@@ -29,6 +30,7 @@ export default function NotesEditor({
   insertMention,
   handleMentionKeyDown,
   checkMentionTrigger,
+  setMentionMenu,
   allTextSelected,
   setAllTextSelected,
   copyCurrentNote,
@@ -41,8 +43,29 @@ export default function NotesEditor({
   exitSelectionMode,
   setIsCollapsed,
   activePath,
-  aiAssistant
+  aiAssistant,
+  addTemplate,
+  templates,
+  pendingSuggestion,
+  activeVideo
 }) {
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  // Mevcut not metni herhangi bir template ile eşleşiyorsa yıldız dolu göster
+  const isTemplated = !!(noteText?.trim() && templates?.some(t => t.content?.trim() === noteText.trim()));
+
+  const getFormattedEditTime = () => {
+    if (selectionMode || !activeVideo || !activeVideo.updated_at) return null;
+    try {
+      const date = new Date(activeVideo.updated_at);
+      const pad = (n) => String(n).padStart(2, '0');
+      const dateStr = `${pad(date.getDate())}.${pad(date.getMonth() + 1)}.${date.getFullYear()}`;
+      const timeStr = `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+      return `${t('last_edited', language)}: ${dateStr} ${timeStr}`;
+    } catch (e) {
+      return null;
+    }
+  };
+
   React.useEffect(() => {
     if (
       aiAssistant &&
@@ -82,6 +105,9 @@ export default function NotesEditor({
           <span className="text-xs font-bold text-foreground/80">
             {selectionMode ? t('notes_title', language) : t('desc_notes_title', language)}
           </span>
+          {pendingSuggestion && (
+            <span className="text-[9px] font-mono text-foreground/30">Enter onayla · ESC iptal</span>
+          )}
 
           {/* Copy note button */}
           {((!selectionMode && activePath) || (selectionMode && selectedPathsCount > 0)) && (
@@ -115,10 +141,28 @@ export default function NotesEditor({
               )}
             </Button>
           )}
+
+          {/* Edit time label */}
+          {!selectionMode && activeVideo && activeVideo.updated_at > 0 && (
+            <span className="text-[10px] text-foreground/30 font-medium select-none pointer-events-none whitespace-nowrap ml-1 shrink-0">
+              {getFormattedEditTime()}
+            </span>
+          )}
         </div>
 
         {/* Panel Actions */}
         <div className="flex items-center gap-1 shrink-0">
+          {/* Save as template (star) button */}
+          {!selectionMode && activePath && addTemplate && (
+            <button
+              onClick={() => setShowSaveDialog(true)}
+              className="p-1 rounded hover:bg-amber-400/15 text-foreground/40 hover:text-amber-400 transition cursor-pointer"
+              title="Şablon olarak kaydet"
+              tabIndex={-1}
+            >
+              <Star size={13} className={isTemplated ? 'fill-amber-400 text-amber-400' : ''} />
+            </button>
+          )}
           {selectionMode && (
             <button 
               onClick={exitSelectionMode}
@@ -227,7 +271,7 @@ export default function NotesEditor({
       )}
 
       {/* Description container */}
-      <div className="relative flex-1 min-h-[100px] group/note-container">
+      <div className="relative flex-1 min-h-0 group/note-container">
         <div 
           ref={overlayRef}
           className={`absolute inset-0 pointer-events-none whitespace-pre-wrap break-words overflow-y-auto pl-0 pr-2 py-1 border-0 z-20 ${
@@ -284,10 +328,14 @@ export default function NotesEditor({
         </div>
         <textarea
           ref={noteInputRef}
+          readOnly={!!pendingSuggestion}
           value={noteText}
           onChange={(e) => {
             handleNoteChange(e.target.value);
             checkMentionTrigger(e.target, 'note');
+          }}
+          style={{
+            caretColor: 'var(--theme-foreground)',
           }}
           onFocus={() => {
             setIsNoteFocused(true);
@@ -331,7 +379,10 @@ export default function NotesEditor({
               }
             } else if (e.ctrlKey && e.key === 'Enter') {
               e.preventDefault();
-              if (selectionMode) {
+              // Accept duplicate diff via AI mechanism
+              if (aiAssistant?.isDiffMode && aiAssistant?.selectionRange?.target === 'note') {
+                aiAssistant.applyAIChanges((newText) => handleNoteChange(newText));
+              } else if (selectionMode) {
                 applyBulkNotes(noteText);
               }
             } else {
@@ -373,6 +424,17 @@ export default function NotesEditor({
           insertMention={insertMention} 
         />
       </div>
+
+      {/* Save Template Dialog */}
+      <SaveTemplateDialog
+        isOpen={showSaveDialog}
+        defaultName={`Şablon ${new Date().toLocaleDateString('tr-TR')}`}
+        onSave={(name) => {
+          if (addTemplate) addTemplate(name, noteText);
+          setShowSaveDialog(false);
+        }}
+        onCancel={() => setShowSaveDialog(false)}
+      />
     </div>
   );
 }

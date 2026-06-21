@@ -1,4 +1,4 @@
-const API_URL = 'http://127.0.0.1:8085';
+const API_URL = 'http://127.0.0.1:' + (import.meta.env.VITE_BACKEND_PORT || '8085');
 
 export const api = {
   scan: (folderPath) => 
@@ -54,5 +54,43 @@ export const api = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text, default_prompt: defaultPrompt, custom_prompt: customPrompt })
-    }).then(res => res.json())
+    }).then(res => res.json()),
+
+  getSettings: () =>
+    fetch(`${API_URL}/api/settings`).then(res => res.json()),
+
+  saveSettings: (settings) =>
+    fetch(`${API_URL}/api/settings`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(settings)
+    }).then(res => res.json()),
+
+  testBuffer: (buffer_api_key) =>
+    fetch(`${API_URL}/api/settings/test-buffer`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ buffer_api_key })
+    }).then(res => res.json()),
+
+  testCloudinary: (cloudinary_cloud_name, cloudinary_api_key, cloudinary_api_secret) =>
+    fetch(`${API_URL}/api/settings/test-cloudinary`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cloudinary_cloud_name, cloudinary_api_key, cloudinary_api_secret })
+    }).then(res => res.json()),
+
+  uploadPublish: (video_path, text, schedule_time) =>
+    fetch(`${API_URL}/api/settings/upload-publish`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ video_path, text, schedule_time })
+    }).then(res => {
+      if (!res.ok) {
+        return res.json().then(err => {
+          throw new Error(err.detail || 'Paylaşım işlemi başarısız oldu.');
+        });
+      }
+      return res.json();
+    })
 };

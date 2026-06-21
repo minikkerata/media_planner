@@ -284,20 +284,5 @@ header:has(.dropdown-menu-open) {
   z-index: 50 !important;
 }
 
-/* Dim inactive video thumbnails when another video is playing/selected */
-main:has(.is-selected-active) .video-card-container:not(.is-selected-active) > div:first-child {
-  background-color: #0f0f10 !important;
-}
 
-main:has(.is-selected-active) .video-card-container:not(.is-selected-active) > div:first-child > div {
-  opacity: 0.35;
-  filter: grayscale(35%);
-  transition: opacity 0.15s ease-out, filter 0.15s ease-out;
-}
-
-/* Restore thumbnail opacity when hovered */
-main:has(.is-selected-active) .video-card-container:not(.is-selected-active):hover > div:first-child > div {
-  opacity: 1;
-  filter: none;
-}
 

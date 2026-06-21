@@ -1,0 +1,43 @@
+INFO:     Started server process [18536]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8085 (Press CTRL+C to quit)
+INFO:     127.0.0.1:65418 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63992 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55151 - "GET /api/scan?folder=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63992 - "GET /api/scan?folder=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63992 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57962 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_C9c07xVNBqV!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:63992 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53609 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53609 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53829 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53829 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53829 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64019 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64019 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64019 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60354 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60354 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60354 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60354 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60354 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60354 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65461 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52615 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52615 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64140 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DU3ZffZCHpB!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:55597 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DU3ZffZCHpB!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:49413 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DU3ZffZCHpB!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:52615 - "POST /api/shutdown HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49413 - "POST /api/shutdown HTTP/1.1" 200 OK

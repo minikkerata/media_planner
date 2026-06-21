@@ -6,6 +6,7 @@ import { useFileOperations } from './useFileOperations';
 import { useKeybindings } from './useKeybindings';
 import { useNavigation } from './useNavigation';
 import { useAIAssistant } from './useAIAssistant';
+import { useTemplates } from './useTemplates';
 import { t } from '../utils/translations';
 
 export function useMediaPlanner() {
@@ -27,8 +28,21 @@ export function useMediaPlanner() {
   });
   const [muteFeedback, setMuteFeedback] = useState(null); 
   const isFirstMuteRender = useRef(true);
-  const [gridSize, setGridSize] = useState(220); 
-  const [showUnsharedOnly, setShowUnsharedOnly] = useState('all');
+  const [gridSize, setGridSizeRaw] = useState(() => {
+    const saved = localStorage.getItem('grid_size');
+    return saved ? (saved === 'list' ? 'list' : parseInt(saved, 10)) : 220;
+  });
+  const setGridSize = (val) => {
+    setGridSizeRaw(val);
+    localStorage.setItem('grid_size', val);
+  };
+  const [showUnsharedOnly, setShowUnsharedOnlyRaw] = useState(() =>
+    localStorage.getItem('filter_mode') || 'all'
+  );
+  const setShowUnsharedOnly = (val) => {
+    setShowUnsharedOnlyRaw(val);
+    localStorage.setItem('filter_mode', val);
+  };
   
   const { sortOption, setSortOption, sortDirection, setSortDirection, sortVideos } = useSorting('date', 'desc');
   
@@ -47,6 +61,9 @@ export function useMediaPlanner() {
   });
 
   const aiAssistant = useAIAssistant();
+  const templateOps = useTemplates();
+  const [templateMode, setTemplateMode] = useState(false);
+  const [duplicateSuggestion, setDuplicateSuggestion] = useState(null); // { description, sourceFileName }
 
   useEffect(() => {
     const handleAISettingsChanged = () => {
@@ -64,6 +81,28 @@ export function useMediaPlanner() {
       window.removeEventListener('show-toast', handleShowToast);
     };
   }, []);
+
+  const [isServerHealthy, setIsServerHealthy] = useState(true);
+
+  useEffect(() => {
+    const checkHealth = async () => {
+      try {
+        const backendRes = await fetch('http://127.0.0.1:8085/api/health', { mode: 'cors' });
+        const backendOk = backendRes.ok;
+
+        const frontendRes = await fetch(window.location.origin + '/index.html', { method: 'HEAD' });
+        const frontendOk = frontendRes.ok;
+
+        setIsServerHealthy(backendOk && frontendOk);
+      } catch (err) {
+        setIsServerHealthy(false);
+      }
+    };
+
+    checkHealth();
+    const interval = setInterval(checkHealth, 5000);
+    return () => clearInterval(interval);
+  }, []);
   const [showNoteSearch, setShowNoteSearch] = useState(false);
   const [noteSearchQuery, setNoteSearchQuery] = useState('');
   const [activeMatchIndex, setActiveMatchIndex] = useState(0);
@@ -75,6 +114,7 @@ export function useMediaPlanner() {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [settingsActiveTab, setSettingsActiveTab] = useState('folder');
   const [showSearchModal, setShowSearchModal] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
   const [language, setLanguage] = useState(() => localStorage.getItem('app_language') || 'tr');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
     const saved = localStorage.getItem('sidebar_panel_collapsed');
@@ -148,10 +188,12 @@ export function useMediaPlanner() {
 
   const getVisibleVideos = () => {
     let visible = showUnsharedOnly === 'unshared' 
-      ? videos.filter(v => !v.shared) 
+      ? videos.filter(v => !v.shared && !v.hidden) 
       : showUnsharedOnly === 'shared' 
-        ? videos.filter(v => v.shared) 
-        : videos;
+        ? videos.filter(v => v.shared && !v.hidden) 
+        : showUnsharedOnly === 'hidden'
+          ? videos.filter(v => v.hidden)
+          : videos.filter(v => !v.hidden); // 'all' — gizliler hariç
     return sortVideos(visible);
   };
 
@@ -248,6 +290,28 @@ export function useMediaPlanner() {
     }
   };
 
+  const toggleHidden = async (video, e) => {
+    if (e) e.stopPropagation();
+    const nextHidden = !video.hidden;
+
+    let videoFolder = currentFolder;
+    if (video.path) {
+      const lastSlash = Math.max(video.path.lastIndexOf('\\'), video.path.lastIndexOf('/'));
+      if (lastSlash !== -1) videoFolder = video.path.substring(0, lastSlash);
+    }
+
+    const data = await api.updateMetadata(videoFolder, [{ name: video.name, hidden: nextHidden }]);
+    if (data.success) {
+      setVideos(p => p.map(v => v.path === video.path ? { ...v, hidden: nextHidden } : v));
+      // Eğer gizlenen video aktifse, bir sonrakine geç
+      if (activePath === video.path && nextHidden) {
+        const visible = getVisibleVideos().filter(v => v.path !== video.path);
+        setActivePath(visible.length > 0 ? visible[0].path : null);
+      }
+      showToast(nextHidden ? 'Video gizlendi' : 'Video görünür yapıldı');
+    }
+  };
+
 
   const clipboardOps = useClipboard({ language, contextMenu, selectionMode, selectedPaths, activePath, hoveredFolder, currentFolder, api, showToast, scanFolder });
   const fileOps = useFileOperations({ language, contextMenu, selectionMode, selectedPaths, activePath, currentFolder, api, showToast, scanFolder, setSelectedPaths, setActivePath, videos, setVideos, getSortedSelectedVideos, exitSelectionMode });
@@ -271,6 +335,8 @@ export function useMediaPlanner() {
     handleOpenLink: () => handleOpenLink(),
     toggleSidebar: () => setIsSidebarCollapsed(p => !p),
     toggleDetailPanel: () => setIsDetailCollapsed(p => !p),
+    toggleTemplates: () => setTemplateMode(p => !p),
+    templateMode,
     showNoteSearch, setShowNoteSearch,
     aiAssistant,
     selectAll: () => selectAll()
@@ -342,6 +408,32 @@ export function useMediaPlanner() {
   }, [volume, muted, activePath]);
 
   useEffect(() => { setVideoTime(0); setVideoDuration(0); }, [activePath]);
+
+  // Duplicate detection: only when template mode opens
+  useEffect(() => {
+    if (!templateMode) return; // only run when opening template mode
+    if (!activePath || !videos || videos.length === 0) { setDuplicateSuggestion(null); return; }
+    const activeVideo = videos.find(v => v.path === activePath);
+    if (!activeVideo) { setDuplicateSuggestion(null); return; }
+
+    const getDuplicateBase = (name) => {
+      const withoutExt = name.replace(/\.[^.]+$/, '');
+      return withoutExt.replace(/\s*\(\d+\)\s*$/, '').toLowerCase().trim();
+    };
+
+    const activeBase = getDuplicateBase(activeVideo.name);
+    const duplicate = videos.find(v => {
+      if (v.path === activePath) return false;
+      if (!v.description) return false;
+      return getDuplicateBase(v.name) === activeBase;
+    });
+
+    if (duplicate && duplicate.description !== (activeVideo.description || '')) {
+      setDuplicateSuggestion({ description: duplicate.description, sourceFileName: duplicate.name });
+    } else {
+      setDuplicateSuggestion(null);
+    }
+  }, [templateMode]);
 
   useEffect(() => {
     if (keybindingOps.preventAutoFocusRef.current) {
@@ -421,7 +513,10 @@ export function useMediaPlanner() {
     }
     const lastExclamation = baseName.lastIndexOf('!');
     if (lastExclamation !== -1) {
-      return baseName.substring(lastExclamation + 1).trim();
+      let username = baseName.substring(lastExclamation + 1).trim();
+      // Strip trailing (1), (2), etc. — e.g. "username (1)" → "username"
+      username = username.replace(/\s*\(\d+\)\s*$/, '').trim();
+      return username;
     }
     return '';
   };
@@ -496,6 +591,10 @@ export function useMediaPlanner() {
     showToast,
     language,
     setLanguage,
+    isServerHealthy,
+    showUploadModal,
+    setShowUploadModal,
+    setVideos,
     goBack,
     goForward,
     canGoBack: !!parentFolder,
@@ -507,6 +606,15 @@ export function useMediaPlanner() {
     extractUsername,
     resolveFixedText,
     aiAssistant,
-    defaultPrompt
+    defaultPrompt,
+    // Template system
+    ...templateOps,
+    templateMode,
+    setTemplateMode,
+    toggleTemplates: () => setTemplateMode(p => !p),
+    // Duplicate suggestion (shown inside template mode)
+    duplicateSuggestion,
+    setDuplicateSuggestion,
+    toggleHidden,
   };
 }

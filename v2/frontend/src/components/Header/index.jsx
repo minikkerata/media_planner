@@ -19,7 +19,8 @@ export default function Header(props) {
     showUnsharedOnly, setShowUnsharedOnly, getVisibleVideos,
     enterSelectionMode, keybindings,
     sortOption, setSortOption, sortDirection, setSortDirection,
-    uiStyle, onOpenSearch, language
+    uiStyle, onOpenSearch, language,
+    isSidebarCollapsed, setIsSidebarCollapsed, isServerHealthy
   } = props;
 
   return (
@@ -41,6 +42,8 @@ export default function Header(props) {
             visibleVideosCount={getVisibleVideos().length}
             onOpenSearch={onOpenSearch}
             language={language}
+            isSidebarCollapsed={isSidebarCollapsed}
+            onOpenSidebar={() => setIsSidebarCollapsed(false)}
           />
 
           {/* Sağ Kısım */}
@@ -51,7 +54,8 @@ export default function Header(props) {
               options={[
                 { value: 'all', label: t('filter_all', language), icon: Eye },
                 { value: 'shared', label: t('filter_completed', language), icon: Check },
-                { value: 'unshared', label: t('filter_incomplete', language), icon: EyeOff }
+                { value: 'unshared', label: t('filter_incomplete', language), icon: EyeOff },
+                { value: 'hidden', label: 'Gizliler', icon: EyeOff },
               ]}
             />
             <SortControls 
@@ -75,6 +79,7 @@ export default function Header(props) {
               handleShutdown={handleShutdown}
               uiStyle={uiStyle}
               language={language}
+              isServerHealthy={isServerHealthy}
             />
           </div>
         </div>

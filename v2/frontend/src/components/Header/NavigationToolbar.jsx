@@ -1,16 +1,29 @@
 import React from 'react';
 import { IconCheck } from '../Icons';
-import { Search } from 'lucide-react';
+import { Search, PanelLeft } from 'lucide-react';
 import Button from '../ui/Button';
 import { t } from '../../utils/translations';
 
 export default function NavigationToolbar({
-  videos, enterSelectionMode, visibleVideosCount, onOpenSearch, language
+  videos, enterSelectionMode, visibleVideosCount, onOpenSearch, language,
+  isSidebarCollapsed, onOpenSidebar
 }) {
   return (
     <>
       {/* Sol Kısım */}
       <div className="flex items-center gap-3 shrink-0">
+        {/* Sidebar açma butonu — sadece sidebar kapalıyken */}
+        {isSidebarCollapsed && (
+          <button
+            onClick={onOpenSidebar}
+            tabIndex={-1}
+            className="p-1.5 rounded-ui-md hover:bg-hover text-foreground/50 hover:text-foreground transition cursor-pointer"
+            title={t('expand', language)}
+          >
+            <PanelLeft size={16} />
+          </button>
+        )}
+
         {/* Search Trigger Button */}
         <button
           onClick={onOpenSearch}

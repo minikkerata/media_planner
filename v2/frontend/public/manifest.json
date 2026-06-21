@@ -1,0 +1,21 @@
+{
+  "short_name": "MediaPlanner",
+  "name": "Media Planner",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/logo_dark.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#303022",
+  "theme_color": "#303022",
+  "display": "standalone",
+  "orientation": "portrait"
+}

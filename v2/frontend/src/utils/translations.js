@@ -43,6 +43,7 @@ export const translations = {
   toggleSidebar: { tr: 'Soldaki Klasör Panelini Aç/Kapat', en: 'Toggle Left Folder Panel' },
   openNoteFinder: { tr: 'Açıklama/Not Finder\'ı Aç', en: 'Open Note Finder' },
   toggleDetailPanel: { tr: 'Sağdaki Detay Panelini Aç/Kapat', en: 'Toggle Right Detail Panel' },
+  toggleTemplates: { tr: 'Şablon Modunu Aç/Kapat', en: 'Toggle Template Mode' },
   
   // Custom Actions / Helper labels
   reset_defaults: { tr: 'Varsayılana Sıfırla', en: 'Reset to Defaults' },
@@ -109,6 +110,7 @@ export const translations = {
   delete: { tr: 'Sil', en: 'Delete' },
   note_copied: { tr: 'Not kopyalandı ✓', en: 'Note copied ✓' },
   path_copied: { tr: 'Dosya yolu kopyalandı ✓', en: 'File path copied ✓' },
+  last_edited: { tr: 'Son Düzenleme', en: 'Last Edited' },
   
   // Sidebar
   folders: { tr: 'Klasörler', en: 'Folders' },
@@ -195,6 +197,8 @@ export const translations = {
   list_view: { tr: 'Liste Görünümü', en: 'List View' },
   sort_date_desc: { tr: 'Tarih: En Yeni', en: 'Date: Newest' },
   sort_date_asc: { tr: 'Tarih: En Eski', en: 'Date: Oldest' },
+  sort_edited_desc: { tr: 'Düzenleme: En Yeni', en: 'Edited: Newest' },
+  sort_edited_asc: { tr: 'Düzenleme: En Eski', en: 'Edited: Oldest' },
   sort_name_asc: { tr: 'İsim: A-Z', en: 'Name: A-Z' },
   sort_name_desc: { tr: 'İsim: Z-A', en: 'Name: Z-A' },
   sort_size_desc: { tr: 'Boyut: En Büyük', en: 'Size: Largest' },
@@ -214,7 +218,35 @@ export const translations = {
   ai_settings: { tr: 'AI Ayarları', en: 'AI Settings' },
   ai_settings_desc: { tr: 'Yapay zeka asistanı için varsayılan talimatları yapılandırın.', en: 'Configure default system instructions for the AI assistant.' },
   ai_default_prompt_label: { tr: 'Varsayılan Sistem Talimatı (Prompt)', en: 'Default System Instruction (Prompt)' },
-  triggerAI: { tr: 'Metni AI ile Düzenle (Alt+I)', en: 'Edit Text with AI (Alt+I)' }
+  triggerAI: { tr: 'Metni AI ile Düzenle (Alt+I)', en: 'Edit Text with AI (Alt+I)' },
+  
+  // Integrations settings
+  integrations: { tr: 'Entegrasyonlar', en: 'Integrations' },
+  integrations_desc: { tr: 'Buffer ve Cloudinary paylaşım entegrasyonlarını yapılandırın.', en: 'Configure Buffer and Cloudinary upload integrations.' },
+  buffer_settings: { tr: 'Buffer Ayarları', en: 'Buffer Settings' },
+  cloudinary_settings: { tr: 'Cloudinary Ayarları', en: 'Cloudinary Settings' },
+  buffer_api_key_label: { tr: 'Buffer API Anahtarı (API Key)', en: 'Buffer API Key' },
+  buffer_channel_id_label: { tr: 'Kanal Kimliği (Channel ID)', en: 'Channel ID' },
+  buffer_post_interval_label: { tr: 'Varsayılan Paylaşım Aralığı (Saat)', en: 'Default Post Interval (Hours)' },
+  cloudinary_cloud_name_label: { tr: 'Cloud Name', en: 'Cloud Name' },
+  cloudinary_api_key_label: { tr: 'Cloudinary API Key', en: 'Cloudinary API Key' },
+  cloudinary_api_secret_label: { tr: 'Cloudinary API Secret', en: 'Cloudinary API Secret' },
+  test_connection_btn: { tr: 'Bağlantıyı Test Et', en: 'Test Connection' },
+  testing_btn: { tr: 'Test ediliyor...', en: 'Testing...' },
+  test_success: { tr: 'Bağlantı Başarılı ✓', en: 'Connection Successful ✓' },
+  test_failed: { tr: 'Bağlantı Başarısız: ', en: 'Connection Failed: ' },
+  save_success_toast: { tr: 'Ayarlar başarıyla kaydedildi ✓', en: 'Settings successfully saved ✓' },
+  
+  // Upload modal
+  upload_modal_title: { tr: 'Buffer / Cloudinary Paylaşım Paneli', en: 'Buffer / Cloudinary Publisher' },
+  upload_now_btn: { tr: 'Şimdi Yükle', en: 'Publish Now' },
+  schedule_btn: { tr: 'Schedule', en: 'Schedule' },
+  schedule_time_label: { tr: 'Planlanan Yayın Saati', en: 'Scheduled Time' },
+  uploading_status: { tr: 'Video Cloudinary\'ye yükleniyor...', en: 'Uploading video to Cloudinary...' },
+  publishing_status: { tr: 'Buffer\'da paylaşım oluşturuluyor...', en: 'Creating Buffer post...' },
+  video_description_label: { tr: 'Video Açıklaması (Salt Okunur)', en: 'Video Description (Read-Only)' },
+  suggested_time: { tr: 'Önerilen Saat:', en: 'Suggested Time:' },
+  publish_success_msg: { tr: 'Video başarıyla paylaşıldı/planlandı! ✓', en: 'Video successfully published/scheduled! ✓' }
 };
 
 

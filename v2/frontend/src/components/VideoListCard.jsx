@@ -22,13 +22,13 @@ export default function VideoListCard({
   let listBgClass = 'bg-transparent text-foreground/80 hover:bg-hover hover:text-foreground';
   let listBorderClass = 'border-transparent';
   if (video.shared) {
-    listBgClass = 'bg-success/5 hover:bg-success/10 text-foreground/80 hover:text-foreground';
+    listBgClass = 'bg-success/[0.09] text-foreground/80 hover:bg-success/[0.13] hover:text-foreground';
+    listBorderClass = 'border-success/35';
   }
   if (selectionMode && isSelected) {
     listBgClass = 'bg-blue-600/10 hover:bg-blue-600/15 text-foreground/80 hover:text-foreground';
     listBorderClass = 'border-blue-500/30';
   } else if (isActive) {
-    // Exactly matches active folder selection style in sidebar
     listBgClass = 'bg-active text-accent font-semibold';
     listBorderClass = 'border-transparent';
   }
@@ -70,7 +70,7 @@ export default function VideoListCard({
           draggable="false"
           onDragStart={(e) => e.preventDefault()}
           alt=""
-          className={`absolute inset-0 w-full h-full object-cover transition duration-150 z-10 ${video.shared ? 'opacity-80' : ''} ${isHovering ? 'opacity-0' : 'group-hover:opacity-88'}`}
+          className={`absolute inset-0 w-full h-full object-cover transition duration-150 z-10 ${isHovering ? 'opacity-0' : ''}`}
         />
         {isHovering && (
            <video
@@ -80,13 +80,11 @@ export default function VideoListCard({
              loop
              muted
              preload="auto"
-             className={`absolute inset-0 w-full h-full object-cover z-0 ${video.shared ? 'opacity-90' : ''}`}
+             className={`absolute inset-0 w-full h-full object-cover z-0`}
              draggable="false"
            />
         )}
-        {video.shared && (
-          <div className="absolute inset-0 bg-success/15 pointer-events-none z-15 transition-all duration-150" />
-        )}
+
         <span className={`absolute bottom-0.5 left-0.5 px-0.5 py-0.2 rounded-sm text-[5px] font-bold text-white uppercase z-20 pointer-events-none ${video.extension ? EXT_COLORS[video.extension] || 'bg-slate-600/80' : 'bg-slate-600/80'}`}>
           {video.extension ? video.extension.replace('.', '') : ''}
         </span>
@@ -128,8 +126,8 @@ export default function VideoListCard({
           onClick={(e) => toggleSharedState(video, e)}
           tabIndex={-1}
           className={`p-1.5 rounded-full transition-all cursor-pointer ${
-            (selectionMode ? isSelected : video.shared) 
-              ? 'bg-black/60 opacity-100 hover:bg-white/10' 
+            (selectionMode ? isSelected : video.shared)
+              ? 'bg-black/60 opacity-100 hover:bg-white/10'
               : 'bg-black/40 opacity-0 group-hover:opacity-100 hover:bg-white/10'
           }`}
           title={selectionMode ? t('select_label', language) : (video.shared ? t('remove_shared', language) : t('make_shared', language))}

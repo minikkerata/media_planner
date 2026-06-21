@@ -83,9 +83,11 @@ def scan_folder_contents(folder: str) -> tuple[list[dict], list[dict]]:
                 "is_folder": False,
                 "description": meta.get("description", ""),
                 "shared": meta.get("shared", False),
+                "hidden": meta.get("hidden", False),
                 "size": stat.st_size,
                 "extension": Path(entry.name).suffix.lower(),
-                "time": file_time
+                "time": file_time,
+                "updated_at": meta.get("updated_at", 0)
             })
             
         # Klasörleri alfabetik sırala

@@ -22,6 +22,8 @@ export default function SortControls({ sortOption, setSortOption, sortDirection,
         options={[
           { value: 'date-desc', label: t('sort_date_desc', language) },
           { value: 'date-asc', label: t('sort_date_asc', language) },
+          { value: 'edited-desc', label: t('sort_edited_desc', language) },
+          { value: 'edited-asc', label: t('sort_edited_asc', language) },
           { value: 'name-asc', label: t('sort_name_asc', language) },
           { value: 'name-desc', label: t('sort_name_desc', language) },
           { value: 'size-desc', label: t('sort_size_desc', language) },

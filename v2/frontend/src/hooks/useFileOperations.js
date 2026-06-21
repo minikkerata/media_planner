@@ -58,7 +58,11 @@ export function useFileOperations({ language, contextMenu, selectionMode, select
     }
     noteDebounceTimeout.current = setTimeout(async () => {
       try {
-        await api.updateMetadata(currentFolder, [{ name: activeVideo.name, description: val }]);
+        const data = await api.updateMetadata(currentFolder, [{ name: activeVideo.name, description: val }]);
+        if (data.success && data.updated_notes && data.updated_notes[activeVideo.name]) {
+          const newTime = data.updated_notes[activeVideo.name];
+          setVideos(prev => prev.map(v => v.path === activePath ? { ...v, updated_at: newTime } : v));
+        }
       } catch (err) {
         console.error('Failed to update note description', err);
       }
@@ -80,7 +84,15 @@ export function useFileOperations({ language, contextMenu, selectionMode, select
     } else { sorted.forEach(v => updates.push({ name: v.name, description: noteText.trim() })); }
     if (updates.length === 0) return;
     const data = await api.updateMetadata(currentFolder, updates);
-    if (data.success) { setVideos(p => p.map(v => { const upd = updates.find(u => u.name === v.name); return upd ? { ...v, description: upd.description } : v; })); showToast(t('bulk_notes_applied_msg', language)); }
+    if (data.success) { 
+      setVideos(p => p.map(v => { 
+        const upd = updates.find(u => u.name === v.name); 
+        if (!upd) return v;
+        const newTime = (data.updated_notes && data.updated_notes[v.name]) || Date.now();
+        return { ...v, description: upd.description, updated_at: newTime }; 
+      })); 
+      showToast(t('bulk_notes_applied_msg', language)); 
+    }
   };
 
   const handleAIDistribution = async () => {
@@ -92,7 +104,12 @@ export function useFileOperations({ language, contextMenu, selectionMode, select
     if (updates.length === 0) return;
     const data = await api.updateMetadata(currentFolder, updates);
     if (data.success) {
-      setVideos(p => p.map(v => { const upd = updates.find(u => u.name === v.name); return upd ? { ...v, description: upd.description } : v; }));
+      setVideos(p => p.map(v => { 
+        const upd = updates.find(u => u.name === v.name); 
+        if (!upd) return v;
+        const newTime = (data.updated_notes && data.updated_notes[v.name]) || Date.now();
+        return { ...v, description: upd.description, updated_at: newTime }; 
+      }));
       setShowAIModal(false); setAiText(''); exitSelectionMode(); showToast(t('ai_notes_distributed_msg', language));
     }
   };

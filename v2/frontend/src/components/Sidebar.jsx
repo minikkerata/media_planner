@@ -208,16 +208,14 @@ export default function Sidebar({
 
   return (
     <div 
-      onClick={() => isCollapsed && setIsCollapsed(false)}
       className={`${transitionClass} h-screen flex flex-col shrink-0 text-foreground font-sans relative z-40 ${
         isCollapsed 
-          ? 'w-[8px] hover:w-[60px] bg-transparent hover:bg-surface border-r border-transparent hover:border-foreground/5 group/collapsed cursor-pointer overflow-hidden items-center' 
+          ? 'w-0 bg-transparent border-r border-transparent overflow-hidden' 
           : 'bg-surface border-r border-foreground/5'
       }`}
       style={{ width: isCollapsed ? undefined : `${sidebarWidth}px` }}
-      title={isCollapsed ? t('expand', language) : undefined}
     >
-      <div className={`flex flex-col h-full w-full ${isCollapsed ? 'opacity-0 group-hover/collapsed:opacity-100 transition-opacity duration-200' : ''}`}>
+      <div className="flex flex-col h-full w-full">
         {/* Header with App Icon and Toggle */}
         <div className="flex items-center justify-between px-3 py-2.5 shrink-0 h-[58px]">
           {!isCollapsed && (

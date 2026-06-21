@@ -39,6 +39,8 @@ const defaultKeybindings = {
   openNoteFinder: { key: 'f', altKey: true, ctrlKey: false, shiftKey: false },
   toggleDetailPanel: { key: 'p', altKey: true, ctrlKey: false, shiftKey: false },
   triggerAI: { key: 'i', altKey: true, ctrlKey: false, shiftKey: false },
+  triggerUpload: { key: 'u', altKey: true, ctrlKey: false, shiftKey: false },
+  toggleTemplates: null, // default: no binding (user can assign)
 };
 
 export function useKeybindings({
@@ -54,6 +56,7 @@ export function useKeybindings({
   navigateToParent, jumpToNextShared, copyCurrentPaths, copyCurrentNote, handleOpenLink, toggleSidebar,
   showNoteSearch, setShowNoteSearch,
   toggleDetailPanel,
+  toggleTemplates, templateMode,
   aiAssistant,
   selectAll
 }) {
@@ -79,6 +82,7 @@ export function useKeybindings({
       if (e.key === 'Escape') {
         e.preventDefault();
         preventAutoFocusRef.current = true;
+        if (templateMode) { toggleTemplates(); return; }
         if (showNoteSearch) setShowNoteSearch(false);
         else if (aiAssistant?.isPromptOpen) aiAssistant.closeAIPrompt();
         else if (aiAssistant?.isDiffMode) aiAssistant.discardAIChanges();
@@ -135,6 +139,11 @@ export function useKeybindings({
           window.dispatchEvent(new CustomEvent('trigger-ai-assistant'));
           return;
         }
+        if (matchesBinding(e, keybindings.triggerUpload)) {
+          e.preventDefault();
+          window.dispatchEvent(new CustomEvent('trigger-upload-modal'));
+          return;
+        }
         if (matchesBinding(e, keybindings.prevVideo)) { 
           e.preventDefault(); 
           if (showSettingsModal) {
@@ -169,6 +178,7 @@ export function useKeybindings({
         if (matchesBinding(e, keybindings.openLink)) { e.preventDefault(); handleOpenLink(); return; }
         if (matchesBinding(e, keybindings.toggleSidebar)) { e.preventDefault(); toggleSidebar(); return; }
         if (matchesBinding(e, keybindings.toggleDetailPanel)) { e.preventDefault(); toggleDetailPanel(); return; }
+        if (keybindings.toggleTemplates && matchesBinding(e, keybindings.toggleTemplates)) { e.preventDefault(); if (activePath) toggleTemplates(); return; }
       }
 
       if (isInputFocused) return;
@@ -208,7 +218,7 @@ export function useKeybindings({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectionMode, videos, activePath, selectedPaths, clipboardState, showAIModal, showDeleteModal, showSettingsModal, settingsActiveTab, setSettingsActiveTab, showSearchModal, setShowSearchModal, contextMenu, keybindings, navigateVideo, exitSelectionMode, enterSelectionMode, cancelClipboard, handleShutdown, toggleMute, toggleSharedState, openInExplorer, triggerClipboardAction, pasteClipboard, handleUndo, applyBulkNotes, triggerDeleteAction, navigateToParent, jumpToNextShared, copyCurrentPaths, copyCurrentNote, handleOpenLink, toggleSidebar, toggleDetailPanel, showNoteSearch, setShowNoteSearch, aiAssistant, selectAll]);
+  }, [selectionMode, videos, activePath, selectedPaths, clipboardState, showAIModal, showDeleteModal, showSettingsModal, settingsActiveTab, setSettingsActiveTab, showSearchModal, setShowSearchModal, contextMenu, keybindings, navigateVideo, exitSelectionMode, enterSelectionMode, cancelClipboard, handleShutdown, toggleMute, toggleSharedState, openInExplorer, triggerClipboardAction, pasteClipboard, handleUndo, applyBulkNotes, triggerDeleteAction, navigateToParent, jumpToNextShared, copyCurrentPaths, copyCurrentNote, handleOpenLink, toggleSidebar, toggleDetailPanel, showNoteSearch, setShowNoteSearch, aiAssistant, selectAll, toggleTemplates, templateMode]);
 
   return { keybindings, saveKeybindings, resetKeybindings, preventAutoFocusRef };
 }

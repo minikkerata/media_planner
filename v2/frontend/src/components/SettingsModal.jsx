@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Keyboard, Globe, FolderOpen, Palette, Database, Brain } from 'lucide-react';
+import { X, Keyboard, Globe, FolderOpen, Palette, Database, Brain, Link2 } from 'lucide-react';
 import ShortcutsTab from './ui/ShortcutsTab';
 import LanguageTab from './ui/LanguageTab';
 import FolderTab from './ui/FolderTab';
 import ThemeTab from './ui/ThemeTab';
 import BackupTab from './ui/BackupTab';
 import AITab from './ui/AITab';
+import IntegrationsTab from './ui/IntegrationsTab';
 import Button from './ui/Button';
 import Modal from './ui/Modal';
 import Input from './ui/Input';
@@ -104,6 +105,14 @@ export default function SettingsModal({
       ai: [
         t('ai_settings', lang), t('ai_settings_desc', lang), t('ai_default_prompt_label', lang),
         'Yapay Zeka', 'Prompt', 'Instruction', 'Llama', 'AI Assistant'
+      ],
+      integrations: [
+        t('integrations', lang), t('integrations_desc', lang),
+        t('buffer_settings', lang), t('cloudinary_settings', lang),
+        t('buffer_api_key_label', lang), t('buffer_channel_id_label', lang),
+        t('buffer_post_interval_label', lang), t('cloudinary_cloud_name_label', lang),
+        t('cloudinary_api_key_label', lang), t('cloudinary_api_secret_label', lang),
+        t('test_connection_btn', lang), 'Buffer', 'Cloudinary'
       ]
     };
     return contents[tab] || [];
@@ -115,7 +124,7 @@ export default function SettingsModal({
     const query = val.toLowerCase().trim();
     
     // Find matching tab based on actual content text
-    const tabs = ['folder', 'shortcuts', 'language', 'theme', 'backup', 'ai'];
+    const tabs = ['folder', 'shortcuts', 'language', 'theme', 'backup', 'ai', 'integrations'];
     const matchedTab = tabs.find(tab => 
       getTabSearchableContent(tab).some(text => 
         text && text.toLowerCase().includes(query)
@@ -131,7 +140,7 @@ export default function SettingsModal({
     const val = settingsQuery.trim();
     if (!val) return;
     const query = val.toLowerCase();
-    const tabs = ['folder', 'shortcuts', 'language', 'theme', 'backup', 'ai'];
+    const tabs = ['folder', 'shortcuts', 'language', 'theme', 'backup', 'ai', 'integrations'];
     
     // Find all tabs that contain the query
     const matchingTabs = tabs.filter(tab => 
@@ -337,6 +346,16 @@ export default function SettingsModal({
             <Brain size={16} />
             {t('ai_settings', language)}
           </Button>
+          <Button
+            variant="none"
+            size="none"
+            onClick={() => setActiveTab('integrations')}
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium
+              ${activeTab === 'integrations' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
+          >
+            <Link2 size={16} />
+            {t('integrations', language)}
+          </Button>
         </div>
       </div>
 
@@ -388,6 +407,15 @@ export default function SettingsModal({
             <AITab 
               language={language} 
               onClose={onClose} 
+              settingsQuery={settingsQuery}
+              highlight={highlight}
+            />
+          )}
+          {activeTab === 'integrations' && (
+            <IntegrationsTab 
+              language={language} 
+              onClose={onClose} 
+              showToast={showToast}
               settingsQuery={settingsQuery}
               highlight={highlight}
             />

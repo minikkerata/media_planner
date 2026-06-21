@@ -24,10 +24,6 @@ export default function VideoGridCard({
 
   let borderClass = 'border-card-border border-[var(--theme-card-border-width)]';
   let bgClass = 'bg-card-bg hover:bg-card-hover-bg';
-  if (video.shared) {
-    bgClass = 'bg-success/10 hover:bg-success/15';
-    borderClass = 'border-success/30 border-[var(--theme-card-border-width)]';
-  }
 
   if (selectionMode && isSelected) {
     bgClass = 'bg-blue-600/10 hover:bg-blue-600/15';
@@ -37,8 +33,6 @@ export default function VideoGridCard({
     borderClass = 'border-transparent border-[var(--theme-card-border-width)]';
   } else if (isCopied) {
     borderClass = 'border-copied-border border-[var(--theme-card-border-width)]';
-  } else if (video.shared) {
-    borderClass = 'border-success/30 hover:border-success/55 border-[var(--theme-card-border-width)]';
   } else {
     borderClass = 'border-card-border hover:border-card-hover-border border-[var(--theme-card-border-width)]';
   }
@@ -54,11 +48,11 @@ export default function VideoGridCard({
     }
   }, [isActive, isSelected, selectionMode]);
 
-  const outerBgClass = isSelectedOrActive ? bgClass : 'bg-transparent';
-  const outerBorderClass = isSelectedOrActive ? borderClass : 'border-transparent';
-  const outerPaddingClass = isSelectedOrActive ? 'p-1.5 rounded-card-dynamic border border-solid shadow-md hover:shadow-lg' : 'p-0 border-transparent';
+  const outerBgClass = isSelectedOrActive ? bgClass : video.shared ? 'bg-success/[0.09]' : 'bg-transparent';
+  const outerBorderClass = isSelectedOrActive ? borderClass : video.shared ? 'border-success/35 border-[var(--theme-card-border-width)]' : 'border-transparent';
+  const outerPaddingClass = isSelectedOrActive ? 'p-1.5 rounded-card-dynamic border border-solid shadow-md hover:shadow-lg' : video.shared ? 'p-0 border border-solid rounded-card-dynamic' : 'p-0 border-transparent';
 
-  const innerBgClass = isSelectedOrActive ? 'bg-black/20' : bgClass;
+  const innerBgClass = isSelectedOrActive ? 'bg-black/20' : video.shared ? 'bg-success/[0.09]' : bgClass;
   const innerBorderClass = isSelectedOrActive ? 'border-transparent' : borderClass;
   const innerShadowClass = isSelectedOrActive ? '' : 'shadow-md hover:shadow-lg border border-solid';
 
@@ -91,7 +85,7 @@ export default function VideoGridCard({
             draggable="false"
             onDragStart={(e) => e.preventDefault()}
             alt=""
-            className={`absolute inset-0 w-full h-full object-cover transition duration-150 z-10 rounded-card-dynamic ${video.shared ? 'opacity-80' : ''} ${isHovering ? 'opacity-0' : 'group-hover:opacity-88'}`}
+            className={`absolute inset-0 w-full h-full object-cover transition duration-150 z-10 rounded-card-dynamic ${isHovering ? 'opacity-0' : ''}`}
           />
           {isHovering && (
              <video
@@ -101,13 +95,11 @@ export default function VideoGridCard({
                loop
                muted
                preload="auto"
-               className={`absolute inset-0 w-full h-full object-cover z-0 rounded-card-dynamic ${video.shared ? 'opacity-90' : ''}`}
+               className={`absolute inset-0 w-full h-full object-cover z-0 rounded-card-dynamic`}
                draggable="false"
              />
           )}
-          {video.shared && (
-            <div className="absolute inset-0 bg-success/15 pointer-events-none z-15 rounded-card-dynamic transition-all duration-150" />
-          )}
+
           <span className={`absolute bottom-2 left-2 px-1.5 py-0.5 rounded-ui-sm text-[8px] font-bold text-white uppercase z-20 pointer-events-none ${EXT_COLORS[video.extension] || 'bg-slate-600/80'}`}>
             {video.extension.replace('.', '')}
           </span>
@@ -137,8 +129,8 @@ export default function VideoGridCard({
           onClick={(e) => toggleSharedState(video, e)}
           tabIndex={-1}
           className={`absolute top-2 right-2 p-1.5 rounded-full transition-all cursor-pointer z-30 ${
-            (selectionMode ? isSelected : video.shared) 
-              ? 'bg-black/60 opacity-100 hover:bg-white/10' 
+            (selectionMode ? isSelected : video.shared)
+              ? 'bg-black/60 opacity-100 hover:bg-white/10'
               : 'bg-black/40 opacity-0 group-hover:opacity-100 hover:bg-white/10'
           }`}
           title={selectionMode ? t('select_label', language) : (video.shared ? t('remove_shared', language) : t('make_shared', language))}

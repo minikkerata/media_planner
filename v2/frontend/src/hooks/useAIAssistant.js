@@ -136,6 +136,14 @@ export function useAIAssistant() {
     setSelectionRange({ start: 0, end: 0, target: null });
   }, []);
 
+  // Inject an external diff (e.g. duplicate detection) without going through the AI prompt flow
+  const injectDiff = useCallback(({ originalText, modifiedText, diffData, target = 'note' }) => {
+    setDiffResult({ originalText, modifiedText, diffData });
+    setSelectionRange({ start: 0, end: originalText.length, target });
+    setIsDiffMode(true);
+    setIsPromptOpen(false);
+  }, []);
+
   return {
     selectedText,
     selectionRange,
@@ -150,6 +158,7 @@ export function useAIAssistant() {
     submitAIPrompt,
     applyAIChanges,
     discardAIChanges,
+    injectDiff,
     setIsPromptOpen
   };
 }

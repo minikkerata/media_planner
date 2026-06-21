@@ -25,6 +25,9 @@ async def update_metadata(request: Request):
     if not folder or not os.path.isdir(folder) or not updates:
         raise HTTPException(status_code=400, detail="Geçersiz parametreler.")
         
+    import time
+    updated_notes = {}
+    
     for update in updates:
         name = update.get('name')
         if not name:
@@ -40,16 +43,19 @@ async def update_metadata(request: Request):
             ctime_ms = int(ctime * 1000)
             key = make_key(name, stat.st_size, ctime_ms)
             
-            existing = get_note(key) or {"description": "", "shared": False}
+            existing = get_note(key) or {"description": "", "shared": False, "hidden": False}
             
             description = update.get('description', existing['description'])
             shared = update.get('shared', existing['shared'])
+            hidden = update.get('hidden', existing.get('hidden', False))
             
-            save_note(key, name, stat.st_size, ctime_ms, description, shared, video_path)
+            updated_at = int(time.time() * 1000)
+            save_note(key, name, stat.st_size, ctime_ms, description, shared, video_path, hidden, updated_at)
+            updated_notes[name] = updated_at
         except Exception as e:
             print(f"Error updating SQLite metadata for {name}: {e}")
             
-    return {"success": True}
+    return {"success": True, "updated_notes": updated_notes}
 
 @router.get('/notes/search')
 def search_videos(query: str = ""):
