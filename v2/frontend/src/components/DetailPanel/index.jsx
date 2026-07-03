@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, FileVideo, Check } from 'lucide-react';
+import { ChevronLeft, FileVideo, Check, Share2, Layers } from 'lucide-react';
 import { IconCheck } from '../Icons';
 import Button from '../ui/Button';
 import { t } from '../../utils/translations';
+import { api } from '../../services/api';
 
 import SelectionList from './SelectionList';
 import VideoPlayer from './VideoPlayer';
@@ -21,14 +22,27 @@ export default function DetailPanel({
   isDetailCollapsed, setIsDetailCollapsed,
   fixedText, handleFixedTextChange, extractUsername, resolveFixedText,
   aiAssistant, defaultPrompt,
-  templateMode, templates, addTemplate, removeTemplate, toggleTemplates,
-  duplicateSuggestion, setDuplicateSuggestion
+  templateMode, templates, addTemplate, removeTemplate, renameTemplate, updateTemplate, toggleTemplates,
+  duplicateSuggestion, setDuplicateSuggestion, setShowBulkUploadModal
 }) {
   const [isPlaying, setIsPlaying] = useState(true);
   const [showCopyTick, setShowCopyTick] = useState(false);
   const [showNoteCopyTick, setShowNoteCopyTick] = useState(false);
   const isCollapsed = isDetailCollapsed;
   const setIsCollapsed = setIsDetailCollapsed;
+
+  const [historicalUsernames, setHistoricalUsernames] = useState([]);
+
+  useEffect(() => {
+    api.getUsernames()
+      .then(res => {
+        if (res && res.success && res.usernames) {
+          setHistoricalUsernames(res.usernames);
+        }
+      })
+      .catch(err => console.error(err));
+  }, [videos]);
+
   const [templateSelectedIndex, setTemplateSelectedIndex] = useState(0);
   // Pending suggestion: shown inline in note area, Enter confirms, ESC cancels
   const [pendingSuggestion, setPendingSuggestion] = useState(null); // { content: string, label: string }
@@ -148,10 +162,15 @@ export default function DetailPanel({
       const allOptions = [
         { token: '@username', label: 'Kullanıcı Adı (@username)', desc: username ? `@${username}` : '@username' },
         { token: '@filename', label: 'Dosya Adı (@filename)', desc: activeVideo ? activeVideo.name : '@filename' },
-        { token: '@folder', label: 'Klasör Adı (@folder)', desc: folder ? folder : '@folder' }
+        { token: '@folder', label: 'Klasör Adı (@folder)', desc: folder ? folder : '@folder' },
+        ...historicalUsernames.map(uname => ({
+          token: `@${uname}`,
+          label: `@${uname}`,
+          desc: language === 'tr' ? 'Önceki etiket' : 'Previous tag'
+        }))
       ];
       
-      const filtered = allOptions.filter(opt => opt.token.toLowerCase().includes(`@${query.toLowerCase()}`));
+      const filtered = allOptions.filter(opt => opt.token.toLowerCase().includes(`@${query.toLowerCase()}`)).slice(0, 6);
       
       setMentionMenu({
         visible: true,
@@ -216,6 +235,7 @@ export default function DetailPanel({
       return true;
     } else if (e.key === 'Escape') {
       e.preventDefault();
+      e.stopPropagation();
       setMentionMenu(prev => ({ ...prev, visible: false }));
       return true;
     }
@@ -704,13 +724,9 @@ export default function DetailPanel({
     return (
       <div 
         onClick={() => setIsCollapsed(false)}
-        className={`${transitionClass} h-screen flex flex-col items-center justify-center shrink-0 relative z-40 w-[8px] hover:w-[50px] bg-transparent hover:bg-surface border-l border-transparent hover:border-muted/15 group/collapsed cursor-pointer`}
+        className={`${transitionClass} h-screen flex flex-col items-center justify-center shrink-0 relative z-40 w-[8px] bg-transparent hover:bg-active/20 border-l border-transparent hover:border-muted/15 cursor-pointer`}
         title={t('expand', language)}
-      >
-        <div className="opacity-0 group-hover/collapsed:opacity-100 transition-opacity duration-200 pointer-events-none">
-          <ChevronLeft size={18} className="text-foreground/60" />
-        </div>
-      </div>
+      />
     );
   }
 
@@ -749,6 +765,8 @@ export default function DetailPanel({
                 }}
                 onClose={toggleTemplates}
                 onRemove={removeTemplate}
+                onRename={renameTemplate}
+                onUpdate={updateTemplate}
                 duplicateSuggestion={duplicateSuggestion}
                 onAcceptDuplicate={(desc) => {
                   setPendingSuggestion({ content: desc, label: `↳ ${duplicateSuggestion?.sourceFileName}` });
@@ -848,62 +866,107 @@ export default function DetailPanel({
               activeVideo={activeVideo}
             />
 
-            {/* Tamamlandı Olarak İşaretle button */}
+            {/* Actions button group (Templates, Publish, Completed) */}
             {!selectionMode && activeVideo && (
-              <Button
-                variant={activeVideo.shared ? "secondary" : "primary"}
-                onClick={(e) => toggleSharedState(activeVideo, e)}
-                tabIndex="-1"
-                className={`w-full flex items-center justify-center gap-2 py-2 rounded-lg font-bold text-xs transition-all duration-300 cursor-pointer shrink-0 h-[34px] mt-2.5 mb-2 ${
-                  activeVideo.shared 
-                    ? 'bg-success/20 hover:bg-success/30 text-success border border-success/30 shadow-none' 
-                    : ''
-                }`}
-              >
-                {activeVideo.shared && (
-                  <IconCheck className="w-3.5 h-3.5 text-success animate-scale-up" />
-                )}
-                <span className="whitespace-nowrap truncate">
-                  {activeVideo.shared ? t('completed', language) : t('mark_completed', language)}
-                </span>
-              </Button>
+              <div className="flex items-center gap-2 mt-2.5 mb-2 shrink-0">
+                {/* Templates Button */}
+                <Button
+                  variant="secondary"
+                  onClick={toggleTemplates}
+                  tabIndex="-1"
+                  className={`px-3 py-2 rounded-lg font-bold transition-all duration-300 h-[34px] flex items-center justify-center shrink-0 ${
+                    templateMode 
+                      ? 'bg-accent/20 hover:bg-accent/30 text-accent border border-accent/30 shadow-none' 
+                      : ''
+                  }`}
+                  title={language === 'tr' ? 'Şablonlar' : 'Templates'}
+                >
+                  <Layers className="w-3.5 h-3.5" />
+                </Button>
+
+                {/* Publish Button */}
+                <Button
+                  variant="secondary"
+                  onClick={() => window.dispatchEvent(new CustomEvent('trigger-upload-modal'))}
+                  tabIndex="-1"
+                  className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg font-bold text-xs transition-all duration-300 h-[34px]"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                  <span className="whitespace-nowrap truncate">
+                    {t('publish_btn', language)}
+                  </span>
+                </Button>
+
+                {/* Shared/Completed Button */}
+                <Button
+                  variant={activeVideo.shared ? "secondary" : "primary"}
+                  onClick={(e) => toggleSharedState(activeVideo, e)}
+                  tabIndex="-1"
+                  className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg font-bold text-xs transition-all duration-300 h-[34px] ${
+                    activeVideo.shared 
+                      ? 'bg-success/20 hover:bg-success/30 text-success border border-success/30 shadow-none' 
+                      : ''
+                  }`}
+                >
+                  {activeVideo.shared && (
+                    <IconCheck className="w-3.5 h-3.5 text-success animate-scale-up" />
+                  )}
+                  <span className="whitespace-nowrap truncate">
+                    {activeVideo.shared ? t('completed', language) : t('mark_completed', language)}
+                  </span>
+                </Button>
+              </div>
             )}
 
             {/* Divider */}
-            <div className="h-[1px] bg-muted/10 shrink-0" />
+            {!selectionMode && <div className="h-[1px] bg-muted/10 shrink-0" />}
 
-            <FixedSectionEditor
-              fixedText={fixedText}
-              handleFixedTextChange={handleFixedTextChange}
-              fixedInputRef={fixedInputRef}
-              fixedOverlayRef={fixedOverlayRef}
-              isFixedFocused={isFixedFocused}
-              setIsFixedFocused={setIsFixedFocused}
-              renderFixedOverlay={renderFixedOverlay}
-              mentionMenu={mentionMenu}
-              insertMention={insertMention}
-              handleMentionKeyDown={handleMentionKeyDown}
-              checkMentionTrigger={checkMentionTrigger}
-              allTextSelected={allTextSelected}
-              setAllTextSelected={setAllTextSelected}
-              copyCurrentNote={copyCurrentNote}
-              handleNoteChange={handleNoteChange}
-              language={language}
-              aiAssistant={aiAssistant}
-            />
+            {!selectionMode && (
+              <FixedSectionEditor
+                fixedText={fixedText}
+                handleFixedTextChange={handleFixedTextChange}
+                fixedInputRef={fixedInputRef}
+                fixedOverlayRef={fixedOverlayRef}
+                isFixedFocused={isFixedFocused}
+                setIsFixedFocused={setIsFixedFocused}
+                renderFixedOverlay={renderFixedOverlay}
+                mentionMenu={mentionMenu}
+                insertMention={insertMention}
+                handleMentionKeyDown={handleMentionKeyDown}
+                checkMentionTrigger={checkMentionTrigger}
+                allTextSelected={allTextSelected}
+                setAllTextSelected={setAllTextSelected}
+                copyCurrentNote={copyCurrentNote}
+                handleNoteChange={handleNoteChange}
+                language={language}
+                aiAssistant={aiAssistant}
+              />
+            )}
 
             {/* Apply bulk notes button when in selection mode */}
             {selectionMode && (
-              <Button
-                variant="primary"
-                onClick={() => applyBulkNotes(noteText)}
-                disabled={selectedPaths.size === 0}
-                tabIndex={-1}
-                className="w-full mt-2 gap-2 font-bold text-xs bg-blue-600 hover:bg-blue-500 hover:opacity-100 text-white shadow-none h-[34px]"
-              >
-                <Check size={14} />
-                <span>{t('apply_changes', language)}</span>
-              </Button>
+              <div className="flex flex-col gap-2 mt-2 w-full">
+                <Button
+                  variant="primary"
+                  onClick={() => applyBulkNotes(noteText)}
+                  disabled={selectedPaths.size === 0}
+                  tabIndex={-1}
+                  className="w-full gap-2 font-bold text-xs bg-blue-600 hover:bg-blue-500 hover:opacity-100 text-white shadow-none h-[34px]"
+                >
+                  <Check size={14} />
+                  <span>{t('apply_changes', language)}</span>
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => setShowBulkUploadModal(true)}
+                  disabled={selectedPaths.size === 0}
+                  tabIndex={-1}
+                  className="w-full gap-2 font-bold text-xs bg-accent hover:bg-accent/85 text-accent-foreground shadow-none h-[34px] cursor-pointer"
+                >
+                  <Share2 size={14} />
+                  <span>Toplu Paylaşım (Bulk Upload)</span>
+                </Button>
+              </div>
             )}
           </div>
         )}
@@ -923,6 +986,9 @@ export default function DetailPanel({
         currentFullText={aiAssistant.selectionRange.target === 'fixed' ? fixedText : noteText}
         onApplyText={aiAssistant.selectionRange.target === 'fixed' ? handleFixedTextChange : handleNoteChange}
         language={language}
+        aiStatus={aiAssistant.aiStatus}
+        aiStatusLog={aiAssistant.aiStatusLog}
+        streamingText={aiAssistant.streamingText}
       />
     </div>
   );

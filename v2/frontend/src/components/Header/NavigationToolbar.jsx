@@ -6,8 +6,14 @@ import { t } from '../../utils/translations';
 
 export default function NavigationToolbar({
   videos, enterSelectionMode, visibleVideosCount, onOpenSearch, language,
-  isSidebarCollapsed, onOpenSidebar
+  isSidebarCollapsed, onOpenSidebar, currentFolder, scanFolder, activePath
 }) {
+  const handleRefresh = () => {
+    if (scanFolder && currentFolder) {
+      scanFolder(currentFolder);
+    }
+  };
+
   return (
     <>
       {/* Sol Kısım */}
@@ -38,15 +44,21 @@ export default function NavigationToolbar({
         <Button
           variant="filled"
           size="none"
-          onClick={() => videos.length > 0 && enterSelectionMode(videos[0].path)}
-          disabled={videos.length === 0} tabIndex={-1}
-          className="cursor-pointer transition-all"
+          onClick={() => videos.length > 0 && enterSelectionMode(activePath || videos[0].path)}
+          disabled={videos.length === 0 || !activePath} tabIndex={-1}
+          className="transition-all"
           title={t('enter_selection_title', language)}
         >
           <span>{t('select_label', language)}</span>
         </Button>
         {videos.length > 0 && (
-          <span className="text-sm font-semibold text-foreground">{t('video_count_label', language).replace('{count}', visibleVideosCount)}</span>
+          <span 
+            onClick={handleRefresh}
+            className="text-sm font-semibold text-foreground hover:text-accent cursor-pointer transition select-none"
+            title={language === 'tr' ? 'Yenilemek için tıklayın' : 'Click to refresh'}
+          >
+            {t('video_count_label', language).replace('{count}', visibleVideosCount)}
+          </span>
         )}
       </div>
     </>

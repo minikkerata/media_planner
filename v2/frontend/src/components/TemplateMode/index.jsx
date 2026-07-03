@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import { Star, X, LayoutTemplate, Zap } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Star, X, LayoutTemplate, Zap, Edit3, Trash2 } from 'lucide-react';
+import EditTemplateDialog from './EditTemplateDialog';
 
 export default function TemplateMode({
   templates,
@@ -8,11 +9,21 @@ export default function TemplateMode({
   onApply,
   onClose,
   onRemove,
+  onRename,
+  onUpdate,
   duplicateSuggestion,
   onAcceptDuplicate
 }) {
   const listRef = useRef(null);
   const selectedRef = useRef(null);
+  const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, template: null });
+  const [editingTemplate, setEditingTemplate] = useState(null);
+
+  useEffect(() => {
+    const handleClose = () => setContextMenu({ visible: false, x: 0, y: 0, template: null });
+    window.addEventListener('click', handleClose);
+    return () => window.removeEventListener('click', handleClose);
+  }, []);
 
   // Combined list: duplicate suggestion first (if any), then saved templates
   const dupEntry = duplicateSuggestion
@@ -27,7 +38,7 @@ export default function TemplateMode({
   }, [selectedIndex]);
 
   return (
-    <div className="flex flex-col gap-2 shrink-0 h-full w-full">
+    <div className="flex flex-col gap-2 shrink-0 h-full w-full relative">
       {/* Header */}
       <div className="h-8 flex items-center justify-between px-1 shrink-0">
         <div className="flex items-center gap-2">
@@ -74,6 +85,21 @@ export default function TemplateMode({
                 ref={isSelected ? selectedRef : null}
                 onClick={() => setSelectedIndex(idx)}
                 onDoubleClick={() => isDup ? onAcceptDuplicate?.(item.content) : onApply(item)}
+                onContextMenu={(e) => {
+                  if (isDup) return;
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const container = e.currentTarget.closest('.relative');
+                  if (container) {
+                    const rect = container.getBoundingClientRect();
+                    setContextMenu({
+                      visible: true,
+                      x: e.clientX - rect.left,
+                      y: e.clientY - rect.top,
+                      template: item
+                    });
+                  }
+                }}
                 className={`group flex items-start gap-2 px-2.5 py-2.5 rounded-lg border border-solid cursor-pointer transition-all duration-100 ${
                   isSelected
                     ? isDup
@@ -138,6 +164,50 @@ export default function TemplateMode({
         <span className="text-[9px] text-foreground/25 font-mono">Enter uygula</span>
         <span className="text-[9px] text-foreground/25 font-mono">ESC çık</span>
       </div>
+
+      {contextMenu.visible && (
+        <div 
+          className="absolute bg-surface border border-muted/15 rounded-ui-lg p-1.5 shadow-2xl w-48 flex flex-col gap-0.5 z-[100]"
+          style={{ top: contextMenu.y, left: contextMenu.x }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            onClick={() => {
+              setEditingTemplate(contextMenu.template);
+              setContextMenu({ visible: false, x: 0, y: 0, template: null });
+            }}
+            className="flex items-center justify-between text-xs px-2.5 py-1.5 rounded-ui-sm text-foreground/80 hover:text-foreground hover:bg-hover transition cursor-pointer w-full text-left"
+          >
+            <span className="flex items-center gap-2">
+              <Edit3 className="w-3.5 h-3.5 text-accent" />
+              <span>Düzenle</span>
+            </span>
+          </button>
+          <button
+            onClick={() => {
+              onRemove(contextMenu.template.id);
+              setContextMenu({ visible: false, x: 0, y: 0, template: null });
+            }}
+            className="flex items-center justify-between text-xs px-2.5 py-1.5 rounded-ui-sm text-foreground/80 hover:text-foreground hover:bg-hover transition cursor-pointer w-full text-left"
+          >
+            <span className="flex items-center gap-2">
+              <Trash2 className="w-3.5 h-3.5 text-danger" />
+              <span>Sil</span>
+            </span>
+          </button>
+        </div>
+      )}
+
+      <EditTemplateDialog
+        isOpen={!!editingTemplate}
+        template={editingTemplate}
+        onSave={(id, name, content) => {
+          onRename?.(id, name);
+          onUpdate?.(id, content);
+          setEditingTemplate(null);
+        }}
+        onCancel={() => setEditingTemplate(null)}
+      />
     </div>
   );
 }

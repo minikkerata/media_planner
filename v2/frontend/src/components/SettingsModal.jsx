@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Keyboard, Globe, FolderOpen, Palette, Database, Brain, Link2 } from 'lucide-react';
+import { X, Keyboard, Globe, FolderOpen, Palette, Database, Brain, Link2, Layers } from 'lucide-react';
 import ShortcutsTab from './ui/ShortcutsTab';
 import LanguageTab from './ui/LanguageTab';
 import FolderTab from './ui/FolderTab';
@@ -7,6 +7,7 @@ import ThemeTab from './ui/ThemeTab';
 import BackupTab from './ui/BackupTab';
 import AITab from './ui/AITab';
 import IntegrationsTab from './ui/IntegrationsTab';
+import FixedNotesTab from './ui/FixedNotesTab';
 import Button from './ui/Button';
 import Modal from './ui/Modal';
 import Input from './ui/Input';
@@ -113,6 +114,10 @@ export default function SettingsModal({
         t('buffer_post_interval_label', lang), t('cloudinary_cloud_name_label', lang),
         t('cloudinary_api_key_label', lang), t('cloudinary_api_secret_label', lang),
         t('test_connection_btn', lang), 'Buffer', 'Cloudinary'
+      ],
+      fixed_notes: [
+        t('fixed_notes', lang), t('fixed_notes_desc', lang), t('save_btn', lang),
+        'Sabit Kısım', 'Fixed Notes', 'Suffix', 'Template'
       ]
     };
     return contents[tab] || [];
@@ -124,7 +129,7 @@ export default function SettingsModal({
     const query = val.toLowerCase().trim();
     
     // Find matching tab based on actual content text
-    const tabs = ['folder', 'shortcuts', 'language', 'theme', 'backup', 'ai', 'integrations'];
+    const tabs = ['folder', 'shortcuts', 'language', 'theme', 'backup', 'ai', 'integrations', 'fixed_notes'];
     const matchedTab = tabs.find(tab => 
       getTabSearchableContent(tab).some(text => 
         text && text.toLowerCase().includes(query)
@@ -140,7 +145,7 @@ export default function SettingsModal({
     const val = settingsQuery.trim();
     if (!val) return;
     const query = val.toLowerCase();
-    const tabs = ['folder', 'shortcuts', 'language', 'theme', 'backup', 'ai', 'integrations'];
+    const tabs = ['folder', 'shortcuts', 'language', 'theme', 'backup', 'ai', 'integrations', 'fixed_notes'];
     
     // Find all tabs that contain the query
     const matchingTabs = tabs.filter(tab => 
@@ -251,7 +256,7 @@ export default function SettingsModal({
     <Modal 
       isOpen={showSettingsModal} 
       onClose={onClose}
-      className="bg-modal-surface border border-foreground/5 rounded-2xl w-full max-w-4xl h-[660px] shadow-2xl flex overflow-hidden animate-in fade-in zoom-in duration-200"
+      className="bg-modal-surface border border-foreground/5 rounded-2xl shadow-2xl flex overflow-hidden animate-in fade-in zoom-in duration-200"
     >
       {/* Left Sidebar Menu */}
       <div className="w-48 bg-modal-surface border-r border-foreground/5 flex flex-col shrink-0">
@@ -290,7 +295,7 @@ export default function SettingsModal({
             variant="none"
             size="none"
             onClick={() => setActiveTab('folder')}
-            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
               ${activeTab === 'folder' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
           >
             <FolderOpen size={16} />
@@ -300,7 +305,7 @@ export default function SettingsModal({
             variant="none"
             size="none"
             onClick={() => setActiveTab('shortcuts')}
-            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
               ${activeTab === 'shortcuts' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
           >
             <Keyboard size={16} />
@@ -310,7 +315,7 @@ export default function SettingsModal({
             variant="none"
             size="none"
             onClick={() => setActiveTab('language')}
-            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
               ${activeTab === 'language' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
           >
             <Globe size={16} />
@@ -320,7 +325,7 @@ export default function SettingsModal({
             variant="none"
             size="none"
             onClick={() => setActiveTab('theme')}
-            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
               ${activeTab === 'theme' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
           >
             <Palette size={16} />
@@ -330,7 +335,7 @@ export default function SettingsModal({
             variant="none"
             size="none"
             onClick={() => setActiveTab('backup')}
-            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
               ${activeTab === 'backup' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
           >
             <Database size={16} />
@@ -340,7 +345,7 @@ export default function SettingsModal({
             variant="none"
             size="none"
             onClick={() => setActiveTab('ai')}
-            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
               ${activeTab === 'ai' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
           >
             <Brain size={16} />
@@ -350,11 +355,21 @@ export default function SettingsModal({
             variant="none"
             size="none"
             onClick={() => setActiveTab('integrations')}
-            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
               ${activeTab === 'integrations' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
           >
             <Link2 size={16} />
             {t('integrations', language)}
+          </Button>
+          <Button
+            variant="none"
+            size="none"
+            onClick={() => setActiveTab('fixed_notes')}
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
+              ${activeTab === 'fixed_notes' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
+          >
+            <Layers size={16} />
+            {t('fixed_notes', language)}
           </Button>
         </div>
       </div>
@@ -413,6 +428,15 @@ export default function SettingsModal({
           )}
           {activeTab === 'integrations' && (
             <IntegrationsTab 
+              language={language} 
+              onClose={onClose} 
+              showToast={showToast}
+              settingsQuery={settingsQuery}
+              highlight={highlight}
+            />
+          )}
+          {activeTab === 'fixed_notes' && (
+            <FixedNotesTab 
               language={language} 
               onClose={onClose} 
               showToast={showToast}

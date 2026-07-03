@@ -1,12 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { IconCheck, IconCopy } from './Icons';
+import { IconCheck, IconCopy, IconArrowUp } from './Icons';
+import { X, Check } from 'lucide-react';
 import { t } from '../utils/translations';
 
 export default function VideoGridCard({
   video, activePath, selectedPaths, clipboardState, selectionMode, EXT_COLORS, API_URL,
   videoRef, muted, volume, videoTime, videoDuration, muteFeedback, handleSeek, toggleMute,
   toggleSharedState, handleCardMouseDown, handleCardMouseEnter, handleContextMenu, handleItemClick,
-  setVideoDuration, setVideoTime, handleCopyPath, language
+  setVideoDuration, setVideoTime, handleCopyPath, language, uploadingPath,
+  uploadQueue = [], uploadCurrentIndex = 0, uploadFailedPaths = new Map()
 }) {
   const isActive = activePath === video.path;
   const isSelected = selectedPaths.has(video.path);
@@ -16,6 +18,17 @@ export default function VideoGridCard({
   const [isHovering, setIsHovering] = useState(false);
   const [showCopyTick, setShowCopyTick] = useState(false);
   const hoverVideoRef = useRef(null);
+
+  const formatPublishedDate = (timestamp) => {
+    if (!timestamp) return '';
+    const date = new Date(timestamp);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${day}.${month}.${year} ${hours}:${minutes}`;
+  };
   
   const isSelectedOrActive = (selectionMode && isSelected) || (!selectionMode && isActive);
   const scaleClass = isSelectedOrActive 
@@ -26,7 +39,7 @@ export default function VideoGridCard({
   let bgClass = 'bg-card-bg hover:bg-card-hover-bg';
 
   if (selectionMode && isSelected) {
-    bgClass = 'bg-blue-600/10 hover:bg-blue-600/15';
+    bgClass = 'bg-active hover:bg-hover';
     borderClass = 'border-transparent border-[var(--theme-card-border-width)]';
   } else if (isActive) {
     bgClass = 'bg-active';
@@ -55,6 +68,10 @@ export default function VideoGridCard({
   const innerBgClass = isSelectedOrActive ? 'bg-black/20' : video.shared ? 'bg-success/[0.09]' : bgClass;
   const innerBorderClass = isSelectedOrActive ? 'border-transparent' : borderClass;
   const innerShadowClass = isSelectedOrActive ? '' : 'shadow-md hover:shadow-lg border border-solid';
+
+  const queueIndex = uploadQueue.findIndex(v => v.path === video.path);
+  const isQueued = queueIndex !== -1 && queueIndex > uploadCurrentIndex;
+  const isFailed = uploadFailedPaths && uploadFailedPaths.has(video.path);
 
   return (
     <div
@@ -100,9 +117,56 @@ export default function VideoGridCard({
              />
           )}
 
-          <span className={`absolute bottom-2 left-2 px-1.5 py-0.5 rounded-ui-sm text-[8px] font-bold text-white uppercase z-20 pointer-events-none ${EXT_COLORS[video.extension] || 'bg-slate-600/80'}`}>
-            {video.extension.replace('.', '')}
-          </span>
+          {/* Centered Uploading Overlay */}
+          {uploadingPath === video.path && (
+            <div className="absolute inset-0 bg-black/55 backdrop-blur-[1px] flex flex-col items-center justify-center gap-2 z-20 animate-fade-in pointer-events-none">
+              <div className="w-16 h-16 rounded-full bg-black/60 border border-white/10 flex items-center justify-center shadow-lg">
+                <IconArrowUp className="w-6 h-6 text-white animate-bounce" />
+              </div>
+              <span className="text-[10px] font-bold text-white tracking-widest uppercase bg-black/50 px-2 py-0.5 rounded border border-white/5">
+                Uploading...
+              </span>
+            </div>
+          )}
+
+          {/* Centered Queued Overlay */}
+          {isQueued && (
+            <div className="absolute inset-0 bg-black/45 backdrop-blur-[0.5px] flex flex-col items-center justify-center gap-2 z-20 animate-fade-in pointer-events-none">
+              <div className="w-16 h-16 rounded-full bg-black/60 border border-amber-500/30 flex items-center justify-center shadow-lg">
+                <div className="w-4.5 h-4.5 rounded-full bg-amber-500 animate-pulse" />
+              </div>
+              <span className="text-[10px] font-bold text-amber-400 tracking-widest uppercase bg-black/60 px-2.5 py-0.5 rounded border border-amber-500/20">
+                Sırada...
+              </span>
+            </div>
+          )}
+
+          {/* Centered Failed Overlay */}
+          {isFailed && (
+            <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-2 z-20 pointer-events-none">
+              <div className="w-16 h-16 rounded-full bg-danger border border-white/20 flex items-center justify-center shadow-lg">
+                <X className="w-8 h-8 text-white" />
+              </div>
+              <span className="text-[10px] font-black text-white tracking-widest uppercase bg-danger px-2.5 py-1 rounded shadow-md">
+                Hata
+              </span>
+            </div>
+          )}
+
+          {/* Centered Published Overlay */}
+          {video.shared && uploadingPath !== video.path && !isFailed && (
+            <div className={`absolute inset-0 bg-black/35 flex flex-col items-center justify-center gap-2 z-20 pointer-events-none transition-all duration-300 ${isHovering ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+              <div className="w-14 h-14 rounded-full bg-success/90 text-white backdrop-blur-sm shadow-xl flex items-center justify-center border border-success/30 animate-scale-up">
+                <Check size={30} strokeWidth={3.5} className="text-white" />
+              </div>
+              {video.updated_at > 0 && (
+                <span className="text-xs font-black text-white text-center select-none tracking-wide" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.85), 0 0 2px rgba(0,0,0,0.9)' }}>
+                  {formatPublishedDate(video.updated_at)}
+                </span>
+              )}
+            </div>
+          )}
+
         </div>
 
         {!selectionMode && (
@@ -129,7 +193,7 @@ export default function VideoGridCard({
           onClick={(e) => toggleSharedState(video, e)}
           tabIndex={-1}
           className={`absolute top-2 right-2 p-1.5 rounded-full transition-all cursor-pointer z-30 ${
-            (selectionMode ? isSelected : video.shared)
+            (selectionMode && isSelected)
               ? 'bg-black/60 opacity-100 hover:bg-white/10'
               : 'bg-black/40 opacity-0 group-hover:opacity-100 hover:bg-white/10'
           }`}
@@ -145,15 +209,6 @@ export default function VideoGridCard({
             </div>
           )}
         </button>
-      </div>
-
-      <div className="mt-1.5 px-0.5 pb-0.5 overflow-hidden">
-        <p className={`text-xs font-semibold truncate transition-colors duration-150 ${isActive ? 'text-accent' : 'text-foreground group-hover:text-foreground'}`}>
-          {video.name}
-        </p>
-        <p className={`text-[10px] truncate italic transition-colors duration-150 ${isActive ? 'text-accent/70' : 'text-foreground/60'}`}>
-          {video.description || t('no_desc_entered', language)}
-        </p>
       </div>
     </div>
   );

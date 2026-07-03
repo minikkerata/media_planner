@@ -6,6 +6,7 @@ import {
 import { IconCheck, IconMute, IconVolume, IconCopy } from '../Icons';
 import Button from '../ui/Button';
 import { t } from '../../utils/translations';
+import Slider from '../ui/Slider';
 
 const formatTime = (secs) => {
   if (typeof secs === 'string') return secs;
@@ -66,7 +67,7 @@ export default function VideoPlayer({
               setTimeout(() => setShowCopyTick(false), 1500);
             }}
             tabIndex={-1}
-            className="cursor-pointer transition-all flex items-center gap-1.5"
+            className="transition-all flex items-center gap-1.5"
             title={t('copy_path_title', language)}
           >
             {showCopyTick ? (
@@ -87,7 +88,7 @@ export default function VideoPlayer({
               size="none"
               onClick={handleOpenLink}
               tabIndex={-1}
-              className="cursor-pointer transition-all flex items-center gap-1.5"
+              className="transition-all flex items-center gap-1.5"
               title={t('open_link', language)}
             >
               <ExternalLink className="w-3.5 h-3.5 text-foreground/80" />
@@ -103,32 +104,32 @@ export default function VideoPlayer({
               size="none"
               onClick={openInExplorer}
               tabIndex={-1}
-              className="p-1.5 h-8 w-8 transition-all flex items-center justify-center cursor-pointer"
+              className="p-1.5 h-8 w-8 transition-all flex items-center justify-center"
               title={t('openExplorer', language)}
             >
               <FolderOpen size={14} className="text-foreground shrink-0" />
             </Button>
           )}
           {/* Volume controls */}
-          <div className="flex items-center gap-1 group/volume relative">
+          <div className="flex items-center gap-1 shrink-0">
             <Button 
-              variant="filled"
+              variant="none"
               size="none"
               onClick={(e) => { e.stopPropagation(); toggleMute(); }}
-              className="p-1.5 h-8 w-8 transition-all flex items-center justify-center cursor-pointer"
+              className="p-1 rounded hover:bg-foreground/5 text-foreground/80 hover:text-foreground transition-all flex items-center justify-center shrink-0"
               title={muted ? t('unmute_title', language) : t('mute_title', language)}
             >
-              {muted ? <VolumeX size={14} className="text-foreground shrink-0" /> : <Volume2 size={14} className="text-foreground shrink-0" />}
+              {muted ? <VolumeX size={15} className="shrink-0" /> : <Volume2 size={15} className="shrink-0" />}
             </Button>
-            <div className="w-0 overflow-hidden group-hover/volume:w-36 transition-all duration-200 ease-out flex items-center">
-              <input 
-                type="range" 
-                min="0" 
-                max="1" 
-                step="0.05" 
-                value={muted ? 0 : volume} 
-                onChange={handleVolumeChange} 
-                className="w-32 h-1.5 rounded appearance-none cursor-pointer accent-foreground bg-foreground/20"
+            <div className="flex items-center shrink-0 ml-1.5">
+              <Slider
+                min={0}
+                max={1}
+                step={0.05}
+                value={muted ? 0 : volume}
+                onChange={handleVolumeChange}
+                onMouseDown={(e) => e.stopPropagation()}
+                widthClass="w-32"
               />
             </div>
           </div>
@@ -182,11 +183,10 @@ export default function VideoPlayer({
         {/* In-player Controls (Visible on Hover) */}
         <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex flex-col gap-2 z-30 opacity-0 group-hover/player:opacity-100 transition-opacity duration-200">
           {/* Timeline Slider */}
-          <input
-            type="range"
-            min="0"
+          <Slider
+            min={0}
             max={videoDuration || 100}
-            step="0.05"
+            step={0.05}
             value={isDragging ? dragTime : videoTime}
             onMouseDown={() => {
               setIsDragging(true);
@@ -214,9 +214,7 @@ export default function VideoPlayer({
             onTouchEnd={() => {
               setIsDragging(false);
             }}
-            tabIndex="-1"
-            className="w-full h-1 rounded-sm appearance-none cursor-pointer accent-[var(--theme-selected-border-color)] hover:h-1.5 transition-all"
-            style={{ background: `linear-gradient(to right, var(--theme-selected-border-color) ${seekPercent}%, var(--theme-active) ${seekPercent}%)` }}
+            accentColor="var(--theme-selected-border-color)"
           />
 
           {/* Bottom Row Controls */}

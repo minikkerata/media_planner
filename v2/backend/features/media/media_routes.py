@@ -51,3 +51,71 @@ def shutdown():
         
     threading.Thread(target=perform_shutdown, daemon=True).start()
     return {"success": True, "message": "Sistem kapatılıyor..."}
+
+import re
+from backend.core.database import get_connection
+
+@router.get('/usernames')
+def get_historical_usernames():
+    """Tüm açıklamalardaki @ etiketli kullanıcı adlarını benzersiz olarak çeker."""
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT description FROM notes WHERE description IS NOT NULL AND description != ''")
+        rows = cursor.fetchall()
+        conn.close()
+        
+        usernames = set()
+        for row in rows:
+            desc = row["description"]
+            # Find all words starting with @ followed by alphanumeric, underscores, dots, hyphens
+            matches = re.findall(r'@([a-zA-Z0-9_\.\-]+)', desc)
+            for m in matches:
+                cleaned = m.strip().rstrip('.-_')
+                if cleaned and cleaned.lower() not in ['username', 'filename', 'folder']:
+                    usernames.add(cleaned)
+                    
+        return {"success": True, "usernames": sorted(list(usernames))}
+    except Exception as e:
+        return {"success": False, "error": str(e), "usernames": []}
+
+@router.get('/scheduled-videos')
+def get_scheduled_videos():
+    """Yayın tarihi (publish_time) girilmiş olan veya paylaşıldı olarak işaretlenmiş tüm videoları veritabanından çeker."""
+    try:
+        import datetime
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT name, path, size, ctime, description, shared, updated_at, fixed_text, publish_time 
+            FROM notes 
+            WHERE (publish_time IS NOT NULL AND publish_time != '') OR shared = 1
+        """)
+        rows = cursor.fetchall()
+        conn.close()
+        
+        videos_list = []
+        for row in rows:
+            publish_time = row["publish_time"] or ""
+            # Fallback to updated_at if empty but shared is True
+            if not publish_time and row["shared"] and row["updated_at"]:
+                try:
+                    dt = datetime.datetime.fromtimestamp(row["updated_at"] / 1000.0, datetime.timezone.utc)
+                    publish_time = dt.isoformat().replace('+00:00', 'Z')
+                except Exception:
+                    pass
+
+            videos_list.append({
+                "name": row["name"],
+                "path": row["path"],
+                "size": row["size"],
+                "ctime": row["ctime"],
+                "description": row["description"],
+                "shared": bool(row["shared"]),
+                "updated_at": row["updated_at"] or 0,
+                "fixed_text": row["fixed_text"] or "",
+                "publish_time": publish_time
+            })
+        return {"success": True, "videos": videos_list}
+    except Exception as e:
+        return {"success": False, "error": str(e), "videos": []}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, Check, X, ArrowRight, Loader2 } from 'lucide-react';
+import { Sparkles, Check, X, ArrowRight, Loader2, Play } from 'lucide-react';
 import Button from '../ui/Button';
 
 export default function AIAssistant({
@@ -15,7 +15,10 @@ export default function AIAssistant({
   defaultPrompt,
   currentFullText,
   onApplyText,
-  language
+  language,
+  aiStatus,
+  aiStatusLog = [],
+  streamingText
 }) {
   const [customPrompt, setCustomPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -57,15 +60,15 @@ export default function AIAssistant({
     }
   };
 
-  // 1. Floating Ask AI pill button has been disabled per user request to only trigger via Alt+I.
-
-  // 2. Render Prompt Input Overlay box
+  // Render Prompt Input Overlay box
   if (isPromptOpen) {
-    const inputLeft = Math.min(window.innerWidth - 304, Math.max(16, promptCoords.x - 144));
+    const widthVal = isLoading ? 320 : 288; // w-80 (320px) or w-72 (288px)
+    const inputLeft = Math.min(window.innerWidth - (widthVal + 16), Math.max(16, promptCoords.x - (widthVal / 2)));
     const inputTop = Math.max(50, promptCoords.y - 70); // Position exactly above the selection
+    
     return (
       <div 
-        className="fixed z-50 bg-white rounded-ui-lg shadow-2xl p-1 w-72 flex flex-col gap-1 animate-in fade-in zoom-in-95 duration-150 pointer-events-auto border-0"
+        className={`fixed z-50 bg-white rounded-ui-lg shadow-2xl p-1.5 flex flex-col gap-1 animate-in fade-in zoom-in-95 duration-150 pointer-events-auto border border-gray-150/60 ${isLoading ? 'w-80' : 'w-72'}`}
         style={{ left: `${inputLeft}px`, top: `${inputTop}px` }}
         onMouseDown={(e) => e.stopPropagation()} // Prevent closing on global click
       >
@@ -102,7 +105,40 @@ export default function AIAssistant({
           </button>
         </div>
 
-        <span className="text-[7.5px] text-gray-400 leading-tight px-1.5 select-none">
+        {/* Loading Logs display */}
+        {isLoading && aiStatusLog.length > 0 && (
+          <div className="flex flex-col gap-0.5 px-2 py-1 border-t border-gray-100 mt-1 max-h-24 overflow-y-auto select-none custom-scrollbar">
+            {aiStatusLog.map((log, index) => (
+              <div key={index} className="text-[9px] text-gray-500 flex items-center gap-1.5">
+                <span className="text-green-500 text-[8px] font-semibold shrink-0">✓</span>
+                <span className="truncate">{log}</span>
+              </div>
+            ))}
+            {aiStatus && !aiStatus.includes("Hata") && !aiStatus.includes("hata") && (
+              <div className="text-[9px] text-blue-600 font-semibold flex items-center gap-1.5 animate-pulse shrink-0 mt-0.5">
+                <Loader2 size={8} className="animate-spin text-blue-600 shrink-0" />
+                <span className="truncate">{aiStatus}</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Live Streaming Preview Panel */}
+        {isLoading && streamingText && (
+          <div className="flex flex-col gap-1 px-2 py-1 border-t border-gray-100 mt-1">
+            <span className="text-[8px] font-bold text-gray-400 uppercase tracking-wider select-none">AI Yanıt Önizleme:</span>
+            <div 
+              className="bg-gray-50 rounded border border-gray-150 p-1.5 max-h-28 overflow-y-auto text-[10.5px] text-gray-800 font-sans whitespace-pre-wrap select-text selection:bg-blue-150 leading-relaxed max-w-full break-words custom-scrollbar"
+              ref={(el) => {
+                if (el) el.scrollTop = el.scrollHeight; // Auto-scroll to bottom as text generates
+              }}
+            >
+              {streamingText}
+            </div>
+          </div>
+        )}
+
+        <span className="text-[7.5px] text-gray-400 leading-tight px-1.5 select-none mt-0.5">
           {isLoading ? "Yapay zeka yanıt üretiyor, lütfen bekleyin..." : "Boş bırakıp Enter'a basarsanız varsayılan prompt ile revize edilir."}
         </span>
       </div>
@@ -120,7 +156,7 @@ export default function AIAssistant({
           variant="secondary"
           size="sm"
           onClick={discardAIChanges}
-          className="flex items-center gap-1 bg-element/50 hover:bg-hover border border-muted/10 cursor-pointer"
+          className="flex items-center gap-1 bg-element/50 hover:bg-hover border border-muted/10"
         >
           <X size={14} />
           <span>Reddet</span>

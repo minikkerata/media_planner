@@ -43,19 +43,43 @@ async def update_metadata(request: Request):
             ctime_ms = int(ctime * 1000)
             key = make_key(name, stat.st_size, ctime_ms)
             
-            existing = get_note(key) or {"description": "", "shared": False, "hidden": False}
+            existing = get_note(key) or {"description": "", "shared": False, "hidden": False, "fixed_text": "", "publish_time": ""}
             
             description = update.get('description', existing['description'])
             shared = update.get('shared', existing['shared'])
             hidden = update.get('hidden', existing.get('hidden', False))
+            fixed_text = update.get('fixed_text', existing.get('fixed_text', ''))
+            publish_time = update.get('publish_time', existing.get('publish_time', ''))
             
             updated_at = int(time.time() * 1000)
-            save_note(key, name, stat.st_size, ctime_ms, description, shared, video_path, hidden, updated_at)
+            save_note(key, name, stat.st_size, ctime_ms, description, shared, video_path, hidden, updated_at, fixed_text, publish_time)
             updated_notes[name] = updated_at
         except Exception as e:
             print(f"Error updating SQLite metadata for {name}: {e}")
             
     return {"success": True, "updated_notes": updated_notes}
+
+@router.get('/notes/shared-today')
+def check_shared_today():
+    import time
+    from datetime import datetime
+    try:
+        from backend.core.database import get_connection
+        conn = get_connection()
+        cursor = conn.cursor()
+        
+        now = datetime.now()
+        start_of_today = datetime(now.year, now.month, now.day)
+        start_of_today_timestamp_ms = int(start_of_today.timestamp() * 1000)
+        
+        cursor.execute("SELECT COUNT(*) as count FROM notes WHERE shared = 1 AND updated_at >= ?", (start_of_today_timestamp_ms,))
+        row = cursor.fetchone()
+        conn.close()
+        return {"success": True, "shared_today": row["count"] > 0}
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get('/notes/search')
 def search_videos(query: str = ""):

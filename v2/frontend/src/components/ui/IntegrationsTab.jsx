@@ -13,7 +13,8 @@ export default function IntegrationsTab({ language, onClose, showToast, highligh
     buffer_post_interval: 24,
     cloudinary_cloud_name: '',
     cloudinary_api_key: '',
-    cloudinary_api_secret: ''
+    cloudinary_api_secret: '',
+    fixed_text: ''
   });
 
   const [bufferTestStatus, setBufferTestStatus] = useState({ state: 'idle', message: '' }); // 'idle' | 'testing' | 'success' | 'error'
@@ -31,7 +32,8 @@ export default function IntegrationsTab({ language, onClose, showToast, highligh
             buffer_post_interval: data.buffer_post_interval !== undefined ? data.buffer_post_interval : 24,
             cloudinary_cloud_name: data.cloudinary_cloud_name || '',
             cloudinary_api_key: data.cloudinary_api_key || '',
-            cloudinary_api_secret: data.cloudinary_api_secret || ''
+            cloudinary_api_secret: data.cloudinary_api_secret || '',
+            fixed_text: data.fixed_text || ''
           });
         }
       })
@@ -57,6 +59,7 @@ export default function IntegrationsTab({ language, onClose, showToast, highligh
       const res = await api.saveSettings(settings);
       if (res.success) {
         if (showToast) showToast(t('save_success_toast', language), 'success');
+        window.dispatchEvent(new Event('settings-changed'));
         if (onClose) onClose();
       } else {
         if (showToast) showToast(res.message || 'Hata', 'error');

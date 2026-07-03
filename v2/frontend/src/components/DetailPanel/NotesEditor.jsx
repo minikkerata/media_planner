@@ -103,7 +103,7 @@ export default function NotesEditor({
       <div className="h-8 flex items-center justify-between px-1 shrink-0">
         <div className="flex items-center gap-2">
           <span className="text-xs font-bold text-foreground/80">
-            {selectionMode ? t('notes_title', language) : t('desc_notes_title', language)}
+            {t('notes_title', language)}
           </span>
           {pendingSuggestion && (
             <span className="text-[9px] font-mono text-foreground/30">Enter onayla · ESC iptal</span>
@@ -125,7 +125,7 @@ export default function NotesEditor({
                 setTimeout(() => setShowNoteCopyTick(false), 1500);
               }}
               tabIndex={-1}
-              className="cursor-pointer transition-all flex items-center gap-1.5"
+              className="transition-all flex items-center gap-1.5"
               title={selectionMode ? t('copy_selected_notes_combined', language) : t('copy_desc_title', language)}
             >
               {showNoteCopyTick ? (
@@ -160,7 +160,7 @@ export default function NotesEditor({
               title="Şablon olarak kaydet"
               tabIndex={-1}
             >
-              <Star size={13} className={isTemplated ? 'fill-amber-400 text-amber-400' : ''} />
+              <Star size={16} className={isTemplated ? 'fill-amber-400 text-amber-400' : ''} />
             </button>
           )}
           {selectionMode && (
@@ -175,9 +175,9 @@ export default function NotesEditor({
           <button 
             onClick={() => setIsCollapsed(true)}
             className="p-1 rounded hover:bg-foreground/5 text-foreground/60 hover:text-foreground transition cursor-pointer"
-            title={t('collapse', language)}
+            title={t('close_btn', language)}
           >
-            <ChevronRight size={14} />
+            <X size={15} />
           </button>
         </div>
       </div>

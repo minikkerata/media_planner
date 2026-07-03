@@ -11,6 +11,9 @@ import SearchModal from './components/SearchModal';
 import UploadModal from './components/UploadModal';
 import { IconCopy, IconCut, IconFolder, IconDelete } from './components/Icons';
 import { EyeOff, Eye } from 'lucide-react';
+import BulkUploadModal from './components/BulkUploadModal';
+import ProcessToast from './components/ui/ProcessToast';
+import WeeklyCalendar from './components/WeeklyCalendar';
 import { t } from './utils/translations';
 
 const API_URL = 'http://127.0.0.1:' + (import.meta.env.VITE_BACKEND_PORT || '8085');
@@ -22,20 +25,14 @@ export default function App() {
   React.useEffect(() => {
     const handleTriggerUpload = () => {
       if (planner.activePath) {
-        planner.setShowUploadModal(true);
+        planner.openPublishModal();
       }
     };
     window.addEventListener('trigger-upload-modal', handleTriggerUpload);
     return () => window.removeEventListener('trigger-upload-modal', handleTriggerUpload);
-  }, [planner.activePath, planner.setShowUploadModal]);
+  }, [planner.activePath, planner.openPublishModal]);
 
-  React.useEffect(() => {
-    const handleUnload = () => {
-      navigator.sendBeacon(API_URL + '/api/shutdown');
-    };
-    window.addEventListener('beforeunload', handleUnload);
-    return () => window.removeEventListener('beforeunload', handleUnload);
-  }, []);
+
 
   React.useEffect(() => {
     document.title = 'Media Planner (' + (import.meta.env.VITE_BACKEND_PORT || '8085') + ')';
@@ -81,7 +78,7 @@ export default function App() {
           onOpenSearch={() => planner.setShowSearchModal(true)} 
         />
         <main 
-          className="flex-1 overflow-y-auto px-4 pb-4 pt-10 relative" 
+          className="flex-1 overflow-y-auto px-4 pb-4 pt-4 relative flex flex-col gap-4" 
           onContextMenu={(e) => { 
             e.preventDefault(); 
             planner.setContextMenu({ x: e.clientX, y: e.clientY, visible: true, targetPath: null, isFolder: false }); 
@@ -91,6 +88,19 @@ export default function App() {
             <div className="flex flex-col items-center justify-center h-full text-foreground/40 gap-2">
               <p className="text-sm">{t('enter_folder_start', planner.language)}</p>
             </div>
+          ) : planner.activeViewTab === 'calendar' ? (
+            <WeeklyCalendar
+              language={planner.language}
+              videos={planner.videos}
+              API_URL={API_URL}
+              activePath={planner.activePath}
+              handleItemClick={planner.handleItemClick}
+              scanFolder={planner.scanFolder}
+              showToast={planner.showToast}
+              openPublishModalWithTime={planner.openPublishModalWithTime}
+              activeUploads={planner.activeUploads}
+              openVideoDetailModal={planner.openVideoDetailModal}
+            />
           ) : planner.getVisibleVideos().length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-foreground/40 gap-2">
               <p className="text-sm">{t('no_videos_found', planner.language)}</p>
@@ -118,6 +128,10 @@ export default function App() {
                   selectedPaths={planner.selectedPaths} 
                   clipboardState={planner.clipboardState} 
                   selectionMode={planner.selectionMode} 
+                  uploadingPath={planner.uploadingPath}
+                  uploadQueue={planner.uploadQueue}
+                  uploadCurrentIndex={planner.uploadCurrentIndex}
+                  uploadFailedPaths={planner.uploadFailedPaths}
                   EXT_COLORS={{ ".mp4": "bg-blue-500/80", ".mov": "bg-purple-500/80", ".avi": "bg-red-500/80", ".mkv": "bg-amber-500/80", ".webm": "bg-green-500/80" }} 
                   API_URL={API_URL} 
                   videoRef={planner.videoRef} 
@@ -152,7 +166,7 @@ export default function App() {
           )}
         </main>
       </div>
-      <DetailPanel {...planner} API_URL={API_URL} />
+      {planner.activeViewTab !== 'calendar' && <DetailPanel {...planner} API_URL={API_URL} />}
       
       {planner.contextMenu.visible && (
         <div 
@@ -332,13 +346,43 @@ export default function App() {
       />
       <UploadModal 
         isOpen={planner.showUploadModal} 
-        onClose={() => planner.setShowUploadModal(false)}
+        onClose={() => {
+          planner.setShowUploadModal(false);
+          planner.setCustomScheduleTime(null);
+          planner.setIsDetailView(false);
+          if (planner.activeViewTab === 'calendar') {
+            planner.setActivePath(null);
+          }
+        }}
         activeVideo={planner.videos.find(v => v.path === planner.activePath)}
         onPublishSuccess={(path, newCaption) => {
-          planner.setVideos(p => p.map(v => v.path === path ? { ...v, shared: true, description: newCaption } : v));
+          planner.setVideos(p => p.map(v => v.path === path ? { ...v, shared: true, description: newCaption, updated_at: Date.now() } : v));
+          planner.triggerCompletedFeedback?.();
         }}
+        onPublishStart={(path) => planner.setUploadingPath(path)}
+        onPublishEnd={() => planner.setUploadingPath(null)}
         language={planner.language}
         showToast={planner.showToast}
+        fixedText={planner.fixedText}
+        resolveFixedText={planner.resolveFixedText}
+        setProcessToast={planner.setProcessToast}
+        setVideos={planner.setVideos}
+        initialScheduleTime={planner.customScheduleTime}
+        startPublishTask={planner.startPublishTask}
+        isDetailView={planner.isDetailView}
+        videos={planner.videos}
+      />
+      <BulkUploadModal
+        isOpen={planner.showBulkUploadModal}
+        onClose={() => planner.setShowBulkUploadModal(false)}
+        selectedVideos={planner.videos.filter(v => planner.selectedPaths.has(v.path))}
+        planner={planner}
+        language={planner.language}
+      />
+      <ProcessToast
+        processToast={planner.processToast}
+        setProcessToast={planner.setProcessToast}
+        language={planner.language}
       />
       {planner.toast.visible && (
         <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 flex justify-center z-50">

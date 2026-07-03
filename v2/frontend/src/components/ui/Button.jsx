@@ -23,7 +23,7 @@ export default function Button({
     }
   };
 
-  const baseStyles = 'inline-flex items-center font-medium transition-colors rounded-lg shrink-0 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseStyles = 'inline-flex items-center font-medium transition-colors rounded-lg shrink-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
   
   const variants = {
     primary: 'justify-center bg-accent text-accent-foreground hover:opacity-90 shadow-sm',

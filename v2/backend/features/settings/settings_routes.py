@@ -21,6 +21,7 @@ class SettingsModel(BaseModel):
     cloudinary_cloud_name: Optional[str] = ""
     cloudinary_api_key: Optional[str] = ""
     cloudinary_api_secret: Optional[str] = ""
+    fixed_text: Optional[str] = ""
 
 class BufferTestModel(BaseModel):
     buffer_api_key: str
@@ -36,7 +37,10 @@ def get_settings():
     if os.path.exists(path):
         try:
             with open(path, 'r', encoding='utf-8') as f:
-                return json.load(f)
+                data = json.load(f)
+                if isinstance(data, dict):
+                    return {k: (v.strip() if isinstance(v, str) else v) for k, v in data.items()}
+                return data
         except Exception:
             pass
     return {
@@ -45,22 +49,24 @@ def get_settings():
         "buffer_post_interval": 24,
         "cloudinary_cloud_name": "",
         "cloudinary_api_key": "",
-        "cloudinary_api_secret": ""
+        "cloudinary_api_secret": "",
+        "fixed_text": "Daha fazla yamaç paraşütü videosu görmek için takip etmeyi unutmayın"
     }
 
 @router.post('/settings')
 def save_settings(settings: SettingsModel):
     path = os.path.join(get_db_dir(), 'settings.json')
     try:
+        settings_dict = {k: (v.strip() if isinstance(v, str) else v) for k, v in settings.dict().items()}
         with open(path, 'w', encoding='utf-8') as f:
-            json.dump(settings.dict(), f, indent=4, ensure_ascii=False)
+            json.dump(settings_dict, f, indent=4, ensure_ascii=False)
         return {"success": True}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ayarlar kaydedilemedi: {str(e)}")
 
 @router.post('/settings/test-buffer')
 async def test_buffer(data: BufferTestModel):
-    api_key = data.buffer_api_key
+    api_key = data.buffer_api_key.strip() if data.buffer_api_key else ""
     if not api_key:
         return {"success": False, "message": "API Key is required."}
     
@@ -100,9 +106,9 @@ async def test_buffer(data: BufferTestModel):
 
 @router.post('/settings/test-cloudinary')
 async def test_cloudinary(data: CloudinaryTestModel):
-    cloud_name = data.cloudinary_cloud_name
-    api_key = data.cloudinary_api_key
-    api_secret = data.cloudinary_api_secret
+    cloud_name = data.cloudinary_cloud_name.strip() if data.cloudinary_cloud_name else ""
+    api_key = data.cloudinary_api_key.strip() if data.cloudinary_api_key else ""
+    api_secret = data.cloudinary_api_secret.strip() if data.cloudinary_api_secret else ""
     
     if not cloud_name or not api_key or not api_secret:
         return {"success": False, "message": "All Cloudinary fields are required."}
@@ -151,11 +157,22 @@ async def publish_to_buffer(api_key: str, channel_id: str, text: str, video_url:
         try:
             mode = "shareNow" if not schedule_time else "customScheduled"
             
+            thumbnail_url = None
+            if "cloudinary.com" in video_url:
+                base, _ = os.path.splitext(video_url)
+                thumbnail_url = base + ".jpg"
+                
             input_data = {
                 "text": text,
                 "channelId": channel_id,
                 "schedulingType": "automatic",
                 "mode": mode,
+                "metadata": {
+                    "instagram": {
+                        "type": "reel",
+                        "shouldShareToFeed": True
+                    }
+                },
                 "assets": [
                     {
                         "video": {
@@ -164,6 +181,9 @@ async def publish_to_buffer(api_key: str, channel_id: str, text: str, video_url:
                     }
                 ]
             }
+            if thumbnail_url:
+                input_data["assets"][0]["video"]["thumbnailUrl"] = thumbnail_url
+                
             if schedule_time:
                 input_data["dueAt"] = schedule_time
                 
@@ -200,14 +220,25 @@ async def publish_to_buffer(api_key: str, channel_id: str, text: str, video_url:
             
         # Fallback to legacy REST API
         try:
+            thumbnail_url = None
+            if "cloudinary.com" in video_url:
+                base, _ = os.path.splitext(video_url)
+                thumbnail_url = base + ".jpg"
+                
             payload = {
                 "text": text,
                 "profile_ids[]": channel_id,
                 "media[video]": video_url
             }
+            if thumbnail_url:
+                payload["media[thumbnail]"] = thumbnail_url
+                
             if schedule_time:
-                dt_str = schedule_time.replace('Z', '')
-                dt = datetime.fromisoformat(dt_str)
+                if schedule_time.endswith('Z'):
+                    dt_str = schedule_time.replace('Z', '+00:00')
+                    dt = datetime.fromisoformat(dt_str)
+                else:
+                    dt = datetime.fromisoformat(schedule_time)
                 epoch = int(dt.timestamp())
                 payload["scheduled_at"] = epoch
             else:
@@ -229,6 +260,65 @@ async def publish_to_buffer(api_key: str, channel_id: str, text: str, video_url:
                 return {"success": False, "message": f"Buffer API error: {err_msg}"}
         except Exception as e:
             return {"success": False, "message": f"Buffer connection error: {str(e)}"}
+
+class CloudinaryUploadModel(BaseModel):
+    video_path: str
+
+class BufferPublishModel(BaseModel):
+    text: str
+    video_url: str
+    schedule_time: Optional[str] = None
+
+@router.post('/settings/upload-cloudinary')
+async def upload_cloudinary(data: CloudinaryUploadModel):
+    settings_data = get_settings()
+    cloudinary_cloud_name = settings_data.get("cloudinary_cloud_name")
+    cloudinary_api_key = settings_data.get("cloudinary_api_key")
+    cloudinary_api_secret = settings_data.get("cloudinary_api_secret")
+    
+    if not cloudinary_cloud_name or not cloudinary_api_key or not cloudinary_api_secret:
+        raise HTTPException(status_code=400, detail="Cloudinary ayarları eksik. Lütfen ayarlardan yapılandırın.")
+        
+    if not os.path.exists(data.video_path):
+        raise HTTPException(status_code=404, detail="Video dosyası yerel diskte bulunamadı.")
+        
+    import cloudinary
+    import cloudinary.uploader
+    cloudinary.config(
+        cloud_name=cloudinary_cloud_name,
+        api_key=cloudinary_api_key,
+        api_secret=cloudinary_api_secret,
+        secure=True
+    )
+    try:
+        upload_result = cloudinary.uploader.upload(data.video_path, resource_type="video")
+        video_url = upload_result.get("secure_url")
+        if not video_url:
+            raise Exception("Cloudinary secure_url dönmedi.")
+        return {"success": True, "video_url": video_url}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Cloudinary yükleme hatası: {str(e)}")
+
+@router.post('/settings/publish-buffer')
+async def publish_buffer(data: BufferPublishModel):
+    settings_data = get_settings()
+    buffer_api_key = settings_data.get("buffer_api_key")
+    buffer_channel_id = settings_data.get("buffer_channel_id")
+    
+    if not buffer_api_key or not buffer_channel_id:
+        raise HTTPException(status_code=400, detail="Buffer ayarları eksik. Lütfen ayarlardan yapılandırın.")
+        
+    res = await publish_to_buffer(
+        buffer_api_key,
+        buffer_channel_id,
+        data.text,
+        data.video_url,
+        data.schedule_time
+    )
+    if res["success"]:
+        return {"success": True, "message": res["message"]}
+    else:
+        raise HTTPException(status_code=500, detail=res["message"])
 
 @router.post('/settings/upload-publish')
 async def upload_publish(data: UploadPublishModel):

@@ -1,12 +1,14 @@
 import React from 'react';
 import { IconClose, IconCopy, IconPower } from '../Icons';
+import { Loader2, X, Check } from 'lucide-react';
 import Button from '../ui/Button';
 import { t } from '../../utils/translations';
 
 export default function SelectionToolbar({
   selectedPaths, exitSelectionMode, selectAll, clearSelection,
   copyCurrentNote, setShowSettingsModal, handleShutdown, keybindings, getShortcutString,
-  uiStyle, language
+  uiStyle, language,
+  uploadStatus, uploadQueue, uploadCurrentIndex, setShowBulkUploadModal
 }) {
   return (
     <div className="flex items-center gap-3 h-[38px] animate-fade-in">
@@ -15,7 +17,7 @@ export default function SelectionToolbar({
         size="none" 
         onClick={exitSelectionMode} 
         tabIndex={-1} 
-        className="cursor-pointer transition-all" 
+        className="transition-all" 
         title={t('exit_selection_title', language)}
       >
         <span>{t('cancel', language)}</span>
@@ -28,7 +30,7 @@ export default function SelectionToolbar({
         size="none" 
         onClick={selectAll} 
         tabIndex={-1} 
-        className="cursor-pointer transition-all"
+        className="transition-all"
       >
         <span>{t('select_all', language)}</span>
       </Button>
@@ -38,17 +40,48 @@ export default function SelectionToolbar({
         size="none" 
         onClick={clearSelection} 
         tabIndex={-1} 
-        className="cursor-pointer transition-all"
+        className="transition-all"
       >
         <span>{t('clear_selection', language)}</span>
       </Button>
       
+      {uploadStatus !== 'idle' && (
+        <>
+          <div className="h-4 w-[1px] bg-muted/15" />
+          <Button
+            onClick={() => setShowBulkUploadModal(true)}
+            className={`flex items-center gap-1.5 px-3 py-1 text-xs font-bold transition-all shadow-md ${
+              uploadStatus === 'success'
+                ? 'bg-success text-white hover:bg-success/80'
+                : uploadStatus === 'error'
+                  ? 'bg-danger text-white hover:bg-danger/80'
+                  : 'bg-blue-600 hover:bg-blue-500 text-white'
+            }`}
+          >
+            {uploadStatus === 'publishing' ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
+            ) : uploadStatus === 'error' ? (
+              <X className="w-3.5 h-3.5 text-white" />
+            ) : (
+              <Check className="w-3.5 h-3.5 text-white" />
+            )}
+            <span className="whitespace-nowrap text-white">
+              {uploadStatus === 'success'
+                ? 'Paylaşıldı ✓'
+                : uploadStatus === 'error'
+                  ? `${uploadQueue.filter((_, idx) => idx < uploadCurrentIndex).length}/${uploadQueue.length} Durduruldu`
+                  : `${uploadCurrentIndex}/${uploadQueue.length} Paylaşılıyor`}
+            </span>
+          </Button>
+        </>
+      )}
+
       <Button 
         variant="header-flat" 
         size="none" 
         onClick={handleShutdown} 
         tabIndex={-1} 
-        className="cursor-pointer transition-all ml-auto hover:text-danger!" 
+        className="transition-all ml-auto hover:text-danger!" 
         title={t('shutdown_tooltip', language)}
       >
         <span>{t('shutdown_short', language)}</span>

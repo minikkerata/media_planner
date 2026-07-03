@@ -24,6 +24,7 @@ export default function LanguageTab({ language, setLanguage, onClose, highlight 
           value={tempLang}
           onChange={setTempLang}
           icon={Globe}
+          classic={true}
           options={[
             { value: 'tr', label: 'Türkçe' },
             { value: 'en', label: 'English' }

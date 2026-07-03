@@ -2,8 +2,8 @@ export const translations = {
   // Settings
   settings: { tr: 'Ayarlar', en: 'Settings' },
   folder: { tr: 'Klasör', en: 'Folder' },
-  folder_tab_desc: { tr: 'Videoların indirileceği ana klasörü seçin.', en: 'Select the main folder where videos will be downloaded.' },
-  save_location: { tr: 'Kayıt Konumu', en: 'Save Location' },
+  folder_tab_desc: { tr: 'Taranacak ve listelenecek videoların bulunduğu ana klasörü seçin.', en: 'Select the main folder containing the videos to be scanned and listed.' },
+  save_location: { tr: 'Kaynak Video Klasörü', en: 'Source Video Folder' },
   no_folder_selected: { tr: 'Henüz bir klasör seçilmedi', en: 'No folder selected yet' },
   shortcuts: { tr: 'Kısayollar', en: 'Shortcuts' },
   language_options: { tr: 'Dil Seçenekleri', en: 'Language' },
@@ -53,7 +53,7 @@ export const translations = {
   // Main UI
   hero_subtitle: { tr: 'İstediğiniz Instagram, TikTok ve YouTube linklerini topluca indirin.', en: 'Bulk download your desired Instagram, TikTok, and YouTube links.' },
   input_note: { tr: 'Virgülle ayırarak birden fazla link yapıştırabilir ve toplu indirme yapabilirsiniz.', en: 'You can do bulk downloading by pasting multiple links separated by commas.' },
-  change_folder_note: { tr: 'İndirilenler klasörünü istediğin zaman ayarlar kısmından değiştirebilirsin.', en: 'You can change the Downloads folder anytime from the settings section.' },
+  change_folder_note: { tr: 'Video klasörünü istediğin zaman ayarlar kısmından değiştirebilirsin.', en: 'You can change the video folder anytime from the settings section.' },
   select_folder_first: { tr: 'Lütfen Önce Bir Klasör Seçin', en: 'Please Select A Folder First' },
   paste_link: { tr: 'Yeni Bağlantı Ekle... (Birden fazla link için virgül kullanın)', en: 'Add New Link... (Use commas for multiple links)' },
   start_download: { tr: 'İndirmeyi Başlat', en: 'Start Download' },
@@ -220,6 +220,9 @@ export const translations = {
   ai_default_prompt_label: { tr: 'Varsayılan Sistem Talimatı (Prompt)', en: 'Default System Instruction (Prompt)' },
   triggerAI: { tr: 'Metni AI ile Düzenle (Alt+I)', en: 'Edit Text with AI (Alt+I)' },
   
+  fixed_notes: { tr: 'Sabit Kısım', en: 'Fixed Notes' },
+  fixed_notes_desc: { tr: 'Paylaşım açıklamalarının sonuna eklenecek varsayılan sabit şablon metni yapılandırın.', en: 'Configure the default fixed template text to be appended to post descriptions.' },
+
   // Integrations settings
   integrations: { tr: 'Entegrasyonlar', en: 'Integrations' },
   integrations_desc: { tr: 'Buffer ve Cloudinary paylaşım entegrasyonlarını yapılandırın.', en: 'Configure Buffer and Cloudinary upload integrations.' },
@@ -236,6 +239,7 @@ export const translations = {
   test_success: { tr: 'Bağlantı Başarılı ✓', en: 'Connection Successful ✓' },
   test_failed: { tr: 'Bağlantı Başarısız: ', en: 'Connection Failed: ' },
   save_success_toast: { tr: 'Ayarlar başarıyla kaydedildi ✓', en: 'Settings successfully saved ✓' },
+  publish_btn: { tr: 'Paylaş', en: 'Publish' },
   
   // Upload modal
   upload_modal_title: { tr: 'Buffer / Cloudinary Paylaşım Paneli', en: 'Buffer / Cloudinary Publisher' },
@@ -246,7 +250,9 @@ export const translations = {
   publishing_status: { tr: 'Buffer\'da paylaşım oluşturuluyor...', en: 'Creating Buffer post...' },
   video_description_label: { tr: 'Video Açıklaması (Salt Okunur)', en: 'Video Description (Read-Only)' },
   suggested_time: { tr: 'Önerilen Saat:', en: 'Suggested Time:' },
-  publish_success_msg: { tr: 'Video başarıyla paylaşıldı/planlandı! ✓', en: 'Video successfully published/scheduled! ✓' }
+  publish_success_msg: { tr: 'Video başarıyla paylaşıldı/planlandı! ✓', en: 'Video successfully published/scheduled! ✓' },
+  library: { tr: 'Medya Kitaplığı', en: 'Media Library' },
+  weekly_calendar: { tr: 'Haftalık Takvim', en: 'Weekly Calendar' }
 };
 
 

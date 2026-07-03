@@ -102,7 +102,7 @@ def start_processes():
     startupinfo.wShowWindow = subprocess.SW_HIDE
     
     # 1. Start backend server
-    python_exe = r"C:\Users\emred\anaconda3\python.exe"
+    python_exe = r"C:\Users\emred\AppData\Local\Programs\Python\Python312\python.exe"
     backend_script = os.path.join(script_dir, "backend", "main.py")
     backend_log = open(os.path.join(script_dir, "backend_err.log"), "w", encoding="utf-8")
     backend_proc = subprocess.Popen(
@@ -181,11 +181,10 @@ def main():
     def launch_chrome_delayed():
         time.sleep(3.0)
         chrome_path = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
-        profile_path = os.path.join(os.getenv("APPDATA"), "MediaPlanner", "chrome-profile")
         if os.path.exists(chrome_path):
-            subprocess.Popen([chrome_path, f"--app=http://localhost:{frontend_port}", f"--user-data-dir={profile_path}"])
+            subprocess.Popen([chrome_path, f"--app=http://localhost:{frontend_port}"])
         else:
-            subprocess.Popen(f'start "" "chrome.exe" --app=http://localhost:{frontend_port} --user-data-dir="{profile_path}"', shell=True)
+            subprocess.Popen(f'start "" "chrome.exe" --app=http://localhost:{frontend_port}', shell=True)
             
     threading.Thread(target=launch_chrome_delayed, daemon=True).start()
     

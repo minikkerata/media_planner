@@ -1,43 +1,686 @@
-INFO:     Started server process [18536]
+INFO:     Started server process [20736]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://127.0.0.1:8085 (Press CTRL+C to quit)
-INFO:     127.0.0.1:65418 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63992 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55151 - "GET /api/scan?folder=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63992 - "GET /api/scan?folder=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63992 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:57962 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_C9c07xVNBqV!thezerrr.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:63992 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53609 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53609 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64360 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53829 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53829 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53829 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64019 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64019 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64019 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60354 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60354 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60354 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60354 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60354 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60354 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:65461 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52615 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52615 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64140 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DU3ZffZCHpB!thezerrr.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:55597 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DU3ZffZCHpB!thezerrr.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:49413 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DU3ZffZCHpB!thezerrr.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:52615 - "POST /api/shutdown HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49413 - "POST /api/shutdown HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55353 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57762 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57762 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55353 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54795 - "GET /api/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54795 - "GET /api/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56490 - "GET /api/scan?folder=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54795 - "GET /api/scan?folder=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54795 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54795 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61288 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40espn%5Bs%5Dvideo%5Bs%5D7376771996363050286!ESPN.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50816 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40espn%5Bs%5Dvideo%5Bs%5D7376771996363050286!ESPN.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:56924 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40espn%5Bs%5Dvideo%5Bs%5D7376771996363050286!ESPN.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:56924 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40espn%5Bs%5Dvideo%5Bs%5D7376771996363050286!ESPN.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:65104 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40espn%5Bs%5Dvideo%5Bs%5D7376771996363050286!ESPN.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50953 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40espn%5Bs%5Dvideo%5Bs%5D7364550392417504555!ESPN.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54795 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54795 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50094 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51841 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_CpVKJ5XuBh9%20(1).mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50519 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7542937727327538450!Semih%20Er.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63629 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40lorena.grey.haze%5Bs%5Dvideo%5Bs%5D7384538279971982625!LORENA%20GREY%20HAZE%F0%9F%91%BD.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51841 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40tekinhalitt%5Bs%5Dvideo%5Bs%5D7355897033946926341!Halit%20Tekin.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63629 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40xieloskydive%5Bs%5Dvideo%5Bs%5D7611358835332189462!Xielo%20Skydive.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50519 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40hasannkaval%5Bs%5Dvideo%5Bs%5D7522876977271917831!Hasan%20Kaval.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58800 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40extremeofficial%5Bs%5Dvideo%5Bs%5D7468724425995652385!UNREEL.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54531 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40extremeofficial%5Bs%5Dvideo%5Bs%5D7509164456060914966!UNREEL%20(1).mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50094 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54531 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7542937727327538450!Semih%20Er.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58800 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7542937727327538450!Semih%20Er.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58800 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7542937727327538450!Semih%20Er.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50094 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62804 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40lorena.grey.haze%5Bs%5Dvideo%5Bs%5D7384538279971982625!LORENA%20GREY%20HAZE%F0%9F%91%BD.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:62763 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40lorena.grey.haze%5Bs%5Dvideo%5Bs%5D7384538279971982625!LORENA%20GREY%20HAZE%F0%9F%91%BD.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:62763 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7542937727327538450!Semih%20Er.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:49418 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58749 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40extremeofficial%5Bs%5Dvideo%5Bs%5D7468724425995652385!UNREEL.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61633 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40extremeofficial%5Bs%5Dvideo%5Bs%5D7468724425995652385!UNREEL.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:60185 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40extremeofficial%5Bs%5Dvideo%5Bs%5D7468724425995652385!UNREEL.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:60185 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40extremeofficial%5Bs%5Dvideo%5Bs%5D7468724425995652385!UNREEL.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:60185 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40extremeofficial%5Bs%5Dvideo%5Bs%5D7468724425995652385!UNREEL.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:49418 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49418 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49418 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49418 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49418 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49418 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49418 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52819 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52819 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52819 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56030 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54769 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63427 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63427 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64085 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64085 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49201 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61087 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61087 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55967 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40extremeofficial%5Bs%5Dvideo%5Bs%5D7509164456060914966!UNREEL%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59748 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40extremeofficial%5Bs%5Dvideo%5Bs%5D7509164456060914966!UNREEL%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61087 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61087 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49242 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49242 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49242 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53997 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53997 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53997 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53997 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53997 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53997 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53997 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53493 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53493 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53493 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53493 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61623 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50148 - "GET /api/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61623 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64123 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50148 - "GET /api/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64123 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59388 - "GET /api/scan?folder=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64123 - "GET /api/scan?folder=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60120 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40espn%5Bs%5Dvideo%5Bs%5D7376771996363050286!ESPN.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:64123 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64123 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60120 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40espn%5Bs%5Dvideo%5Bs%5D7376771996363050286!ESPN.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:64123 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59388 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59388 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59388 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59388 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59388 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50779 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65200 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7542937727327538450!Semih%20Er.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50779 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49851 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49851 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50859 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50859 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61608 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40theoadb%5Bs%5Dvideo%5Bs%5D7370415263818190112!Th%C3%A9o%20Audebaud.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52212 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40hasannkaval%5Bs%5Dvideo%5Bs%5D7495661708111875335!Hasan%20Kaval.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62885 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40flyonur%5Bs%5Dvideo%5Bs%5D7642413238382284053!%F0%9F%AA%82flyonur%F0%9F%AA%82.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57085 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5CVideo%20by%20bichocarrera.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56077 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40tekinhalitt%5Bs%5Dvideo%5Bs%5D7355229560721476869!Halit%20Tekin.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59386 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40mrdenizerdal%5Bs%5Dvideo%5Bs%5D7650576026744917269!%C3%96m%C3%BCr%20Deniz%20Erdal.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61608 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40extremeofficial%5Bs%5Dvideo%5Bs%5D7509164456060914966!UNREEL.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62885 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40bestofspeedflying%5Bs%5Dvideo%5Bs%5D7145924619277471019!Speedfly.com.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59386 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40extremeofficial%5Bs%5Dvideo%5Bs%5D7446758197571947808!UNREEL.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57085 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7603673902648298773!Semih%20Er.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52212 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40leiiiiighhhh%5Bs%5Dvideo%5Bs%5D7591456120556850453!PSY.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56077 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7492664722173463815!Semih%20Er.mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61608 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40flyonur%5Bs%5Dvideo%5Bs%5D7642413238382284053!%F0%9F%AA%82flyonur%F0%9F%AA%82%20(1).mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52212 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7542937727327538450!Semih%20Er%20(1).mp4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52212 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7542937727327538450!Semih%20Er%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61608 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7542937727327538450!Semih%20Er%20(1).mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:57085 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7542937727327538450!Semih%20Er%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:57085 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7542937727327538450!Semih%20Er%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:56077 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZIDxsyooAF%5Bs%5D!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:62885 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZIDxsyooAF%5Bs%5D!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59386 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40flyonur%5Bs%5Dvideo%5Bs%5D7642413238382284053!%F0%9F%AA%82flyonur%F0%9F%AA%82%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:62885 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZIDxsyooAF%5Bs%5D!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59145 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40flyonur%5Bs%5Dvideo%5Bs%5D7642413238382284053!%F0%9F%AA%82flyonur%F0%9F%AA%82%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:62885 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZIDxsyooAF%5Bs%5D!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50365 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7603673902648298773!Semih%20Er.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:57288 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7603673902648298773!Semih%20Er.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:59145 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7603673902648298773!Semih%20Er.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59145 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7603673902648298773!Semih%20Er.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59145 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7603673902648298773!Semih%20Er.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50859 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59145 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7542937727327538450!Semih%20Er%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59145 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40leiiiiighhhh%5Bs%5Dvideo%5Bs%5D7591456120556850453!PSY.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:54563 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40leiiiiighhhh%5Bs%5Dvideo%5Bs%5D7591456120556850453!PSY.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:54563 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40leiiiiighhhh%5Bs%5Dvideo%5Bs%5D7591456120556850453!PSY.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:63954 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63954 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56612 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7542937727327538450!Semih%20Er%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:63954 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60096 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7603673902648298773!Semih%20Er.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:60096 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40flyonur%5Bs%5Dvideo%5Bs%5D7642413238382284053!%F0%9F%AA%82flyonur%F0%9F%AA%82.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:59849 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40flyonur%5Bs%5Dvideo%5Bs%5D7642413238382284053!%F0%9F%AA%82flyonur%F0%9F%AA%82.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59849 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40flyonur%5Bs%5Dvideo%5Bs%5D7642413238382284053!%F0%9F%AA%82flyonur%F0%9F%AA%82.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:60711 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40mrdenizerdal%5Bs%5Dvideo%5Bs%5D7650576026744917269!%C3%96m%C3%BCr%20Deniz%20Erdal.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:58051 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40mrdenizerdal%5Bs%5Dvideo%5Bs%5D7650576026744917269!%C3%96m%C3%BCr%20Deniz%20Erdal.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58051 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40mrdenizerdal%5Bs%5Dvideo%5Bs%5D7650576026744917269!%C3%96m%C3%BCr%20Deniz%20Erdal.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61432 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DTUpxM5gu9u!beyzanurrduru.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50200 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DTUpxM5gu9u!beyzanurrduru.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50200 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DTUpxM5gu9u!beyzanurrduru.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:56996 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59849 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DCsjsQLAOuiC%5Bs%5D!speedflyingschool.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:64673 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DCsjsQLAOuiC%5Bs%5D!speedflyingschool.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:64673 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DCsjsQLAOuiC%5Bs%5D!speedflyingschool.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:64673 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40hasannkaval%5Bs%5Dvideo%5Bs%5D7522876977271917831!Hasan%20Kaval.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:60424 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40hasannkaval%5Bs%5Dvideo%5Bs%5D7522876977271917831!Hasan%20Kaval.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:60424 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40hasannkaval%5Bs%5Dvideo%5Bs%5D7522876977271917831!Hasan%20Kaval.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:60424 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40xieloskydive%5Bs%5Dvideo%5Bs%5D7611358835332189462!Xielo%20Skydive.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:57044 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40xieloskydive%5Bs%5Dvideo%5Bs%5D7611358835332189462!Xielo%20Skydive.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:57044 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40xieloskydive%5Bs%5Dvideo%5Bs%5D7611358835332189462!Xielo%20Skydive.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:56996 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56996 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56996 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50629 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50629 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60287 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60287 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60287 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63286 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40extremeofficial%5Bs%5Dvideo%5Bs%5D7468724425995652385!UNREEL.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:60287 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55004 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZIDxsyooAF%5Bs%5D!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:60287 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50268 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_CpVKJ5XuBh9%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:52324 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_CpVKJ5XuBh9%20(1).mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:59713 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_CpVKJ5XuBh9%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59713 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_CpVKJ5XuBh9%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59713 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40tekinhalitt%5Bs%5Dvideo%5Bs%5D7355897033946926341!Halit%20Tekin.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:57427 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40tekinhalitt%5Bs%5Dvideo%5Bs%5D7355897033946926341!Halit%20Tekin.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:57462 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40tekinhalitt%5Bs%5Dvideo%5Bs%5D7355897033946926341!Halit%20Tekin.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:57462 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40tekinhalitt%5Bs%5Dvideo%5Bs%5D7355897033946926341!Halit%20Tekin.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:60015 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_CpVKJ5XuBh9%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59452 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_CpVKJ5XuBh9%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59452 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_CpVKJ5XuBh9%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59452 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40theoadb%5Bs%5Dvideo%5Bs%5D7370415263818190112!Th%C3%A9o%20Audebaud.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:57504 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40theoadb%5Bs%5Dvideo%5Bs%5D7370415263818190112!Th%C3%A9o%20Audebaud.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:57504 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40theoadb%5Bs%5Dvideo%5Bs%5D7370415263818190112!Th%C3%A9o%20Audebaud.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:57504 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40theoadb%5Bs%5Dvideo%5Bs%5D7370415263818190112!Th%C3%A9o%20Audebaud.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:57504 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40flyonur%5Bs%5Dvideo%5Bs%5D7642413238382284053!%F0%9F%AA%82flyonur%F0%9F%AA%82.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:49632 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49632 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49632 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53086 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62191 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_C9c07xVNBqV!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61093 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_C9c07xVNBqV!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61093 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_C9c07xVNBqV!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:51744 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53494 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40bestofspeedflying%5Bs%5Dvideo%5Bs%5D7145924619277471019!Speedfly.com.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:56919 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40bestofspeedflying%5Bs%5Dvideo%5Bs%5D7145924619277471019!Speedfly.com.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:56146 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40bestofspeedflying%5Bs%5Dvideo%5Bs%5D7145924619277471019!Speedfly.com.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:56146 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40bestofspeedflying%5Bs%5Dvideo%5Bs%5D7145924619277471019!Speedfly.com.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:51744 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51744 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59057 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59298 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDTGcCULjGYI%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:52615 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDTGcCULjGYI%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:52615 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDTGcCULjGYI%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:49470 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDTGcCULjGYI%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50038 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDTGcCULjGYI%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50038 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDTGcCULjGYI%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59057 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59015 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40leiiiiighhhh%5Bs%5Dvideo%5Bs%5D7591456120556850453!PSY.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:60164 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40leiiiiighhhh%5Bs%5Dvideo%5Bs%5D7591456120556850453!PSY.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:49948 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50429 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40flyonur%5Bs%5Dvideo%5Bs%5D7642413238382284053!%F0%9F%AA%82flyonur%F0%9F%AA%82.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:49948 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55598 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56635 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56635 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56635 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56635 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56043 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56043 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64078 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62988 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62988 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62988 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62557 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62557 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62557 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62557 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59493 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53083 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53083 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53653 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53653 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56963 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40tekinhalitt%5Bs%5Dvideo%5Bs%5D7355897033946926341!Halit%20Tekin.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:56963 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40tekinhalitt%5Bs%5Dvideo%5Bs%5D7355897033946926341!Halit%20Tekin.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:51426 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40hasannkaval%5Bs%5Dvideo%5Bs%5D7495661708111875335!Hasan%20Kaval.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:55815 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40hasannkaval%5Bs%5Dvideo%5Bs%5D7495661708111875335!Hasan%20Kaval.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:55815 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40hasannkaval%5Bs%5Dvideo%5Bs%5D7495661708111875335!Hasan%20Kaval.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:63087 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40hasannkaval%5Bs%5Dvideo%5Bs%5D7522876977271917831!Hasan%20Kaval.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:63087 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40hasannkaval%5Bs%5Dvideo%5Bs%5D7522876977271917831!Hasan%20Kaval.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:53653 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52220 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53679 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53679 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63800 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63800 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54581 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57618 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57618 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61872 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51569 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53136 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53136 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53136 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53136 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53136 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50177 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40espn%5Bs%5Dvideo%5Bs%5D7364550392417504555!ESPN.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:56307 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40espn%5Bs%5Dvideo%5Bs%5D7364550392417504555!ESPN.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:50726 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40espn%5Bs%5Dvideo%5Bs%5D7364550392417504555!ESPN.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50726 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40espn%5Bs%5Dvideo%5Bs%5D7364550392417504555!ESPN.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50726 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40espn%5Bs%5Dvideo%5Bs%5D7364550392417504555!ESPN.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50726 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:58603 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:53136 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49933 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:63928 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:63928 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZhaxmJoi-n%5Bs%5D!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:56237 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:53136 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51149 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51149 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58122 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58122 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54104 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54104 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50095 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50095 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50095 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50095 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60654 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64143 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64143 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64143 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62461 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62461 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62461 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62461 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61972 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61972 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56135 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60200 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64877 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65354 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55173 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55173 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62863 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DTUpxM5gu9u!beyzanurrduru.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:55173 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55173 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61673 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61673 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61673 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61673 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52377 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40espn%5Bs%5Dvideo%5Bs%5D7364550392417504555!ESPN.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61673 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52377 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:57626 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:57626 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59623 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:62249 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:62249 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:61673 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61109 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61109 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61109 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61109 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61109 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61673 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61673 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61673 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61673 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61673 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61109 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61109 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61109 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61109 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61673 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61673 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61673 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61673 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53813 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40espn%5Bs%5Dvideo%5Bs%5D7376771996363050286!ESPN.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61673 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61673 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60320 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60320 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60320 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60320 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64531 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZhaxmJoi-n%5Bs%5D!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:51592 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZhaxmJoi-n%5Bs%5D!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:51592 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZhaxmJoi-n%5Bs%5D!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61808 - "GET /api/health HTTP/1.1" 200 OK
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:49252 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZhaxmJoi-n%5Bs%5D!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:49252 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZhaxmJoi-n%5Bs%5D!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:56363 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZhaxmJoi-n%5Bs%5D!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58491 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54405 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:50375 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50375 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58491 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51800 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51800 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51800 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51800 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53964 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40xieloskydive%5Bs%5Dvideo%5Bs%5D7611358835332189462!Xielo%20Skydive.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:60214 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40xieloskydive%5Bs%5Dvideo%5Bs%5D7611358835332189462!Xielo%20Skydive.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:60214 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40xieloskydive%5Bs%5Dvideo%5Bs%5D7611358835332189462!Xielo%20Skydive.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50444 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DCsjsQLAOuiC%5Bs%5D!speedflyingschool.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50444 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DCsjsQLAOuiC%5Bs%5D!speedflyingschool.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50444 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40tekinhalitt%5Bs%5Dvideo%5Bs%5D7355897033946926341!Halit%20Tekin.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:51800 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51800 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60603 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60603 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60555 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60555 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55639 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55639 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55639 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55020 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55020 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58985 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52501 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52501 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52501 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52434 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55352 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DV2_xYEClgL!burak.pinarr.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:49635 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DV2_xYEClgL!burak.pinarr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:49635 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DV2_xYEClgL!burak.pinarr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59403 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWWggA4jH9H%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:62165 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWWggA4jH9H%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:62165 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWWggA4jH9H%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:55619 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_C4YhO66ixGa%20(1).mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:52475 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_C4YhO66ixGa%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:52475 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_C4YhO66ixGa%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50953 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DTUpxM5gu9u!beyzanurrduru.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:56995 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51723 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51723 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53387 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53387 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53387 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53387 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49553 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49553 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63929 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63104 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63104 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63104 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63104 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63104 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56955 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60019 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40xieloskydive%5Bs%5Dvideo%5Bs%5D7611358835332189462!Xielo%20Skydive.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:57817 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57817 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61996 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DTUpxM5gu9u!beyzanurrduru.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:57817 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57817 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49228 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDTGcCULjGYI%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:55160 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDTGcCULjGYI%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:57817 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50131 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDTGcCULjGYI%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:53877 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDTGcCULjGYI%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:53877 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDTGcCULjGYI%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:55636 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55636 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55636 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55636 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61731 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61731 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:62886 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59017 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZhaxmJoi-n%5Bs%5D!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:60776 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:64575 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:52359 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDWPDIIzjPlb%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59767 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZhaxmJoi-n%5Bs%5D!thezerrr.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:56060 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56060 - "GET /api/scan?folder=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56060 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56060 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57934 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57934 - "POST /api/shutdown HTTP/1.1" 200 OK

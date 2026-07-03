@@ -92,5 +92,52 @@ export const api = {
         });
       }
       return res.json();
+    }),
+
+  uploadCloudinary: (video_path) =>
+    fetch(`${API_URL}/api/settings/upload-cloudinary`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ video_path })
+    }).then(res => {
+      if (!res.ok) {
+        return res.json().then(err => {
+          throw new Error(err.detail || 'Cloudinary yükleme hatası.');
+        });
+      }
+      return res.json();
+    }),
+
+  publishBuffer: (text, video_url, schedule_time) =>
+    fetch(`${API_URL}/api/settings/publish-buffer`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, video_url, schedule_time })
+    }).then(res => {
+      if (!res.ok) {
+        return res.json().then(err => {
+          throw new Error(err.detail || 'Buffer paylaşım hatası.');
+        });
+      }
+      return res.json();
+    }),
+
+  checkSharedToday: () =>
+    fetch(`${API_URL}/api/notes/shared-today`).then(res => {
+      if (!res.ok) {
+        throw new Error('Paylaşım durumu kontrol edilemedi.');
+      }
+      return res.json();
+    }),
+
+  getUsernames: () =>
+    fetch(`${API_URL}/api/usernames`).then(res => res.json()),
+
+  getScheduledVideos: () =>
+    fetch(`${API_URL}/api/scheduled-videos`).then(res => {
+      if (!res.ok) {
+        throw new Error('Yayın takvimi yüklenemedi.');
+      }
+      return res.json();
     })
 };

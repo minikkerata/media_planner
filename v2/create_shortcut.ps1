@@ -10,7 +10,7 @@ $Shortcut = $WshShell.CreateShortcut($ShortcutPath)
 $Shortcut.TargetPath = "wscript.exe"
 $Shortcut.Arguments = "`"$LaunchVbsPath`""
 $Shortcut.WorkingDirectory = $ProjectDir
-$Shortcut.IconLocation = "shell32.dll,116"
+$Shortcut.IconLocation = Join-Path $V2Dir "logo.ico"
 $Shortcut.WindowStyle = 7
 $Shortcut.Save()
 

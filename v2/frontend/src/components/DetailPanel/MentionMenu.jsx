@@ -4,7 +4,7 @@ export default function MentionMenu({ menu, textareaRef, targetType, insertMenti
   if (!menu.visible || menu.target !== targetType) return null;
 
   return (
-    <div className="absolute left-2 bottom-2 bg-surface/95 backdrop-blur border border-muted/20 rounded-ui-lg shadow-2xl p-1 w-64 z-50 flex flex-col gap-0.5 animate-in fade-in slide-in-from-bottom-2 duration-150">
+    <div className="absolute left-2 bottom-2 bg-surface/95 backdrop-blur border border-muted/20 rounded-ui-lg shadow-2xl p-1 w-64 z-50 flex flex-col gap-0.5 max-h-60 overflow-y-auto animate-in fade-in slide-in-from-bottom-2 duration-150">
       {menu.options.map((opt, idx) => (
         <button
           key={opt.token}

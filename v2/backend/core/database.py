@@ -34,13 +34,15 @@ def init_db():
         description TEXT DEFAULT '',
         shared INTEGER DEFAULT 0,
         hidden INTEGER DEFAULT 0,
-        updated_at INTEGER DEFAULT 0
+        updated_at INTEGER DEFAULT 0,
+        fixed_text TEXT DEFAULT '',
+        publish_time TEXT DEFAULT ''
     )
     """)
     conn.commit()
     
     # Safely upgrade existing tables if they lack columns
-    for col, definition in [("path", "TEXT"), ("hidden", "INTEGER DEFAULT 0"), ("updated_at", "INTEGER DEFAULT 0")]:
+    for col, definition in [("path", "TEXT"), ("hidden", "INTEGER DEFAULT 0"), ("updated_at", "INTEGER DEFAULT 0"), ("fixed_text", "TEXT DEFAULT ''"), ("publish_time", "TEXT DEFAULT ''")]:
         try:
             cursor.execute(f"ALTER TABLE notes ADD COLUMN {col} {definition}")
             conn.commit()
@@ -57,7 +59,7 @@ def get_note(key: str) -> dict:
         return None
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT description, shared, hidden, path, updated_at FROM notes WHERE key = ?", (key,))
+    cursor.execute("SELECT description, shared, hidden, path, updated_at, fixed_text, publish_time FROM notes WHERE key = ?", (key,))
     row = cursor.fetchone()
     conn.close()
     if row:
@@ -66,7 +68,9 @@ def get_note(key: str) -> dict:
             "shared": bool(row["shared"]),
             "hidden": bool(row["hidden"]),
             "path": row["path"],
-            "updated_at": row["updated_at"] or 0
+            "updated_at": row["updated_at"] or 0,
+            "fixed_text": row["fixed_text"] or "",
+            "publish_time": row["publish_time"] or ""
         }
     return None
 
@@ -76,7 +80,7 @@ def get_notes_bulk(keys: list[str]) -> dict:
     conn = get_connection()
     cursor = conn.cursor()
     placeholders = ",".join("?" for _ in keys)
-    cursor.execute(f"SELECT key, description, shared, hidden, path, updated_at FROM notes WHERE key IN ({placeholders})", keys)
+    cursor.execute(f"SELECT key, description, shared, hidden, path, updated_at, fixed_text, publish_time FROM notes WHERE key IN ({placeholders})", keys)
     rows = cursor.fetchall()
     conn.close()
     return {
@@ -85,12 +89,14 @@ def get_notes_bulk(keys: list[str]) -> dict:
             "shared": bool(row["shared"]),
             "hidden": bool(row["hidden"]),
             "path": row["path"],
-            "updated_at": row["updated_at"] or 0
+            "updated_at": row["updated_at"] or 0,
+            "fixed_text": row["fixed_text"] or "",
+            "publish_time": row["publish_time"] or ""
         }
         for row in rows
     }
 
-def save_note(key: str, name: str, size: int, ctime: int, description: str, shared: bool, path: str = None, hidden: bool = False, updated_at: int = None):
+def save_note(key: str, name: str, size: int, ctime: int, description: str, shared: bool, path: str = None, hidden: bool = False, updated_at: int = None, fixed_text: str = '', publish_time: str = ''):
     conn = get_connection()
     cursor = conn.cursor()
     
@@ -101,15 +107,17 @@ def save_note(key: str, name: str, size: int, ctime: int, description: str, shar
         updated_at = row["updated_at"] if row else 0
         
     cursor.execute("""
-    INSERT INTO notes (key, name, path, size, ctime, description, shared, hidden, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO notes (key, name, path, size, ctime, description, shared, hidden, updated_at, fixed_text, publish_time)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(key) DO UPDATE SET
         description = excluded.description,
         shared = excluded.shared,
         hidden = excluded.hidden,
         path = COALESCE(excluded.path, notes.path),
-        updated_at = excluded.updated_at
-    """, (key, name, path, size, ctime, description, 1 if shared else 0, 1 if hidden else 0, updated_at))
+        updated_at = excluded.updated_at,
+        fixed_text = excluded.fixed_text,
+        publish_time = excluded.publish_time
+    """, (key, name, path, size, ctime, description, 1 if shared else 0, 1 if hidden else 0, updated_at, fixed_text, publish_time))
     conn.commit()
     conn.close()
 

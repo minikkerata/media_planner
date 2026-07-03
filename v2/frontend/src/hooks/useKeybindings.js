@@ -55,10 +55,12 @@ export function useKeybindings({
   triggerClipboardAction, pasteClipboard, handleUndo, applyBulkNotes, triggerDeleteAction,
   navigateToParent, jumpToNextShared, copyCurrentPaths, copyCurrentNote, handleOpenLink, toggleSidebar,
   showNoteSearch, setShowNoteSearch,
-  toggleDetailPanel,
+  toggleDetailPanel, isDetailCollapsed, setIsDetailCollapsed,
   toggleTemplates, templateMode,
   aiAssistant,
-  selectAll
+  selectAll,
+  showUploadModal,
+  setShowUploadModal
 }) {
   const [keybindings, setKeybindings] = useState(() => {
     const saved = localStorage.getItem('keybindings');
@@ -80,6 +82,16 @@ export function useKeybindings({
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
+        const target = e.target;
+        const isEditingText = target && (target.tagName === 'TEXTAREA' || (target.tagName === 'INPUT' && target.type === 'text'));
+        if (isEditingText) {
+          if (showNoteSearch) {
+            e.preventDefault();
+            setShowNoteSearch(false);
+          }
+          return;
+        }
+
         e.preventDefault();
         preventAutoFocusRef.current = true;
         if (templateMode) { toggleTemplates(); return; }
@@ -90,8 +102,15 @@ export function useKeybindings({
         else if (showDeleteModal) setShowDeleteModal(false);
         else if (showSettingsModal) setShowSettingsModal(false);
         else if (showSearchModal) setShowSearchModal(false);
+        else if (showUploadModal) setShowUploadModal(false);
         else if (selectionMode) exitSelectionMode();
         else if (clipboardState.operation) cancelClipboard();
+        else if (!isDetailCollapsed) setIsDetailCollapsed(true);
+        return;
+      }
+
+      // If UploadModal is open, block all other hotkeys
+      if (showUploadModal) {
         return;
       }
 
@@ -183,6 +202,14 @@ export function useKeybindings({
 
       if (isInputFocused) return;
 
+      if (e.key === 'Enter') {
+        if (isDetailCollapsed && activePath) {
+          e.preventDefault();
+          setIsDetailCollapsed(false);
+          return;
+        }
+      }
+
       if (e.ctrlKey) {
         const key = e.key.toLowerCase();
         if (key === 'c') { e.preventDefault(); triggerClipboardAction('copy'); }
@@ -218,7 +245,7 @@ export function useKeybindings({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectionMode, videos, activePath, selectedPaths, clipboardState, showAIModal, showDeleteModal, showSettingsModal, settingsActiveTab, setSettingsActiveTab, showSearchModal, setShowSearchModal, contextMenu, keybindings, navigateVideo, exitSelectionMode, enterSelectionMode, cancelClipboard, handleShutdown, toggleMute, toggleSharedState, openInExplorer, triggerClipboardAction, pasteClipboard, handleUndo, applyBulkNotes, triggerDeleteAction, navigateToParent, jumpToNextShared, copyCurrentPaths, copyCurrentNote, handleOpenLink, toggleSidebar, toggleDetailPanel, showNoteSearch, setShowNoteSearch, aiAssistant, selectAll, toggleTemplates, templateMode]);
+  }, [selectionMode, videos, activePath, selectedPaths, clipboardState, showAIModal, showDeleteModal, showSettingsModal, settingsActiveTab, setSettingsActiveTab, showSearchModal, setShowSearchModal, contextMenu, keybindings, navigateVideo, exitSelectionMode, enterSelectionMode, cancelClipboard, handleShutdown, toggleMute, toggleSharedState, openInExplorer, triggerClipboardAction, pasteClipboard, handleUndo, applyBulkNotes, triggerDeleteAction, navigateToParent, jumpToNextShared, copyCurrentPaths, copyCurrentNote, handleOpenLink, toggleSidebar, toggleDetailPanel, isDetailCollapsed, setIsDetailCollapsed, showNoteSearch, setShowNoteSearch, aiAssistant, selectAll, toggleTemplates, templateMode, showUploadModal, setShowUploadModal]);
 
   return { keybindings, saveKeybindings, resetKeybindings, preventAutoFocusRef };
 }

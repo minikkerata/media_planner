@@ -26,8 +26,8 @@ export default function VideoListCard({
     listBorderClass = 'border-success/35';
   }
   if (selectionMode && isSelected) {
-    listBgClass = 'bg-blue-600/10 hover:bg-blue-600/15 text-foreground/80 hover:text-foreground';
-    listBorderClass = 'border-blue-500/30';
+    listBgClass = 'bg-active hover:bg-hover text-foreground/80 hover:text-foreground';
+    listBorderClass = 'border-transparent';
   } else if (isActive) {
     listBgClass = 'bg-active text-accent font-semibold';
     listBorderClass = 'border-transparent';
@@ -126,7 +126,7 @@ export default function VideoListCard({
           onClick={(e) => toggleSharedState(video, e)}
           tabIndex={-1}
           className={`p-1.5 rounded-full transition-all cursor-pointer ${
-            (selectionMode ? isSelected : video.shared)
+            (selectionMode && isSelected)
               ? 'bg-black/60 opacity-100 hover:bg-white/10'
               : 'bg-black/40 opacity-0 group-hover:opacity-100 hover:bg-white/10'
           }`}

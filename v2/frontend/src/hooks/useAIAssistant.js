@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react';
 import { api } from '../services/api';
 
+const API_URL = 'http://127.0.0.1:' + (import.meta.env.VITE_BACKEND_PORT || '8085');
+
 export function useAIAssistant() {
   const [selectedText, setSelectedText] = useState('');
   const [selectionRange, setSelectionRange] = useState({ start: 0, end: 0, target: null });
@@ -13,6 +15,11 @@ export function useAIAssistant() {
     // Array of { type: 'unchanged' | 'removed' | 'added', text: string }
     diffData: []
   });
+
+  // Streaming status states
+  const [aiStatus, setAiStatus] = useState('');
+  const [aiStatusLog, setAiStatusLog] = useState([]);
+  const [streamingText, setStreamingText] = useState('');
 
   const handleSelection = useCallback((e, target) => {
     const textarea = e.target;
@@ -41,6 +48,9 @@ export function useAIAssistant() {
   const openAIPrompt = useCallback(() => {
     if (selectedText.trim()) {
       setIsPromptOpen(true);
+      setAiStatus('');
+      setAiStatusLog([]);
+      setStreamingText('');
     }
   }, [selectedText]);
 
@@ -48,37 +58,80 @@ export function useAIAssistant() {
     setIsPromptOpen(false);
     setSelectedText('');
     setSelectionRange({ start: 0, end: 0, target: null });
+    setAiStatus('');
+    setAiStatusLog([]);
+    setStreamingText('');
   }, []);
 
   const submitAIPrompt = useCallback(async (customPrompt, defaultPrompt, currentFullText) => {
     if (!selectedText) return;
 
+    setAiStatus('Bağlantı kuruluyor...');
+    setAiStatusLog(['🔄 AI Asistanı başlatılıyor...']);
+    setStreamingText('');
+
     let replacement = '';
     let isSuccessful = false;
 
     try {
-      // Call local Llama model via our API
-      const result = await api.rewriteText(selectedText, defaultPrompt, customPrompt);
-      if (result && result.success) {
-        replacement = result.rewritten_text;
-        isSuccessful = true;
-      } else {
-        // Fallback or error returned from API
-        if (result && result.error) {
-          window.dispatchEvent(new CustomEvent('show-toast', { 
-            detail: { message: result.error + " (Demo moduna geçildi)", type: 'error' } 
-          }));
+      // Call streaming Llama model via our API
+      const response = await fetch(`${API_URL}/api/ai/rewrite`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: selectedText, default_prompt: defaultPrompt, custom_prompt: customPrompt })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP hatası! Durum: ${response.status}`);
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let done = false;
+      let buffer = '';
+      let accumulatedText = '';
+
+      while (!done) {
+        const { value, done: readerDone } = await reader.read();
+        done = readerDone;
+        if (value) {
+          buffer += decoder.decode(value, { stream: !done });
+          const lines = buffer.split('\n');
+          // Keep the last partial line in the buffer
+          buffer = lines.pop();
+
+          for (const line of lines) {
+            if (line.trim()) {
+              try {
+                const data = JSON.parse(line);
+                if (data.type === 'status') {
+                  setAiStatus(data.message);
+                  setAiStatusLog(prev => [...prev, data.message]);
+                } else if (data.type === 'token') {
+                  accumulatedText += data.text;
+                  setStreamingText(accumulatedText);
+                } else if (data.type === 'error') {
+                  setAiStatus(`Hata: ${data.message}`);
+                  setAiStatusLog(prev => [...prev, `❌ Hata: ${data.message}`]);
+                  throw new Error(data.message);
+                } else if (data.type === 'done') {
+                  isSuccessful = true;
+                }
+              } catch (parseErr) {
+                // Ignore parsing errors for partial JSON lines
+              }
+            }
+          }
         }
       }
-    } catch (err) {
-      console.error("AI rewrite API error, falling back to mock:", err);
-      window.dispatchEvent(new CustomEvent('show-toast', { 
-        detail: { message: "AI sunucusuna bağlanırken hata oluştu. Demo moduna geçildi.", type: 'error' } 
-      }));
-    }
 
-    // Fallback Mock Logic if API failed
-    if (!isSuccessful) {
+      replacement = accumulatedText;
+    } catch (err) {
+      console.error("AI rewrite API error, falling back to local mock:", err);
+      setAiStatusLog(prev => [...prev, `❌ AI sunucusu bağlantı hatası. Demo moduna geçiliyor...`]);
+      setAiStatus('Bağlantı hatası, demo modunda çalışılıyor...');
+      
+      // Fallback Mock Logic if API failed
       replacement = selectedText;
       if (customPrompt.toLowerCase().includes('büyük') || customPrompt.toLowerCase().includes('upper')) {
         replacement = selectedText.toUpperCase();
@@ -95,29 +148,48 @@ export function useAIAssistant() {
           replacement = replacement + " ✓";
         }
       }
+
+      // Simulate local streaming for fallback preview
+      let currentMockedText = '';
+      const words = replacement.split(' ');
+      for (let i = 0; i < words.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, 80));
+        currentMockedText += words[i] + (i < words.length - 1 ? ' ' : '');
+        setStreamingText(currentMockedText);
+      }
+      isSuccessful = true;
     }
 
-    // Build the new full text
-    const beforeText = currentFullText.substring(0, selectionRange.start);
-    const afterText = currentFullText.substring(selectionRange.end);
-    const newFullText = beforeText + replacement + afterText;
+    if (isSuccessful && replacement) {
+      let cleanText = replacement.trim();
+      if (cleanText.startsWith('"') && cleanText.endsWith('"')) {
+        cleanText = cleanText.substring(1, cleanText.length - 1).strip?.() || cleanText.substring(1, cleanText.length - 1).trim();
+      } else if (cleanText.startsWith("'''") && cleanText.endsWith("'''")) {
+        cleanText = cleanText.substring(3, cleanText.length - 3).strip?.() || cleanText.substring(3, cleanText.length - 3).trim();
+      }
 
-    // Generate diff segments
-    const diffData = [
-      { type: 'unchanged', text: beforeText },
-      { type: 'removed', text: selectedText },
-      { type: 'added', text: replacement },
-      { type: 'unchanged', text: afterText }
-    ];
+      // Build the new full text
+      const beforeText = currentFullText.substring(0, selectionRange.start);
+      const afterText = currentFullText.substring(selectionRange.end);
+      const newFullText = beforeText + cleanText + afterText;
 
-    setDiffResult({
-      originalText: currentFullText,
-      modifiedText: newFullText,
-      diffData: diffData
-    });
+      // Generate diff segments
+      const diffData = [
+        { type: 'unchanged', text: beforeText },
+        { type: 'removed', text: selectedText },
+        { type: 'added', text: cleanText },
+        { type: 'unchanged', text: afterText }
+      ];
 
-    setIsPromptOpen(false);
-    setIsDiffMode(true);
+      setDiffResult({
+        originalText: currentFullText,
+        modifiedText: newFullText,
+        diffData: diffData
+      });
+
+      setIsPromptOpen(false);
+      setIsDiffMode(true);
+    }
   }, [selectedText, selectionRange]);
 
   const applyAIChanges = useCallback((onApply) => {
@@ -128,12 +200,18 @@ export function useAIAssistant() {
     setIsDiffMode(false);
     setSelectedText('');
     setSelectionRange({ start: 0, end: 0, target: null });
+    setAiStatus('');
+    setAiStatusLog([]);
+    setStreamingText('');
   }, [diffResult]);
 
   const discardAIChanges = useCallback(() => {
     setIsDiffMode(false);
     setSelectedText('');
     setSelectionRange({ start: 0, end: 0, target: null });
+    setAiStatus('');
+    setAiStatusLog([]);
+    setStreamingText('');
   }, []);
 
   // Inject an external diff (e.g. duplicate detection) without going through the AI prompt flow
@@ -159,6 +237,9 @@ export function useAIAssistant() {
     applyAIChanges,
     discardAIChanges,
     injectDiff,
-    setIsPromptOpen
+    setIsPromptOpen,
+    aiStatus,
+    aiStatusLog,
+    streamingText
   };
 }

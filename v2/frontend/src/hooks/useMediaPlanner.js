@@ -7,17 +7,45 @@ import { useKeybindings } from './useKeybindings';
 import { useNavigation } from './useNavigation';
 import { useAIAssistant } from './useAIAssistant';
 import { useTemplates } from './useTemplates';
+import { useFolderScanner } from './useFolderScanner';
+import { useUploadQueue } from './useUploadQueue';
 import { t } from '../utils/translations';
 
 export function useMediaPlanner() {
-  const [currentFolder, setCurrentFolder] = useState(null);
-  const [parentFolder, setParentFolder] = useState(null);
-  const [subfolders, setSubfolders] = useState([]);
-  const [videos, setVideos] = useState([]);
-  const [forwardStack, setForwardStack] = useState([]);
-  const [selectedPaths, setSelectedPaths] = useState(new Set());
   const [activePath, setActivePath] = useState(null);
   const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedPaths, setSelectedPaths] = useState(new Set());
+  const [toast, setToast] = useState({ message: '', type: 'success', visible: false });
+  const [language, setLanguage] = useState(() => localStorage.getItem('app_language') || 'tr');
+  const [completedFeedback, setCompletedFeedback] = useState(false);
+  const [processToast, setProcessToast] = useState(null);
+
+  const showToast = (message, type = 'success') => { setToast({ message, type, visible: true }); };
+
+  const triggerCompletedFeedback = () => {
+    setCompletedFeedback(true);
+    setTimeout(() => setCompletedFeedback(false), 500);
+  };
+
+  // Ref to resolve circular dependency between clipboard and scanner
+  const clipboardOpsRef = useRef(null);
+
+  // Folder scanning sub-hook
+  const {
+    currentFolder, setCurrentFolder, parentFolder, setParentFolder,
+    subfolders, setSubfolders, videos, setVideos, forwardStack, setForwardStack,
+    scanFolder, goBack, goForward, canGoBack, canGoForward
+  } = useFolderScanner(language, showToast, selectionMode, activePath, setActivePath, clipboardOpsRef);
+
+  // Upload/Queue management sub-hook
+  const {
+    uploadQueue, setUploadQueue, uploadCurrentIndex, setUploadCurrentIndex,
+    uploadStatus, setUploadStatus, uploadErrorMsg, uploadCompletedPaths,
+    uploadFailedPaths, uploadCurrentStep, showBulkUploadModal, setShowBulkUploadModal,
+    uploadingPath, setUploadingPath, startPublishQueue, cancelPublishQueue,
+    resumePublishQueue, skipAndResumePublishQueue
+  } = useUploadQueue(videos, setVideos, showToast, triggerCompletedFeedback, setProcessToast);
+
   const [volume, setVolume] = useState(() => {
     const saved = localStorage.getItem('volume');
     return saved !== null ? parseFloat(saved) : 1.0;
@@ -49,11 +77,234 @@ export function useMediaPlanner() {
   const [isClosed, setIsClosed] = useState(false);
   const [videoTime, setVideoTime] = useState(0);
   const [videoDuration, setVideoDuration] = useState(0);
-  const [completedFeedback, setCompletedFeedback] = useState(false);
   const [folderInput, setFolderInput] = useState('');
   const [noteText, setNoteText] = useState('');
-  const [toast, setToast] = useState({ message: '', type: 'success', visible: false });
+  const [activeViewTab, setActiveViewTab] = useState('library');
+  const [customScheduleTime, setCustomScheduleTime] = useState(null);
+  const [activeUploads, setActiveUploads] = useState({});
+
+  const [isDetailView, setIsDetailView] = useState(false);
+
+  const openPublishModalWithTime = (path, timeStr) => {
+    setIsDetailView(false);
+    setCustomScheduleTime(timeStr);
+    setActivePath(path);
+    // Explicitly compute and set fixedText so UploadModal always gets the right value
+    // regardless of tab/render order (avoids race with the reactive fixedText useEffect)
+    const targetVideo = videos.find(v => v.path === path);
+    const globalDefault = localStorage.getItem('fixed_text') || '';
+    setFixedText(targetVideo?.fixed_text || globalDefault);
+    setShowUploadModal(true);
+  };
+
+  const openVideoDetailModal = (videoPath) => {
+    setIsDetailView(true);
+    setActivePath(videoPath);
+    setShowUploadModal(true);
+  };
+
+  const openPublishModal = () => {
+    setIsDetailView(false);
+    setShowUploadModal(true);
+  };
+
+  const startPublishTask = (video, caption, formattedScheduleTime, isScheduled) => {
+    const videoPath = video.path;
+    
+    // Close the upload modal immediately
+    setShowUploadModal(false);
+    
+    // Initialize task state
+    setActiveUploads(prev => ({
+      ...prev,
+      [videoPath]: {
+        video,
+        caption,
+        publish_time: formattedScheduleTime || new Date().toISOString(),
+        isScheduled,
+        status: 'running',
+        progress: 5,
+        steps: [
+          { id: 'file', label: language === 'tr' ? 'Dosya doğrulama' : 'File verification', status: 'running' },
+          { id: 'cloudinary', label: language === 'tr' ? 'Cloudinary bulut sunucusuna yükleme' : 'Uploading to Cloudinary', status: 'idle' },
+          { id: 'buffer', label: language === 'tr' ? 'Buffer sosyal medya entegrasyonu' : 'Buffer publishing', status: 'idle' },
+          { id: 'db', label: language === 'tr' ? 'Yerel veritabanı (SQLite) güncellemesi' : 'Local database (SQLite) update', status: 'idle' }
+        ],
+        error: null
+      }
+    }));
+
+    if (setProcessToast) {
+      setProcessToast({
+        type: 'publish',
+        name: video.name,
+        image: video.path,
+        status: 'running',
+        progress: 5,
+        error: null
+      });
+    }
+
+    const runTask = async () => {
+      const updateTaskStep = (stepId, stepStatus) => {
+        setActiveUploads(prev => {
+          const task = prev[videoPath];
+          if (!task) return prev;
+          return {
+            ...prev,
+            [videoPath]: {
+              ...task,
+              steps: task.steps.map(s => s.id === stepId ? { ...s, status: stepStatus } : s)
+            }
+          };
+        });
+      };
+      
+      const updateTaskProgress = (progress) => {
+        setActiveUploads(prev => {
+          const task = prev[videoPath];
+          if (!task) return prev;
+          return {
+            ...prev,
+            [videoPath]: { ...task, progress }
+          };
+        });
+      };
+
+      try {
+        // Step 1: File Verification
+        await new Promise(resolve => setTimeout(resolve, 600));
+        updateTaskStep('file', 'success');
+        updateTaskStep('cloudinary', 'running');
+        updateTaskProgress(25);
+        if (setProcessToast) {
+          setProcessToast(prev => prev ? { ...prev, progress: 25 } : null);
+        }
+
+        // Step 2: Upload to Cloudinary
+        const uploadRes = await api.uploadCloudinary(videoPath);
+        if (!uploadRes.success || !uploadRes.video_url) {
+          updateTaskStep('cloudinary', 'error');
+          throw new Error(language === 'tr' ? 'Cloudinary yüklemesi başarısız oldu.' : 'Cloudinary upload failed.');
+        }
+        const videoUrl = uploadRes.video_url;
+        updateTaskStep('cloudinary', 'success');
+        updateTaskStep('buffer', 'running');
+        updateTaskProgress(60);
+        if (setProcessToast) {
+          setProcessToast(prev => prev ? { ...prev, progress: 60 } : null);
+        }
+
+        // Step 3: Publish to Buffer
+        const bufferRes = await api.publishBuffer(caption, videoUrl, formattedScheduleTime);
+        if (!bufferRes.success) {
+          updateTaskStep('buffer', 'error');
+          throw new Error(bufferRes.message || (language === 'tr' ? 'Buffer paylaşımı başarısız oldu.' : 'Buffer publishing failed.'));
+        }
+        updateTaskStep('buffer', 'success');
+        updateTaskStep('db', 'running');
+        updateTaskProgress(85);
+        if (setProcessToast) {
+          setProcessToast(prev => prev ? { ...prev, progress: 85 } : null);
+        }
+
+        // Step 4: Update SQLite Database
+        let videoFolder = '';
+        const lastSlash = Math.max(videoPath.lastIndexOf('\\'), videoPath.lastIndexOf('/'));
+        if (lastSlash !== -1) {
+          videoFolder = videoPath.substring(0, lastSlash);
+        }
+        const finalPublishTime = formattedScheduleTime || new Date().toISOString();
+        await api.updateMetadata(videoFolder, [{ 
+          name: video.name, 
+          shared: true, 
+          description: caption,
+          publish_time: finalPublishTime
+        }]);
+
+        // Update local videos array
+        setVideos(p => p.map(v => v.path === videoPath ? { 
+          ...v, 
+          shared: true, 
+          description: caption, 
+          publish_time: finalPublishTime,
+          updated_at: Date.now() 
+        } : v));
+        
+        updateTaskStep('db', 'success');
+        updateTaskProgress(100);
+
+        setActiveUploads(prev => {
+          const task = prev[videoPath];
+          if (!task) return prev;
+          return {
+            ...prev,
+            [videoPath]: { ...task, status: 'success' }
+          };
+        });
+
+        if (showToast) showToast(t('publish_success_msg', language), 'success');
+        if (setProcessToast) {
+          setProcessToast({
+            type: 'publish',
+            name: video.name,
+            image: video.path,
+            status: 'completed',
+            progress: 100,
+            error: null
+          });
+        }
+
+        triggerCompletedFeedback();
+
+        // Clear override schedule time
+        setCustomScheduleTime(null);
+
+        // Keep it in activeUploads for a few seconds to let them see success
+        setTimeout(() => {
+          setActiveUploads(prev => {
+            const copy = { ...prev };
+            delete copy[videoPath];
+            return copy;
+          });
+        }, 5000);
+
+      } catch (err) {
+        console.error(err);
+        setActiveUploads(prev => {
+          const task = prev[videoPath];
+          if (!task) return prev;
+          return {
+            ...prev,
+            [videoPath]: { 
+              ...task, 
+              status: 'error', 
+              error: err.message || 'Paylaşım başarısız.',
+              steps: task.steps.map(s => s.status === 'running' ? { ...s, status: 'error' } : s)
+            }
+          };
+        });
+        if (showToast) showToast(err.message || 'Paylaşım başarısız.', 'error');
+        if (setProcessToast) {
+          setProcessToast({
+            type: 'publish',
+            name: video.name,
+            image: video.path,
+            status: 'failed',
+            progress: 100,
+            error: err.message || 'Paylaşım başarısız.'
+          });
+        }
+      }
+    };
+
+    runTask();
+  };
+
   const [fixedText, setFixedText] = useState(() => {
+    return localStorage.getItem('fixed_text') || 'Daha fazla yamaç paraşütü videosu görmek için takip etmeyi unutmayın';
+  });
+  const [globalFixedText, setGlobalFixedText] = useState(() => {
     return localStorage.getItem('fixed_text') || 'Daha fazla yamaç paraşütü videosu görmek için takip etmeyi unutmayın';
   });
   const [defaultPrompt, setDefaultPrompt] = useState(() => {
@@ -64,6 +315,7 @@ export function useMediaPlanner() {
   const templateOps = useTemplates();
   const [templateMode, setTemplateMode] = useState(false);
   const [duplicateSuggestion, setDuplicateSuggestion] = useState(null); // { description, sourceFileName }
+  const fixedTextDebounceRef = useRef(null);
 
   useEffect(() => {
     const handleAISettingsChanged = () => {
@@ -74,11 +326,25 @@ export function useMediaPlanner() {
         showToast(e.detail.message, e.detail.type || 'success');
       }
     };
+    const loadGlobalSettings = () => {
+      api.getSettings()
+        .then(data => {
+          if (data && data.fixed_text !== undefined) {
+            setGlobalFixedText(data.fixed_text);
+            localStorage.setItem('fixed_text', data.fixed_text);
+          }
+        })
+        .catch(err => console.error("Failed to load settings:", err));
+    };
+
+    loadGlobalSettings();
     window.addEventListener('ai-settings-changed', handleAISettingsChanged);
     window.addEventListener('show-toast', handleShowToast);
+    window.addEventListener('settings-changed', loadGlobalSettings);
     return () => {
       window.removeEventListener('ai-settings-changed', handleAISettingsChanged);
       window.removeEventListener('show-toast', handleShowToast);
+      window.removeEventListener('settings-changed', loadGlobalSettings);
     };
   }, []);
 
@@ -115,7 +381,7 @@ export function useMediaPlanner() {
   const [settingsActiveTab, setSettingsActiveTab] = useState('folder');
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
-  const [language, setLanguage] = useState(() => localStorage.getItem('app_language') || 'tr');
+
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
     const saved = localStorage.getItem('sidebar_panel_collapsed');
     return saved === 'true';
@@ -130,61 +396,7 @@ export function useMediaPlanner() {
   const isInputFocusedRef = useRef(false);
   const videoRef = useRef(null);
 
-  const showToast = (message, type = 'success') => { setToast({ message, type, visible: true }); };
-
   const getSortedSelectedVideos = () => videos.filter(v => selectedPaths.has(v.path));
-  
-  const scanFolder = async (path, actionType = 'manual') => {
-    if (!path || typeof path !== 'string' || path.trim() === '') {
-      showToast(t('empty_folder_path', language).replace('{val}', JSON.stringify(path)), 'error');
-      return;
-    }
-    const oldFolder = currentFolder;
-    try {
-      const data = await api.scan(path);
-      if (data.success) {
-        setCurrentFolder(data.current_folder); setParentFolder(data.parent_folder);
-        setSubfolders(data.subfolders); setVideos(data.videos); 
-        clipboardOps.setClipboardState(data.clipboard);
-        setFolderInput(data.current_folder); localStorage.setItem('last_folder', data.current_folder);
-        if (!selectionMode && data.videos.length > 0) {
-          const activeExist = data.videos.find(v => v.path === activePath);
-          if (!activeExist) { const unshared = data.videos.find(v => !v.shared); setActivePath(unshared ? unshared.path : data.videos[0].path); }
-        }
-        
-        if (actionType === 'back') {
-          if (oldFolder) {
-            setForwardStack(prev => {
-              if (prev[prev.length - 1] === oldFolder) return prev;
-              return [...prev, oldFolder];
-            });
-          }
-        } else if (actionType === 'forward') {
-          setForwardStack(prev => prev.slice(0, -1));
-        } else {
-          setForwardStack([]);
-        }
-      } else {
-        showToast(data.detail || data.message || t('scan_failed', language), 'error');
-      }
-    } catch (err) {
-      console.error(err);
-      showToast(t('cannot_connect_backend', language), 'error');
-    }
-  };
-
-  const goBack = () => {
-    if (parentFolder) {
-      scanFolder(parentFolder, 'back');
-    }
-  };
-
-  const goForward = () => {
-    if (forwardStack.length > 0) {
-      const nextFolder = forwardStack[forwardStack.length - 1];
-      scanFolder(nextFolder, 'forward');
-    }
-  };
 
   const getVisibleVideos = () => {
     let visible = showUnsharedOnly === 'unshared' 
@@ -241,8 +453,6 @@ export function useMediaPlanner() {
     if (selectionMode) { toggleSelection(video.path); return; }
     const nextState = !video.shared;
     
-    // Durumu değişen video şu an aktif videoyken,
-    // state değişmeden hemen önce kendi havuzundaki (paylaşılanlar veya paylaşılmayanlar) bir sonraki videoyu bulup ona atlamalıyız.
     let nextVideoPathToJump = null;
     if (activePath === video.path) {
       const currentPool = getVisibleVideos().filter(v => v.shared === video.shared);
@@ -260,15 +470,24 @@ export function useMediaPlanner() {
       }
     }
 
-    const data = await api.updateMetadata(videoFolder, [{ name: video.name, shared: nextState }]);
+    const finalPublishTime = nextState ? new Date().toISOString() : '';
+    const data = await api.updateMetadata(videoFolder, [{ 
+      name: video.name, 
+      shared: nextState, 
+      publish_time: finalPublishTime 
+    }]);
     if (data.success) {
-      setVideos(p => p.map(v => v.path === video.path ? { ...v, shared: nextState } : v));
+      setVideos(p => p.map(v => v.path === video.path ? { 
+        ...v, 
+        shared: nextState, 
+        publish_time: finalPublishTime,
+        updated_at: Date.now() 
+      } : v));
       
       const performJump = () => {
         if (nextVideoPathToJump) {
           setActivePath(nextVideoPathToJump);
         } else if (activePath === video.path) {
-          // Kendi havuzunda başka video kalmadıysa diğer havuza (zıt duruma) geçmeyi dene
           const oppositePool = getVisibleVideos().filter(v => v.shared !== video.shared);
           if (oppositePool.length > 0) {
             setActivePath(oppositePool[0].path);
@@ -279,10 +498,9 @@ export function useMediaPlanner() {
       };
 
       if (nextState) {
-        setCompletedFeedback(true);
-        setTimeout(() => setCompletedFeedback(false), 500);
+        triggerCompletedFeedback();
         showToast(t('shared_msg', language));
-        setTimeout(performJump, 500); // 500ms delay to let checkmark animation play
+        setTimeout(performJump, 500);
       } else {
         showToast(t('unshared_msg', language));
         performJump();
@@ -303,7 +521,6 @@ export function useMediaPlanner() {
     const data = await api.updateMetadata(videoFolder, [{ name: video.name, hidden: nextHidden }]);
     if (data.success) {
       setVideos(p => p.map(v => v.path === video.path ? { ...v, hidden: nextHidden } : v));
-      // Eğer gizlenen video aktifse, bir sonrakine geç
       if (activePath === video.path && nextHidden) {
         const visible = getVisibleVideos().filter(v => v.path !== video.path);
         setActivePath(visible.length > 0 ? visible[0].path : null);
@@ -312,8 +529,9 @@ export function useMediaPlanner() {
     }
   };
 
-
   const clipboardOps = useClipboard({ language, contextMenu, selectionMode, selectedPaths, activePath, hoveredFolder, currentFolder, api, showToast, scanFolder });
+  clipboardOpsRef.current = clipboardOps;
+
   const fileOps = useFileOperations({ language, contextMenu, selectionMode, selectedPaths, activePath, currentFolder, api, showToast, scanFolder, setSelectedPaths, setActivePath, videos, setVideos, getSortedSelectedVideos, exitSelectionMode });
   const keybindingOps = useKeybindings({
     selectionMode, videos, activePath, selectedPaths, clipboardState: clipboardOps.clipboardState,
@@ -335,11 +553,14 @@ export function useMediaPlanner() {
     handleOpenLink: () => handleOpenLink(),
     toggleSidebar: () => setIsSidebarCollapsed(p => !p),
     toggleDetailPanel: () => setIsDetailCollapsed(p => !p),
+    isDetailCollapsed,
+    setIsDetailCollapsed,
     toggleTemplates: () => setTemplateMode(p => !p),
     templateMode,
     showNoteSearch, setShowNoteSearch,
     aiAssistant,
-    selectAll: () => selectAll()
+    selectAll: () => selectAll(),
+    showUploadModal, setShowUploadModal
   });
 
   const copyCurrentPaths = () => {
@@ -354,6 +575,7 @@ export function useMediaPlanner() {
       showToast(paths.length > 1 ? `${paths.length} ${t('paths_copied', language)}` : `${paths[0]} ${t('copied_msg', language)}`, "success");
     }
   };
+
   const handleOpenLink = (e) => {
     if (e) e.stopPropagation();
     if (!activePath) return;
@@ -366,11 +588,25 @@ export function useMediaPlanner() {
     if (baseName.includes('!')) {
       baseName = baseName.split('!')[0];
     }
-    if (/^https?_/i.test(baseName)) {
-      baseName = baseName.replace(/^https?_/i, '');
+    let transformed = baseName;
+    if (/\[[sqeacb]\]/.test(transformed)) {
+      transformed = transformed
+        .replace(/\[s\]/g, '/')
+        .replace(/\[q\]/g, '?')
+        .replace(/\[e\]/g, '=')
+        .replace(/\[a\]/g, '&')
+        .replace(/\[c\]/g, ':')
+        .replace(/\[b\]/g, '\\');
+    } else {
+      if (/^https?_/i.test(transformed)) {
+        transformed = transformed.replace(/^https?_/i, '');
+      }
+      transformed = transformed.replace(/_/g, '/');
     }
-    const transformed = baseName.replace(/_/g, '/');
-    const url = `https://${transformed}`;
+    let url = transformed;
+    if (!/^https?:\/\//i.test(url)) {
+      url = 'https://' + url;
+    }
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
@@ -409,9 +645,8 @@ export function useMediaPlanner() {
 
   useEffect(() => { setVideoTime(0); setVideoDuration(0); }, [activePath]);
 
-  // Duplicate detection: only when template mode opens
   useEffect(() => {
-    if (!templateMode) return; // only run when opening template mode
+    if (!templateMode) return;
     if (!activePath || !videos || videos.length === 0) { setDuplicateSuggestion(null); return; }
     const activeVideo = videos.find(v => v.path === activePath);
     if (!activeVideo) { setDuplicateSuggestion(null); return; }
@@ -457,6 +692,24 @@ export function useMediaPlanner() {
   }, [activePath, selectedPaths, selectionMode, videos]);
 
   useEffect(() => {
+    if (activeViewTab === 'calendar') {
+      setActivePath(null);
+    }
+  }, [activeViewTab]);
+
+  useEffect(() => {
+    if (selectionMode) {
+      setFixedText('');
+    } else if (activePath) {
+      const activeVideo = videos.find(v => v.path === activePath);
+      const globalDefault = localStorage.getItem('fixed_text') || 'Daha fazla yamaç paraşütü videosu görmek için takip etmeyi unutmayın';
+      setFixedText(activeVideo && activeVideo.fixed_text ? activeVideo.fixed_text : globalDefault);
+    } else {
+      setFixedText('');
+    }
+  }, [activePath, selectionMode, videos]);
+
+  useEffect(() => {
     if (toast.visible) { const timer = setTimeout(() => setToast(p => ({ ...p, visible: false })), 2500); return () => clearTimeout(timer); }
   }, [toast.visible]);
 
@@ -482,7 +735,16 @@ export function useMediaPlanner() {
   const handleShutdown = async () => { setIsClosed(true); try { await api.shutdown(); } catch { } window.close(); };
   const selectAll = () => setSelectedPaths(new Set(getVisibleVideos().map(v => v.path)));
   const clearSelection = () => setSelectedPaths(new Set());
-  const handleItemClick = (p) => selectionMode ? toggleSelection(p) : setActivePath(p);
+  const handleItemClick = (p) => {
+    if (selectionMode) {
+      toggleSelection(p);
+    } else {
+      setActivePath(p);
+      if (activePath === p && isDetailCollapsed) {
+        setIsDetailCollapsed(false);
+      }
+    }
+  };
 
   const handleCardMouseDown = (p, e) => {
     if (e.button !== 0) return; e.preventDefault(); setIsMouseDown(true); setPendingDragPath(p);
@@ -501,7 +763,30 @@ export function useMediaPlanner() {
 
   const handleFixedTextChange = (val) => {
     setFixedText(val);
-    localStorage.setItem('fixed_text', val);
+    if (selectionMode) return;
+    if (!activePath) {
+      localStorage.setItem('fixed_text', val);
+      return;
+    }
+    const activeVideo = videos.find(v => v.path === activePath);
+    if (!activeVideo) return;
+
+    setVideos(prev => prev.map(v => v.path === activePath ? { ...v, fixed_text: val } : v));
+
+    if (fixedTextDebounceRef.current) {
+      clearTimeout(fixedTextDebounceRef.current);
+    }
+    fixedTextDebounceRef.current = setTimeout(async () => {
+      try {
+        const data = await api.updateMetadata(currentFolder, [{ name: activeVideo.name, fixed_text: val }]);
+        if (data.success && data.updated_notes && data.updated_notes[activeVideo.name]) {
+          const newTime = data.updated_notes[activeVideo.name];
+          setVideos(prev => prev.map(v => v.path === activePath ? { ...v, updated_at: newTime } : v));
+        }
+      } catch (err) {
+        console.error('Failed to update fixed suffix', err);
+      }
+    }, 300);
   };
 
   const extractUsername = (filename) => {
@@ -514,7 +799,6 @@ export function useMediaPlanner() {
     const lastExclamation = baseName.lastIndexOf('!');
     if (lastExclamation !== -1) {
       let username = baseName.substring(lastExclamation + 1).trim();
-      // Strip trailing (1), (2), etc. — e.g. "username (1)" → "username"
       username = username.replace(/\s*\(\d+\)\s*$/, '').trim();
       return username;
     }
@@ -528,15 +812,9 @@ export function useMediaPlanner() {
     const folder = currentFolder ? currentFolder.split(/[\\/]/).pop() : '';
     
     let resolved = template;
-    
-    // Resolve @username / @user_name
     const userReplacement = username ? `@${username}` : '@username';
     resolved = resolved.replace(/@(username|user_name)/g, userReplacement);
-    
-    // Resolve @filename
     resolved = resolved.replace(/@filename/g, video.name);
-    
-    // Resolve @folder
     resolved = resolved.replace(/@folder/g, folder);
     
     return resolved;
@@ -547,8 +825,7 @@ export function useMediaPlanner() {
       if (selectedPaths.size === 0) return;
       const text = getSortedSelectedVideos().map((v, i) => {
         const desc = resolveFixedText(v, v.description || '');
-        const resolved = resolveFixedText(v, fixedText);
-        return `${i + 1}. ${desc}${desc && resolved ? '\n' : ''}${resolved}`;
+        return `${i + 1}. ${desc}`;
       }).join('\n\n');
       navigator.clipboard.writeText(text);
       showToast('Seçili notlar kopyalandı ✓');
@@ -594,27 +871,58 @@ export function useMediaPlanner() {
     isServerHealthy,
     showUploadModal,
     setShowUploadModal,
+    uploadingPath,
+    setUploadingPath,
+    uploadQueue,
+    setUploadQueue,
+    uploadCurrentIndex,
+    setUploadCurrentIndex,
+    uploadStatus,
+    setUploadStatus,
+    uploadErrorMsg,
+    uploadCompletedPaths,
+    uploadFailedPaths,
+    uploadCurrentStep,
+    showBulkUploadModal,
+    setShowBulkUploadModal,
+    startPublishQueue,
+    cancelPublishQueue,
+    resumePublishQueue,
+    skipAndResumePublishQueue,
     setVideos,
     goBack,
     goForward,
-    canGoBack: !!parentFolder,
-    canGoForward: forwardStack.length > 0,
+    canGoBack,
+    canGoForward,
     handleNoteChange: (val) => fileOps.handleNoteChange(val, setNoteText),
     completedFeedback,
+    triggerCompletedFeedback,
     fixedText,
     handleFixedTextChange,
     extractUsername,
     resolveFixedText,
     aiAssistant,
     defaultPrompt,
-    // Template system
     ...templateOps,
     templateMode,
     setTemplateMode,
     toggleTemplates: () => setTemplateMode(p => !p),
-    // Duplicate suggestion (shown inside template mode)
     duplicateSuggestion,
     setDuplicateSuggestion,
     toggleHidden,
+    processToast,
+    setProcessToast,
+    activeViewTab,
+    setActiveViewTab,
+    customScheduleTime,
+    setCustomScheduleTime,
+    openPublishModalWithTime,
+    activeUploads,
+    setActiveUploads,
+    startPublishTask,
+    isDetailView,
+    setIsDetailView,
+    openVideoDetailModal,
+    openPublishModal,
   };
 }

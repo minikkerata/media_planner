@@ -28,6 +28,7 @@ export default function ThemeTab({ theme, setTheme, uiStyle, setUiStyle, languag
             value={tempUiStyle}
             onChange={setTempUiStyle}
             icon={Palette}
+            classic={true}
             options={[
               { value: 'old', label: t('classic_style', language) },
               { value: 'new', label: t('modern_style', language) }
@@ -42,6 +43,7 @@ export default function ThemeTab({ theme, setTheme, uiStyle, setUiStyle, languag
             <SelectDropdown
               value={tempTheme}
               onChange={setTempTheme}
+              classic={true}
               options={[
                 { value: 'system', label: t('system_theme', language), icon: Monitor },
                 { value: 'dark', label: t('dark_theme', language), icon: Moon },

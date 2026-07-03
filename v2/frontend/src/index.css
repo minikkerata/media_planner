@@ -2,8 +2,8 @@
 
 :root {
   /* Default to old/classic style */
-  --theme-base: #0f0f10;
-  --theme-surface: #0f0f10;
+  --theme-base: #070709;
+  --theme-surface: #070709;
   --theme-modal-base: #05070A;
   --theme-modal-surface: #0B0D12;
   --theme-input-bg: #191919;
@@ -19,16 +19,16 @@
   
   --theme-card-bg: transparent;
   --theme-card-hover-bg: #10131A;
-  --theme-card-border: transparent;
+  --theme-card-border: rgba(255, 255, 255, 0.08);
   --theme-card-hover-border: rgba(255, 255, 255, 0.2);
   --theme-scrollbar-thumb: #1F232B;
   --theme-scrollbar-thumb-hover: #30363D;
   --theme-scrollbar-track: #0B0D12;
 
-  --ui-rounded-sm: 4px;
-  --ui-rounded-md: 6px;
-  --ui-rounded-lg: 8px;
-  --ui-rounded-xl: 12px;
+  --ui-rounded-sm: 6px;
+  --ui-rounded-md: 8px;
+  --ui-rounded-lg: 10px;
+  --ui-rounded-xl: 14px;
   --theme-active-border-color: #58A6FF;
   --theme-selected-border-color: #2563eb;
   --theme-copied-border-color: #3FB950;
@@ -40,8 +40,8 @@
 }
 
 :root[data-ui-style="old"] {
-  --theme-base: #0f0f10;
-  --theme-surface: #0f0f10;
+  --theme-base: #070709;
+  --theme-surface: #070709;
   --theme-modal-base: #05070A;
   --theme-modal-surface: #0B0D12;
   --theme-input-bg: #191919;
@@ -57,16 +57,16 @@
   
   --theme-card-bg: transparent;
   --theme-card-hover-bg: #10131A;
-  --theme-card-border: transparent;
+  --theme-card-border: rgba(255, 255, 255, 0.08);
   --theme-card-hover-border: rgba(255, 255, 255, 0.2);
   --theme-scrollbar-thumb: #1F232B;
   --theme-scrollbar-thumb-hover: #30363D;
   --theme-scrollbar-track: #0B0D12;
 
-  --ui-rounded-sm: 4px;
-  --ui-rounded-md: 6px;
-  --ui-rounded-lg: 8px;
-  --ui-rounded-xl: 12px;
+  --ui-rounded-sm: 6px;
+  --ui-rounded-md: 8px;
+  --ui-rounded-lg: 10px;
+  --ui-rounded-xl: 14px;
   --theme-active-border-color: #58A6FF;
   --theme-selected-border-color: #2563eb;
   --theme-copied-border-color: #3FB950;
@@ -78,8 +78,8 @@
 }
 
 :root[data-ui-style="new"] {
-  --theme-base: #0f0f10;       /* ChatGPT Dark Main Background */
-  --theme-surface: #0f0f10;    /* ChatGPT Dark Sidebar/Header Background */
+  --theme-base: #08080a;       /* ChatGPT Dark Main Background */
+  --theme-surface: #08080a;    /* ChatGPT Dark Sidebar/Header Background */
   --theme-modal-base: #111111;
   --theme-modal-surface: #171717;
   --theme-input-bg: #212121;
@@ -93,18 +93,18 @@
   --theme-success: #10a37f;    /* ChatGPT Success Green */
   --theme-danger: #ef4444;     /* Danger Red */
   
-  --theme-card-bg: #212121;
-  --theme-card-hover-bg: #2f2f2f;
+  --theme-card-bg: #141416;
+  --theme-card-hover-bg: #1c1c1f;
   --theme-card-border: rgba(255, 255, 255, 0.08);
   --theme-card-hover-border: rgba(255, 255, 255, 0.15);
   --theme-scrollbar-thumb: var(--theme-active);
   --theme-scrollbar-thumb-hover: var(--theme-hover);
   --theme-scrollbar-track: transparent;
 
-  --ui-rounded-sm: 6px;
-  --ui-rounded-md: 8px;
-  --ui-rounded-lg: 12px;
-  --ui-rounded-xl: 16px;
+  --ui-rounded-sm: 8px;
+  --ui-rounded-md: 10px;
+  --ui-rounded-lg: 14px;
+  --ui-rounded-xl: 18px;
   --theme-active-border-color: #ffffff;
   --theme-selected-border-color: #2563eb;
   --theme-copied-border-color: #10a37f;
@@ -194,25 +194,68 @@
   }
 }
 
-/* Custom Scrollbars */
+/* ─── Custom Scrollbars ─────────────────────────────────────────────── */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-scrollbar-thumb) transparent;
+}
+
+/* Webkit — default (for all scrollable areas) */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--theme-scrollbar-track);
+  background: transparent;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--theme-scrollbar-thumb);
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
+  background: color-mix(in srgb, var(--theme-foreground) 10%, transparent);
+  border-radius: 9999px;
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--theme-scrollbar-thumb-hover);
+  background: color-mix(in srgb, var(--theme-foreground) 22%, transparent);
 }
+
+::-webkit-scrollbar-thumb:active {
+  background: color-mix(in srgb, var(--theme-accent) 55%, transparent);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* scrollbar-thin — used on dense inner panels */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--theme-foreground) 10%, transparent) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--theme-foreground) 10%, transparent);
+  border-radius: 9999px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--theme-foreground) 22%, transparent);
+}
+
+/* scrollbar-none — hide completely (keep functional) */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 
 /* Animation Utilities */
 @keyframes pulse-subtle {
@@ -285,4 +328,100 @@ header:has(.dropdown-menu-open) {
 }
 
 
+/* ─── Premium Themed Slider ─────────────────────────────────────────── */
+input[type="range"].themed-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  padding: 0;
+  /* vertical centering so click area matches visual track */
+  display: block;
+}
 
+/* ── Track: Webkit ── */
+input[type="range"].themed-slider::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 9999px;
+  /* filled left portion via JS inline style (set on wrapper); track itself is just the bg */
+  background: transparent;
+}
+
+/* ── Track: Firefox ── */
+input[type="range"].themed-slider::-moz-range-track {
+  height: 3px;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--theme-foreground) 12%, transparent);
+}
+input[type="range"].themed-slider::-moz-range-progress {
+  height: 3px;
+  border-radius: 9999px;
+  background: var(--theme-accent);
+}
+
+/* ── Thumb: Webkit ── */
+input[type="range"].themed-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  background: var(--theme-accent);
+  border: 2px solid color-mix(in srgb, var(--theme-accent-foreground) 70%, transparent);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--theme-accent) 35%, transparent),
+              0 2px 6px color-mix(in srgb, #000 40%, transparent);
+  margin-top: -4.5px; /* (12px - 3px) / 2 */
+  transition: width 0.15s ease, height 0.15s ease,
+              box-shadow 0.2s ease, background 0.15s ease;
+  cursor: grab;
+}
+
+input[type="range"].themed-slider::-webkit-slider-thumb:hover {
+  width: 14px;
+  height: 14px;
+  margin-top: -5.5px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--theme-accent) 20%, transparent),
+              0 2px 8px color-mix(in srgb, #000 50%, transparent);
+}
+
+input[type="range"].themed-slider:active::-webkit-slider-thumb {
+  cursor: grabbing;
+  width: 15px;
+  height: 15px;
+  margin-top: -6px;
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--theme-accent) 15%, transparent),
+              0 3px 10px color-mix(in srgb, #000 60%, transparent);
+}
+
+/* ── Thumb: Firefox ── */
+input[type="range"].themed-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  background: var(--theme-accent);
+  border: 2px solid color-mix(in srgb, var(--theme-accent-foreground) 70%, transparent);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--theme-accent) 35%, transparent),
+              0 2px 6px color-mix(in srgb, #000 40%, transparent);
+  transition: width 0.15s ease, height 0.15s ease, box-shadow 0.2s ease;
+  cursor: grab;
+}
+input[type="range"].themed-slider::-moz-range-thumb:hover {
+  width: 14px;
+  height: 14px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--theme-accent) 20%, transparent),
+              0 2px 8px color-mix(in srgb, #000 50%, transparent);
+}
+input[type="range"].themed-slider:active::-moz-range-thumb {
+  cursor: grabbing;
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--theme-accent) 15%, transparent);
+}
+
+/* ── Disabled state ── */
+input[type="range"].themed-slider:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+input[type="range"].themed-slider:disabled::-webkit-slider-thumb { cursor: not-allowed; }
+input[type="range"].themed-slider:disabled::-moz-range-thumb     { cursor: not-allowed; }
