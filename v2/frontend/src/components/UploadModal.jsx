@@ -22,7 +22,8 @@ export default function UploadModal({
   initialScheduleTime,
   startPublishTask,
   isDetailView,
-  videos = []
+  videos = [],
+  activeUploads = {}
 }) {
   const [scheduleTime, setScheduleTime] = useState('');
   const [postInterval, setPostInterval] = useState(24);
@@ -36,6 +37,10 @@ export default function UploadModal({
     { id: 'buffer', label: 'Buffer sosyal medya entegrasyonu', status: 'idle' },
     { id: 'db', label: 'Yerel veritabanı (SQLite) güncellemesi', status: 'idle' }
   ]);
+
+  const activeUpload = activeUploads && activeVideo ? activeUploads[activeVideo.path] : null;
+  const isFailedUpload = activeUpload && activeUpload.status === 'error';
+  const failedErrorMessage = activeUpload ? activeUpload.error : '';
 
   const updateStepStatus = (id, status) => {
     setPublishSteps(prev => prev.map(s => s.id === id ? { ...s, status } : s));
@@ -406,6 +411,21 @@ export default function UploadModal({
 
         {/* Content Form Area */}
         <div className="flex-1 p-8 pt-10 flex flex-col gap-5 min-h-0 overflow-y-auto relative">
+          {/* Failed upload warning banner */}
+          {isFailedUpload && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3.5 flex items-start gap-3 text-red-400 select-none animate-in fade-in slide-in-from-top-1 duration-200">
+              <AlertTriangle className="w-5 h-5 shrink-0 text-red-500" />
+              <div className="flex flex-col gap-1">
+                <span className="text-xs font-bold">
+                  {language === 'tr' ? 'Gönderim Başarısız Oldu' : 'Publishing Failed'}
+                </span>
+                <span className="text-[11px] font-mono text-red-400/80 break-all leading-relaxed">
+                  {failedErrorMessage || (language === 'tr' ? 'Bilinmeyen bir hata oluştu.' : 'An unknown error occurred.')}
+                </span>
+              </div>
+            </div>
+          )}
+
           {/* Description input - Matched style with main page notes editor (no label) */}
           <div className="flex-1 flex flex-col gap-2 min-h-[260px]">
             <textarea

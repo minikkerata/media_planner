@@ -343,6 +343,8 @@ export default function App() {
         keybindings={planner.keybindings}
         videos={planner.videos}
         language={planner.language}
+        handleNoteChange={planner.handleNoteChange}
+        showToast={planner.showToast}
       />
       <UploadModal 
         isOpen={planner.showUploadModal} 
@@ -371,6 +373,7 @@ export default function App() {
         startPublishTask={planner.startPublishTask}
         isDetailView={planner.isDetailView}
         videos={planner.videos}
+        activeUploads={planner.activeUploads}
       />
       <BulkUploadModal
         isOpen={planner.showBulkUploadModal}

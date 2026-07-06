@@ -512,7 +512,7 @@ export default function WeeklyCalendar({
                         language={language}
                         formatPublishTime={formatPublishTime}
                         onClick={() => {
-                          if (upload) {
+                          if (upload && upload.status === 'running') {
                             setViewUploadTask(upload);
                           } else {
                             handleVideoCardClick(video);
@@ -721,7 +721,7 @@ export default function WeeklyCalendar({
                               language={language}
                               formatPublishTime={formatPublishTime}
                               onClick={() => {
-                                if (upload) {
+                                if (upload && upload.status === 'running') {
                                   setViewUploadTask(upload);
                                 } else {
                                   handleVideoCardClick(video);

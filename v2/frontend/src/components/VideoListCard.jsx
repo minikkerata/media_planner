@@ -1,12 +1,13 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { IconCheck, IconCopy } from './Icons';
 import { t } from '../utils/translations';
+import { FileText } from 'lucide-react';
 
 export default function VideoListCard({
   video, activePath, selectedPaths, clipboardState, selectionMode, EXT_COLORS, API_URL,
   videoRef, muted, volume, videoTime, videoDuration, muteFeedback, handleSeek, toggleMute,
   toggleSharedState, handleCardMouseDown, handleCardMouseEnter, handleContextMenu, handleItemClick,
-  setVideoDuration, setVideoTime, handleCopyPath, language
+  setVideoDuration, setVideoTime, handleCopyPath, language, onCopyDescription
 }) {
   const isActive = activePath === video.path;
   const isSelected = selectedPaths.has(video.path);
@@ -91,7 +92,7 @@ export default function VideoListCard({
       </div>
 
       {/* Middle: Details */}
-      <div className="flex-1 min-w-0 flex flex-col gap-0.5 pr-20">
+      <div className={`flex-1 min-w-0 flex flex-col gap-0.5 ${onCopyDescription ? 'pr-28' : 'pr-20'}`}>
         <p className="text-xs font-semibold truncate">
           {video.name}
         </p>
@@ -102,6 +103,20 @@ export default function VideoListCard({
 
       {/* Right: Hover Buttons */}
       <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2 z-30">
+        {onCopyDescription && !selectionMode && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onCopyDescription(video);
+            }}
+            tabIndex={-1}
+            className="p-1.5 rounded-full bg-black/40 hover:bg-white/10 text-white/80 hover:text-white transition-all cursor-pointer opacity-0 group-hover:opacity-100"
+            title={language === 'tr' ? 'Açıklamayı aktif videoya kopyala (Ctrl+Enter)' : 'Copy description to active video (Ctrl+Enter)'}
+          >
+            <FileText className="w-4 h-4 text-white/80" />
+          </button>
+        )}
+
         {!selectionMode && (
           <button
             onClick={(e) => {
