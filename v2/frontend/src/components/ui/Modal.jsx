@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 // Keep track of open modal close handlers at the module level
@@ -21,15 +21,33 @@ export default function Modal({
     (!hasWidth && !hasHeight) ? "w-full max-w-4xl h-[660px]" : ""
   ].filter(Boolean).join(" ");
 
-  // ESC key listener
+  const modalRef = useRef(null);
+
+  // Block key events from propagating to the background when modal is open
   useEffect(() => {
+    if (!isOpen) return;
+
     const handleKeyDown = (e) => {
-      if (isOpen && e.key === 'Escape') {
-        onClose();
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        e.stopPropagation();
+        if (e.key === 'Escape') {
+          onClose();
+        }
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+
+    const handleKeyUp = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        e.stopPropagation();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    window.addEventListener('keyup', handleKeyUp, true);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown, true);
+      window.removeEventListener('keyup', handleKeyUp, true);
+    };
   }, [isOpen, onClose]);
 
   // Handle singleton modal behavior: when this modal opens, close all others
@@ -56,6 +74,7 @@ export default function Modal({
       onClick={onClose}
     >
       <div 
+        ref={modalRef}
         className={finalClassName}
         onClick={(e) => e.stopPropagation()}
       >

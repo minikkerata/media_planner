@@ -3,7 +3,6 @@ import { ChevronUp, ChevronDown, ChevronRight, X, Star } from 'lucide-react';
 import { IconCheck, IconCopy } from '../Icons';
 import Button from '../ui/Button';
 import MentionMenu from './MentionMenu';
-import SaveTemplateDialog from '../TemplateMode/SaveTemplateDialog';
 import { t } from '../../utils/translations';
 
 export default function NotesEditor({
@@ -47,9 +46,18 @@ export default function NotesEditor({
   addTemplate,
   templates,
   pendingSuggestion,
-  activeVideo
+  activeVideo,
+  showToast
 }) {
-  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const getAutoTemplateName = (text) => {
+    if (!text || !text.trim()) return 'Şablon';
+    const firstLine = text.trim().split('\n')[0].trim();
+    if (firstLine.length > 25) {
+      return firstLine.substring(0, 25) + '...';
+    }
+    return firstLine;
+  };
+
   // Mevcut not metni herhangi bir template ile eşleşiyorsa yıldız dolu göster
   const isTemplated = !!(noteText?.trim() && templates?.some(t => t.content?.trim() === noteText.trim()));
 
@@ -155,7 +163,24 @@ export default function NotesEditor({
           {/* Save as template (star) button */}
           {!selectionMode && activePath && addTemplate && (
             <button
-              onClick={() => setShowSaveDialog(true)}
+              onClick={() => {
+                if (!noteText || !noteText.trim()) {
+                  if (showToast) {
+                    showToast(language === 'tr' ? 'Şablon oluşturmak için önce açıklama yazın!' : 'Write a description first to create a template!', 'error');
+                  }
+                  return;
+                }
+                const autoName = getAutoTemplateName(noteText);
+                addTemplate(autoName, noteText);
+                if (showToast) {
+                  showToast(
+                    language === 'tr'
+                      ? `"${autoName}" şablonu başarıyla oluşturuldu ⭐`
+                      : `Template "${autoName}" successfully created ⭐`,
+                    'success'
+                  );
+                }
+              }}
               className="p-1 rounded hover:bg-amber-400/15 text-foreground/40 hover:text-amber-400 transition cursor-pointer"
               title="Şablon olarak kaydet"
               tabIndex={-1}
@@ -425,16 +450,6 @@ export default function NotesEditor({
         />
       </div>
 
-      {/* Save Template Dialog */}
-      <SaveTemplateDialog
-        isOpen={showSaveDialog}
-        defaultName={`Şablon ${new Date().toLocaleDateString('tr-TR')}`}
-        onSave={(name) => {
-          if (addTemplate) addTemplate(name, noteText);
-          setShowSaveDialog(false);
-        }}
-        onCancel={() => setShowSaveDialog(false)}
-      />
-    </div>
+      </div>
   );
 }

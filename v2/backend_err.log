@@ -1,27 +1,146 @@
-INFO:     Started server process [12036]
+INFO:     Started server process [11228]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://127.0.0.1:8085 (Press CTRL+C to quit)
-INFO:     127.0.0.1:57611 - "GET /api/usernames HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52285 - "GET /api/settings HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58749 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52285 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:57611 - "GET /api/settings HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64729 - "GET /api/usernames HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51283 - "GET /api/scan?folder=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64729 - "GET /api/scan?folder=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64729 - "GET /api/usernames HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64729 - "GET /api/usernames HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59874 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DYbgVTlslfz!ersemih%20(1).mp4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:65203 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7492664722173463815!Semih%20Er%20(1).mp4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54771 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DZft7gvMMlX!fly_bluelagoon.mp4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59874 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_Cz6BBIICGh-%20(1).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:49594 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dreel%5Bs%5DDZ2wCcIILx9%5Bs%5D!ersemih.mp4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54986 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ7xvNsIfLp%5Bs%5D!kasper_kumpulainen%20(3).mp4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61939 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_Cz6BBIICGh-%20(1).mp4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:65203 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DYbgVTlslfz!ersemih%20(1).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:54986 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DYbgVTlslfz!ersemih%20(1).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:61939 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ7xvNsIfLp%5Bs%5D!kasper_kumpulainen%20(3).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:60185 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63678 - "GET /api/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61023 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63678 - "GET /api/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64668 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64668 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58294 - "GET /api/scan?folder=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64668 - "GET /api/scan?folder=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64668 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64668 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55670 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63091 - "GET /api/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55670 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63091 - "GET /api/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59750 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59750 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61715 - "GET /api/scan?folder=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59750 - "GET /api/scan?folder=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59750 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59750 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59750 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61760 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61760 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57880 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ7xvNsIfLp%5Bs%5D!kasper_kumpulainen%20(3).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61760 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61760 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61760 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61760 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61760 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61760 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61760 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61760 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56822 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56822 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56822 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56822 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56822 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56822 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56822 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56822 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56822 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56822 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56822 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56822 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56822 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56822 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54856 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54856 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54856 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54856 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54856 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54856 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58730 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58730 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58730 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58730 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58730 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58730 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58730 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58730 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58730 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58730 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58730 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58730 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58730 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58730 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58126 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58126 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58126 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58126 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58126 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58126 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58126 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58126 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58126 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "OPTIONS /api/metadata/update HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "POST /api/metadata/update HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "POST /api/metadata/update HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51240 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52656 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52656 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52656 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50535 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50535 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57857 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57857 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57857 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57857 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57857 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57857 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57857 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57857 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57857 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57857 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57857 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57857 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57857 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64595 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64595 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64595 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64595 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64595 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55484 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:63471 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:49371 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49371 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65230 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65230 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65230 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65230 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65230 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65230 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65230 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61162 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61162 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61162 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49317 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49317 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49317 - "POST /api/metadata/update HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49317 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49317 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52628 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZz7HNkosO1%5Bs%5D!andreas.mosling.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59463 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZz7HNkosO1%5Bs%5D!andreas.mosling.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59463 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZz7HNkosO1%5Bs%5D!andreas.mosling.mp4 HTTP/1.1" 206 Partial Content
 Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
 handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
 Traceback (most recent call last):
@@ -30,16 +149,22 @@ Traceback (most recent call last):
   File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
     self._sock.shutdown(socket.SHUT_RDWR)
 ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
-INFO:     127.0.0.1:54771 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DYbgVTlslfz!ersemih%20(1).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:49594 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_Cz6BBIICGh-%20(1).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:57109 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ7xvNsIfLp%5Bs%5D!kasper_kumpulainen%20(3).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:57109 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ7xvNsIfLp%5Bs%5D!kasper_kumpulainen%20(3).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:49594 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DYbgVTlslfz!ersemih%20(1).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:54771 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_Cz6BBIICGh-%20(1).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:55690 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_Cz6BBIICGh-%20(1).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:55690 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ7xvNsIfLp%5Bs%5D!kasper_kumpulainen%20(3).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:56163 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DZft7gvMMlX!fly_bluelagoon.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:58960 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DZft7gvMMlX!fly_bluelagoon.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:49317 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58040 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58040 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58040 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58040 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58040 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58040 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58040 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58040 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58040 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58040 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58040 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58040 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58279 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58279 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54226 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7492664722173463815!Semih%20Er%20(1).mp4 HTTP/1.1" 206 Partial Content
 Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
 handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
 Traceback (most recent call last):
@@ -48,6 +173,82 @@ Traceback (most recent call last):
   File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
     self._sock.shutdown(socket.SHUT_RDWR)
 ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:61171 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7492664722173463815!Semih%20Er%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61171 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZz7HNkosO1%5Bs%5D!andreas.mosling.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61171 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZz7HNkosO1%5Bs%5D!andreas.mosling.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58279 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56198 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZz7HNkosO1%5Bs%5D!andreas.mosling.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58279 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58279 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58279 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58279 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58709 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DZft7gvMMlX!fly_bluelagoon.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:58279 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58279 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58279 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58279 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58279 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54508 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50156 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7492664722173463815!Semih%20Er%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:51761 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60302 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dreel%5Bs%5DDZ2wCcIILx9%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:51761 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51761 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51761 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51761 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51761 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51761 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51761 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51761 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51761 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51761 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51761 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51761 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49511 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49511 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59360 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59360 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61356 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64845 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dreel%5Bs%5DDZ2wCcIILx9%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:64845 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DZft7gvMMlX!fly_bluelagoon.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:61356 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61356 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61356 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61356 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61356 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65319 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56206 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DCvjuL17Mo0o%5Bs%5D!artooshgh.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59185 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ7xvNsIfLp%5Bs%5D!kasper_kumpulainen%20(3).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:65319 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56802 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56802 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56802 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56802 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56802 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55650 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZz7HNkosO1%5Bs%5D!andreas.mosling.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:55171 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZz7HNkosO1%5Bs%5D!andreas.mosling.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:56915 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:51381 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51381 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51381 - "POST /api/metadata/update HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51381 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51381 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62036 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
 Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
 handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
 Traceback (most recent call last):
@@ -56,13 +257,15 @@ Traceback (most recent call last):
   File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
     self._sock.shutdown(socket.SHUT_RDWR)
 ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
-INFO:     127.0.0.1:49915 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DZft7gvMMlX!fly_bluelagoon.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:49915 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DZft7gvMMlX!fly_bluelagoon.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:64411 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7492664722173463815!Semih%20Er%20(1).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:60766 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7492664722173463815!Semih%20Er%20(1).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:60766 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7492664722173463815!Semih%20Er%20(1).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:64729 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63367 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dreel%5Bs%5DDZ2wCcIILx9%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:63437 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:63437 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59549 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59549 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:51381 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51381 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50199 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59847 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:59847 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
 Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
 handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
 Traceback (most recent call last):
@@ -71,8 +274,26 @@ Traceback (most recent call last):
   File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
     self._sock.shutdown(socket.SHUT_RDWR)
 ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
-INFO:     127.0.0.1:58523 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dreel%5Bs%5DDZ2wCcIILx9%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:58523 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dreel%5Bs%5DDZ2wCcIILx9%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:51381 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58457 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DCvjuL17Mo0o%5Bs%5D!artooshgh.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:62342 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62342 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62342 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62342 - "POST /api/metadata/update HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62342 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62342 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62342 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62342 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62342 - "POST /api/metadata/update HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62342 - "GET /api/usernames HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62342 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62342 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55114 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56409 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52110 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DYbgVTlslfz!ersemih%20(1).mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50487 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:50487 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:51826 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZz7HNkosO1%5Bs%5D!andreas.mosling.mp4 HTTP/1.1" 206 Partial Content
 Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
 handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
 Traceback (most recent call last):
@@ -81,19 +302,8 @@ Traceback (most recent call last):
   File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
     self._sock.shutdown(socket.SHUT_RDWR)
 ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
-INFO:     127.0.0.1:49217 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dreel%5Bs%5DDZ2wCcIILx9%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:49217 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dreel%5Bs%5DDZ2wCcIILx9%5Bs%5D!ersemih.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:64155 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64155 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51382 - "GET /api/scheduled-videos HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49217 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDXPxAVjD8tU%5Bs%5D!bichocarrera.mp4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63690 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDXXeWbekYxS%5Bs%5D!playing_with_the_invisible.mp4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63690 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DAQXkgyi8NO!kevin.philipp%20(1).mp4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49217 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DY5JM_isz6A%20(1).mp4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59554 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DC9U6Wq6sTH6%5Bs%5D!flyoludeniz_.mp4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60603 - "GET /api/thumbnail?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZt7gLAAMHv%5Bs%5D!joachim_knauss.mp4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59554 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DC9U6Wq6sTH6%5Bs%5D!flyoludeniz_.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:60603 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DC9U6Wq6sTH6%5Bs%5D!flyoludeniz_.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:54474 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZz7HNkosO1%5Bs%5D!andreas.mosling.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:54474 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZz7HNkosO1%5Bs%5D!andreas.mosling.mp4 HTTP/1.1" 206 Partial Content
 Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
 handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
 Traceback (most recent call last):
@@ -102,11 +312,20 @@ Traceback (most recent call last):
   File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
     self._sock.shutdown(socket.SHUT_RDWR)
 ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
-INFO:     127.0.0.1:49217 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DC9U6Wq6sTH6%5Bs%5D!flyoludeniz_.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:49217 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DC9U6Wq6sTH6%5Bs%5D!flyoludeniz_.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:51382 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49217 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDXXeWbekYxS%5Bs%5D!playing_with_the_invisible.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:63690 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDXXeWbekYxS%5Bs%5D!playing_with_the_invisible.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:64491 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:56409 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56409 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56409 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56409 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56409 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54299 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59417 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58497 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52245 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52245 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52245 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52245 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50119 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
 Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
 handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
 Traceback (most recent call last):
@@ -115,6 +334,8 @@ Traceback (most recent call last):
   File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
     self._sock.shutdown(socket.SHUT_RDWR)
 ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:     127.0.0.1:60022 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:60022 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
 Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
 handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
 Traceback (most recent call last):
@@ -123,21 +344,10 @@ Traceback (most recent call last):
   File "C:\Users\emred\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
     self._sock.shutdown(socket.SHUT_RDWR)
 ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
-INFO:     127.0.0.1:50519 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDXXeWbekYxS%5Bs%5D!playing_with_the_invisible.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:50519 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDXXeWbekYxS%5Bs%5D!playing_with_the_invisible.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:60122 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53561 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DC9U6Wq6sTH6%5Bs%5D!flyoludeniz_.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:53561 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DC9U6Wq6sTH6%5Bs%5D!flyoludeniz_.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:60122 - "GET /api/usernames HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60122 - "GET /api/usernames HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53561 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DZft7gvMMlX!fly_bluelagoon.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:60122 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49603 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.tiktok.com%5Bs%5D%40ersemih_%5Bs%5Dvideo%5Bs%5D7492664722173463815!Semih%20Er%20(1).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:60122 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59795 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DYbgVTlslfz!ersemih%20(1).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:59795 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DYbgVTlslfz!ersemih%20(1).mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:59795 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com_p_DZft7gvMMlX!fly_bluelagoon.mp4 HTTP/1.1" 206 Partial Content
-INFO:     127.0.0.1:60122 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60122 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60122 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60122 - "POST /api/shutdown HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63023 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:63023 - "GET /api/video?path=C%3A%5CUsers%5Cemred%5COneDrive%5CMasa%C3%BCst%C3%BC%5Cpayla%C5%9F%C4%B1lacak%5Cwww.instagram.com%5Bs%5Dp%5Bs%5DDZ6yDQIqcSR%5Bs%5D!partytillimpact.mp4 HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:52245 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52264 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56549 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56549 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56549 - "POST /api/shutdown HTTP/1.1" 200 OK

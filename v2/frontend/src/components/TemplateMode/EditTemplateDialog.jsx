@@ -18,9 +18,9 @@ export default function EditTemplateDialog({
   const inputRef = useRef(null);
 
   useEffect(() => {
-    if (isOpen && template) {
-      setName(template.name || '');
-      setContent(template.content || '');
+    if (isOpen) {
+      setName(template?.name || '');
+      setContent(template?.content || '');
       setTimeout(() => inputRef.current?.focus(), 80);
     }
   }, [isOpen, template]);
@@ -34,7 +34,7 @@ export default function EditTemplateDialog({
   };
 
   const handleSave = () => {
-    onSave(template.id, name.trim() || 'Şablon', content);
+    onSave(template?.id, name.trim() || 'Şablon', content);
   };
 
   return (
@@ -48,7 +48,9 @@ export default function EditTemplateDialog({
         <div className="flex items-center justify-between px-5 py-4 border-b border-muted/15">
           <div className="flex items-center gap-2 text-accent">
             <LayoutTemplate className="w-5 h-5" />
-            <h3 className="font-bold text-foreground">Şablonu Düzenle</h3>
+            <h3 className="font-bold text-foreground">
+              {template?.id ? 'Şablonu Düzenle' : 'Yeni Şablon Ekle'}
+            </h3>
           </div>
           <button
             onClick={onCancel}

@@ -84,47 +84,11 @@ export default function DetailPanel({
     return () => window.removeEventListener('trigger-ai-assistant', handleTriggerAI);
   }, [aiAssistant]);
 
-  // Live preview: update pendingSuggestion as template selection changes (or mode closes)
   useEffect(() => {
-    if (!templateMode) {
-      setPendingSuggestion(null);
-      return;
-    }
-    const dupEntry = duplicateSuggestion
-      ? [{ id: '__dup__', content: duplicateSuggestion.description, isDuplicate: true, name: `↳ ${duplicateSuggestion.sourceFileName}` }]
-      : [];
-    const allItems = [...dupEntry, ...(templates || [])];
-    const item = allItems[templateSelectedIndex];
-    setPendingSuggestion(item ? { content: item.content, label: item.isDuplicate ? item.name : item.name } : null);
-  }, [templateMode, templateSelectedIndex, templates, duplicateSuggestion]);
+    setPendingSuggestion(null);
+  }, [templateMode]);
 
-  // Template mode keyboard navigation
-  useEffect(() => {
-    if (!templateMode) return;
-    const dupEntry = duplicateSuggestion
-      ? [{ id: '__dup__', content: duplicateSuggestion.description, isDuplicate: true }]
-      : [];
-    const allItems = [...dupEntry, ...(templates || [])];
 
-    const handleTemplateKeyDown = (e) => {
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        setTemplateSelectedIndex(prev => Math.min(prev + 1, allItems.length - 1));
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        setTemplateSelectedIndex(prev => Math.max(prev - 1, 0));
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        const item = allItems[templateSelectedIndex];
-        if (!item) return;
-        handleNoteChange(item.content);
-        if (item.isDuplicate) setDuplicateSuggestion(null);
-        if (toggleTemplates) toggleTemplates(); // closes mode → live preview effect clears pendingSuggestion
-      }
-    };
-    window.addEventListener('keydown', handleTemplateKeyDown, true);
-    return () => window.removeEventListener('keydown', handleTemplateKeyDown, true);
-  }, [templateMode, templates, templateSelectedIndex, handleNoteChange, toggleTemplates, duplicateSuggestion, setDuplicateSuggestion]);
 
   // Reset pending suggestion on video change
   useEffect(() => {
@@ -753,59 +717,36 @@ export default function DetailPanel({
         ) : activeVideo ? (
           /* Single Playing Video View */
           <div className="flex flex-col gap-2 shrink-0 animate-scale-up" style={{ width: `${videoWidth}px` }}>
-            {templateMode ? (
-              <TemplateMode
-                templates={templates || []}
-                selectedIndex={templateSelectedIndex}
-                setSelectedIndex={setTemplateSelectedIndex}
-                onApply={(tpl) => {
-                  const label = tpl.name;
-                  setPendingSuggestion({ content: tpl.content, label });
-                  if (toggleTemplates) toggleTemplates();
-                }}
-                onClose={toggleTemplates}
-                onRemove={removeTemplate}
-                onRename={renameTemplate}
-                onUpdate={updateTemplate}
-                duplicateSuggestion={duplicateSuggestion}
-                onAcceptDuplicate={(desc) => {
-                  setPendingSuggestion({ content: desc, label: `↳ ${duplicateSuggestion?.sourceFileName}` });
-                  setDuplicateSuggestion(null);
-                  if (toggleTemplates) toggleTemplates();
-                }}
-              />
-            ) : (
-              <VideoPlayer
-                activeVideo={activeVideo}
-                API_URL={API_URL}
-                language={language}
-                videoRef={videoRef}
-                muted={muted}
-                volume={volume}
-                videoTime={videoTime}
-                videoDuration={videoDuration}
-                setVideoTime={setVideoTime}
-                setVideoDuration={setVideoDuration}
-                muteFeedback={muteFeedback}
-                completedFeedback={completedFeedback}
-                handleSeek={handleSeek}
-                toggleMute={toggleMute}
-                copyCurrentPaths={copyCurrentPaths}
-                handleOpenLink={handleOpenLink}
-                openInExplorer={openInExplorer}
-                handleVolumeChange={handleVolumeChange}
-                isPlaying={isPlaying}
-                handlePlayPause={handlePlayPause}
-                showCopyTick={showCopyTick}
-                setShowCopyTick={setShowCopyTick}
-                shouldShowOpenLink={shouldShowOpenLink}
-                isDragging={isDragging}
-                setIsDragging={setIsDragging}
-                dragTime={dragTime}
-                setDragTime={setDragTime}
-                currentFolder={currentFolder}
-              />
-            )}
+            <VideoPlayer
+              activeVideo={activeVideo}
+              API_URL={API_URL}
+              language={language}
+              videoRef={videoRef}
+              muted={muted}
+              volume={volume}
+              videoTime={videoTime}
+              videoDuration={videoDuration}
+              setVideoTime={setVideoTime}
+              setVideoDuration={setVideoDuration}
+              muteFeedback={muteFeedback}
+              completedFeedback={completedFeedback}
+              handleSeek={handleSeek}
+              toggleMute={toggleMute}
+              copyCurrentPaths={copyCurrentPaths}
+              handleOpenLink={handleOpenLink}
+              openInExplorer={openInExplorer}
+              handleVolumeChange={handleVolumeChange}
+              isPlaying={isPlaying}
+              handlePlayPause={handlePlayPause}
+              showCopyTick={showCopyTick}
+              setShowCopyTick={setShowCopyTick}
+              shouldShowOpenLink={shouldShowOpenLink}
+              isDragging={isDragging}
+              setIsDragging={setIsDragging}
+              dragTime={dragTime}
+              setDragTime={setDragTime}
+              currentFolder={currentFolder}
+            />
           </div>
         ) : (
           /* Empty State */
@@ -864,6 +805,7 @@ export default function DetailPanel({
               templates={templates}
               pendingSuggestion={pendingSuggestion}
               activeVideo={activeVideo}
+              showToast={showToast}
             />
 
             {/* Actions button group (Templates, Publish, Completed) */}
@@ -971,6 +913,29 @@ export default function DetailPanel({
           </div>
         )}
       </div>
+      
+      <TemplateMode
+        isOpen={templateMode}
+        templates={templates || []}
+        selectedIndex={templateSelectedIndex}
+        setSelectedIndex={setTemplateSelectedIndex}
+        onApply={(tpl) => {
+          handleNoteChange(tpl.content);
+          if (toggleTemplates) toggleTemplates();
+        }}
+        onClose={toggleTemplates}
+        onRemove={removeTemplate}
+        onRename={renameTemplate}
+        onUpdate={updateTemplate}
+        onAdd={addTemplate}
+        duplicateSuggestion={duplicateSuggestion}
+        onAcceptDuplicate={(desc) => {
+          handleNoteChange(desc);
+          setDuplicateSuggestion(null);
+          if (toggleTemplates) toggleTemplates();
+        }}
+        language={language}
+      />
 
       <AIAssistant
         selectedText={aiAssistant.selectedText}

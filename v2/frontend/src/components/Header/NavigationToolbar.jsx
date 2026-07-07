@@ -34,11 +34,11 @@ export default function NavigationToolbar({
         <button
           onClick={onOpenSearch}
           tabIndex={-1}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-ui-md bg-active hover:bg-hover text-foreground/50 hover:text-foreground/70 text-xs font-semibold transition cursor-pointer h-8 w-48 text-left border-0"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-ui-md bg-active hover:bg-hover text-foreground/50 hover:text-foreground/70 text-xs font-semibold transition cursor-pointer h-8 text-left border-0"
           title={t('search_videos_tooltip', language)}
         >
           <Search size={14} className="text-foreground/45" />
-          <span className="truncate">{t('search_input_placeholder', language)}</span>
+          <span className="truncate">Search</span>
         </button>
 
         <Button
