@@ -720,7 +720,7 @@ export default function DetailPanel({
           <SelectionList sortedSelected={sortedSelected} API_URL={API_URL} language={language} />
         ) : activeVideo ? (
           /* Single Playing Video View */
-          <div className="flex flex-col gap-2 shrink-0 animate-scale-up" style={{ width: `${videoWidth}px` }}>
+          <div className="flex flex-col gap-2 shrink-0 animate-scale-up mb-9" style={{ width: `${videoWidth}px` }}>
             <VideoPlayer
               activeVideo={activeVideo}
               API_URL={API_URL}

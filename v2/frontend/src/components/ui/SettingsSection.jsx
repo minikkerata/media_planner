@@ -8,9 +8,9 @@ export default function SettingsSection({
   saveLabel = 'Kaydet' 
 }) {
   return (
-    <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex-1 flex flex-col gap-4 pr-2 min-h-0">
-        {description && <p className="text-xs text-foreground/50 shrink-0">{description}</p>}
+    <div className="flex flex-col h-full overflow-hidden text-left items-start">
+      <div className="flex-1 flex flex-col gap-4 pr-2 min-h-0 w-full text-left items-start">
+        {description && <p className="text-xs text-foreground/50 shrink-0 text-left">{description}</p>}
         {children}
       </div>
       

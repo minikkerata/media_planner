@@ -14,6 +14,8 @@
     "electron:build": "npm run build && electron-builder"
   },
   "build": {
+    "npmRebuild": false,
+    "forceCodeSigning": false,
     "appId": "com.mediaplanner.app",
     "productName": "Media Planner",
     "directories": {
@@ -28,6 +30,7 @@
     ],
     "win": {
       "icon": "logo.ico",
+      "verifyUpdateCodeSignature": false,
       "target": [
         "nsis",
         "portable"

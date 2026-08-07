@@ -579,7 +579,7 @@ export default function UploadModal({
                           }}
                           onClick={(e) => { try { e.target.showPicker(); } catch (err) {} }}
                           disabled={publishStatus !== 'idle'}
-                          className="bg-transparent border-0 focus:ring-0 focus:outline-none pl-2.5 pr-1 text-xs text-foreground cursor-pointer h-full w-[88px] outline-none hover:bg-hover hover:rounded-l-md transition-all [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden [&::-webkit-datetime-edit]:flex [&::-webkit-datetime-edit]:justify-center [&::-webkit-datetime-edit]:mx-auto"
+                          className="bg-transparent border-0 focus:ring-0 focus-visible:outline-none pl-2.5 pr-1 text-xs text-foreground cursor-pointer h-full w-[108px] min-w-[100px] outline-none hover:bg-hover hover:rounded-l-md transition-all [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden [&::-webkit-datetime-edit]:flex [&::-webkit-datetime-edit]:justify-center [&::-webkit-datetime-edit]:mx-auto"
                           style={{ accentColor: 'var(--theme-accent)', colorScheme: document.documentElement.classList.contains('light') ? 'light' : 'dark' }}
                           title={`${t('suggested_time', language)} ${postInterval} saat sonra`}
                         />
@@ -594,7 +594,7 @@ export default function UploadModal({
                           }}
                           onClick={(e) => { try { e.target.showPicker(); } catch (err) {} }}
                           disabled={publishStatus !== 'idle'}
-                          className="bg-transparent border-0 focus:ring-0 focus:outline-none px-1 text-xs text-foreground cursor-pointer h-full w-[50px] outline-none hover:bg-hover hover:rounded-md transition-all [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden [&::-webkit-datetime-edit]:flex [&::-webkit-datetime-edit]:justify-center [&::-webkit-datetime-edit]:mx-auto"
+                          className="bg-transparent border-0 focus:ring-0 focus-visible:outline-none px-1.5 text-xs text-foreground cursor-pointer h-full w-[68px] min-w-[64px] outline-none hover:bg-hover hover:rounded-md transition-all [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden [&::-webkit-datetime-edit]:flex [&::-webkit-datetime-edit]:justify-center [&::-webkit-datetime-edit]:mx-auto"
                           style={{ accentColor: 'var(--theme-accent)', colorScheme: document.documentElement.classList.contains('light') ? 'light' : 'dark' }}
                           title={`${t('suggested_time', language)} ${postInterval} saat sonra`}
                         />

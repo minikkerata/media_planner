@@ -123,7 +123,7 @@ export default function Header(props) {
                 onClick={() => {
                   setActiveViewTab('library');
                 }}
-                className={`text-[10px] font-bold px-3 py-1 rounded-md transition-all cursor-pointer
+                className={`text-[10px] font-bold px-3 py-1 rounded-md transition-all cursor-pointer focus:outline-none focus:ring-0 focus-visible:outline-none
                   ${activeViewTab === 'library'
                     ? 'bg-active text-foreground shadow-sm font-black'
                     : 'text-foreground/60 hover:text-foreground'
@@ -136,7 +136,7 @@ export default function Header(props) {
                   setActiveViewTab('calendar');
                   setIsSidebarCollapsed(true);
                 }}
-                className={`text-[10px] font-bold px-3 py-1 rounded-md transition-all cursor-pointer
+                className={`text-[10px] font-bold px-3 py-1 rounded-md transition-all cursor-pointer focus:outline-none focus:ring-0 focus-visible:outline-none
                   ${activeViewTab === 'calendar'
                     ? 'bg-active text-foreground shadow-sm font-black'
                     : 'text-foreground/60 hover:text-foreground'

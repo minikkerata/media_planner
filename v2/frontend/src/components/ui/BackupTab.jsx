@@ -89,13 +89,13 @@ export default function BackupTab({ language, API_URL, showToast, refreshFolder,
 
   return (
     <SettingsSection description={highlight(desc)}>
-      <div className="flex flex-col gap-4 py-4 border-b border-foreground/5">
-        <div className="flex items-center justify-between group">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-foreground">
+      <div className="flex flex-col gap-4 py-4 border-b border-foreground/5 w-full text-left items-start">
+        <div className="flex items-center justify-between group w-full text-left">
+          <div className="flex flex-col gap-1 text-left items-start">
+            <label className="text-sm font-medium text-foreground text-left">
               {highlight(t('backup_data_export', language))}
             </label>
-            <span className="text-xs text-foreground/50">
+            <span className="text-xs text-foreground/50 text-left">
               {highlight(t('export_subtext', language))}
             </span>
           </div>
@@ -103,23 +103,23 @@ export default function BackupTab({ language, API_URL, showToast, refreshFolder,
             variant="secondary"
             onClick={handleExport}
             disabled={isExporting}
-            className="gap-2"
+            className="gap-2 shrink-0"
           >
             <Download size={16} />
             {highlight(t('export_notes_btn', language))}
           </Button>
         </div>
 
-        <div className="flex items-center justify-between group pt-2">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-foreground">
+        <div className="flex items-center justify-between group pt-2 w-full text-left">
+          <div className="flex flex-col gap-1 text-left items-start">
+            <label className="text-sm font-medium text-foreground text-left">
               {highlight(t('restore_data_import', language))}
             </label>
-            <span className="text-xs text-foreground/50">
+            <span className="text-xs text-foreground/50 text-left">
               {highlight(t('import_subtext', language))}
             </span>
           </div>
-          <div>
+          <div className="shrink-0">
             <input 
               type="file" 
               ref={fileInputRef} 
@@ -131,7 +131,7 @@ export default function BackupTab({ language, API_URL, showToast, refreshFolder,
               variant="secondary"
               onClick={handleImportClick}
               disabled={isImporting}
-              className="gap-2"
+              className="gap-2 shrink-0"
             >
               <Upload size={16} />
               {highlight(t('import_notes_btn', language))}
