@@ -13,6 +13,8 @@ import { usePublishTask } from './usePublishTask';
 import { useMediaPlayerState } from './useMediaPlayerState';
 import { useFixedTextResolver } from './useFixedTextResolver';
 import { useDragSelection } from './useDragSelection';
+import { useAppLayout } from './useAppLayout';
+import { useNoteSearch } from './useNoteSearch';
 import { t } from '../utils/translations';
 
 export function useMediaPlanner() {
@@ -36,6 +38,9 @@ export function useMediaPlanner() {
   const clipboardOpsRef = useRef(null);
   const videoRef = useRef(null);
 
+  // Layout Sub-hook (sidebar/detail collapse, grid size, view tab)
+  const layoutOps = useAppLayout();
+
   // Folder scanning sub-hook
   const {
     currentFolder, setCurrentFolder, parentFolder, setParentFolder,
@@ -55,29 +60,11 @@ export function useMediaPlanner() {
     resumePublishQueue, skipAndResumePublishQueue
   } = useUploadQueue(videos, setVideos, showToast, triggerCompletedFeedback, setProcessToast);
 
-  const [gridSize, setGridSizeRaw] = useState(() => {
-    const saved = localStorage.getItem('grid_size');
-    return saved ? (saved === 'list' ? 'list' : parseInt(saved, 10)) : 220;
-  });
-  const setGridSize = (val) => {
-    setGridSizeRaw(val);
-    localStorage.setItem('grid_size', val);
-  };
-
-  const [showUnsharedOnly, setShowUnsharedOnlyRaw] = useState(() =>
-    localStorage.getItem('filter_mode') || 'all'
-  );
-  const setShowUnsharedOnly = (val) => {
-    setShowUnsharedOnlyRaw(val);
-    localStorage.setItem('filter_mode', val);
-  };
-
   const { sortOption, setSortOption, sortDirection, setSortDirection, sortVideos } = useSorting('date', 'desc');
 
   const [isClosed, setIsClosed] = useState(false);
   const [folderInput, setFolderInput] = useState('');
   const [noteText, setNoteText] = useState('');
-  const [activeViewTab, setActiveViewTab] = useState('library');
 
   // Media Player State Sub-hook
   const mediaPlayer = useMediaPlayerState({ activePath, videoRef });
@@ -85,23 +72,29 @@ export function useMediaPlanner() {
   // Drag Selection Sub-hook
   const dragSel = useDragSelection({ selectionMode, setSelectionMode, setActivePath, selectedPaths, setSelectedPaths });
 
+  // Note Search Sub-hook
+  const noteSearchOps = useNoteSearch();
+
   const getSortedSelectedVideos = useCallback(() => videos.filter(v => selectedPaths.has(v.path)), [videos, selectedPaths]);
 
   const getVisibleVideos = useCallback(() => {
-    let visible = showUnsharedOnly === 'unshared'
+    let visible = layoutOps.showUnsharedOnly === 'unshared'
       ? videos.filter(v => !v.shared && !v.hidden)
-      : showUnsharedOnly === 'shared'
+      : layoutOps.showUnsharedOnly === 'shared'
         ? videos.filter(v => v.shared && !v.hidden)
-        : showUnsharedOnly === 'hidden'
+        : layoutOps.showUnsharedOnly === 'hidden'
           ? videos.filter(v => v.hidden)
           : videos.filter(v => !v.hidden);
     return sortVideos(visible);
-  }, [videos, showUnsharedOnly, sortVideos]);
+  }, [videos, layoutOps.showUnsharedOnly, sortVideos]);
 
   // Fixed Text & Username Resolver Sub-hook
   const fixedTextOps = useFixedTextResolver({
     videos, setVideos, activePath, selectionMode, currentFolder, selectedPaths, getSortedSelectedVideos, showToast
   });
+
+  const fixedTextOpsRef = useRef(fixedTextOps);
+  useEffect(() => { fixedTextOpsRef.current = fixedTextOps; });
 
   const [showUploadModal, setShowUploadModal] = useState(false);
 
@@ -120,6 +113,7 @@ export function useMediaPlanner() {
   const [templateMode, setTemplateMode] = useState(false);
   const [duplicateSuggestion, setDuplicateSuggestion] = useState(null);
 
+  // Fixed useEffect dependency array to [] to eliminate infinite re-render loop on sidebar collapse
   useEffect(() => {
     const handleAISettingsChanged = () => {
       setDefaultPrompt(localStorage.getItem('ai_default_prompt') || 'Metni imla ve dilbilgisi açısından düzelt, daha akıcı hale getir.');
@@ -139,21 +133,21 @@ export function useMediaPlanner() {
         .then(data => {
           if (!data) return;
           if (data.fixed_text !== undefined) {
-            fixedTextOps.setGlobalFixedText(data.fixed_text);
+            fixedTextOpsRef.current.setGlobalFixedText(data.fixed_text);
             localStorage.setItem('fixed_text', data.fixed_text);
           }
           if (data.app_theme) {
             localStorage.setItem('app_theme', data.app_theme);
           }
           if (data.sidebar_panel_collapsed !== undefined) {
-            setIsSidebarCollapsed(Boolean(data.sidebar_panel_collapsed));
+            layoutOps.setIsSidebarCollapsed(Boolean(data.sidebar_panel_collapsed));
             localStorage.setItem('sidebar_panel_collapsed', String(data.sidebar_panel_collapsed));
           }
           if (data.sidebar_width !== undefined && Number(data.sidebar_width) > 0) {
             localStorage.setItem('sidebar_width', String(data.sidebar_width));
           }
           if (data.detail_panel_collapsed !== undefined) {
-            setIsDetailCollapsed(Boolean(data.detail_panel_collapsed));
+            layoutOps.setIsDetailCollapsed(Boolean(data.detail_panel_collapsed));
             localStorage.setItem('detail_panel_collapsed', String(data.detail_panel_collapsed));
           }
           if (data.detail_panel_width !== undefined && Number(data.detail_panel_width) > 0) {
@@ -179,7 +173,7 @@ export function useMediaPlanner() {
       window.removeEventListener('show-toast', handleShowToast);
       window.removeEventListener('settings-changed', loadGlobalSettings);
     };
-  }, [showToast, fixedTextOps]);
+  }, []); // Run ONCE on mount
 
   const [isServerHealthy, setIsServerHealthy] = useState(true);
 
@@ -201,23 +195,11 @@ export function useMediaPlanner() {
     return () => clearInterval(interval);
   }, []);
 
-  const [showNoteSearch, setShowNoteSearch] = useState(false);
-  const [noteSearchQuery, setNoteSearchQuery] = useState('');
-  const [activeMatchIndex, setActiveMatchIndex] = useState(0);
   const [contextMenu, setContextMenu] = useState({ x: 0, y: 0, visible: false, targetPath: null, isFolder: false });
   const [hoveredFolder, setHoveredFolder] = useState(null);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [settingsActiveTab, setSettingsActiveTab] = useState('folder');
   const [showSearchModal, setShowSearchModal] = useState(false);
-
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
-    const saved = localStorage.getItem('sidebar_panel_collapsed');
-    return saved === 'true';
-  });
-  const [isDetailCollapsed, setIsDetailCollapsed] = useState(() => {
-    const saved = localStorage.getItem('detail_panel_collapsed');
-    return saved === 'true';
-  });
 
   const noteInputRef = useRef(null);
   const aiInputRef = useRef(null);
@@ -411,13 +393,13 @@ export function useMediaPlanner() {
     copyCurrentPaths,
     copyCurrentNote: fixedTextOps.copyCurrentNote,
     handleOpenLink,
-    toggleSidebar: () => setIsSidebarCollapsed(p => !p),
-    toggleDetailPanel: () => setIsDetailCollapsed(p => !p),
-    isDetailCollapsed,
-    setIsDetailCollapsed,
+    toggleSidebar: layoutOps.toggleSidebar,
+    toggleDetailPanel: layoutOps.toggleDetailPanel,
+    isDetailCollapsed: layoutOps.isDetailCollapsed,
+    setIsDetailCollapsed: layoutOps.setIsDetailCollapsed,
     toggleTemplates: () => setTemplateMode(p => !p),
     templateMode,
-    showNoteSearch, setShowNoteSearch,
+    showNoteSearch: noteSearchOps.showNoteSearch, setShowNoteSearch: noteSearchOps.setShowNoteSearch,
     aiAssistant,
     selectAll: () => setSelectedPaths(new Set(getVisibleVideos().map(v => v.path))),
     showUploadModal, setShowUploadModal
@@ -431,16 +413,6 @@ export function useMediaPlanner() {
   useEffect(() => {
     localStorage.setItem('app_language', language);
   }, [language]);
-
-  useEffect(() => {
-    localStorage.setItem('detail_panel_collapsed', isDetailCollapsed.toString());
-    api.saveSettings({ detail_panel_collapsed: isDetailCollapsed }).catch(() => {});
-  }, [isDetailCollapsed]);
-
-  useEffect(() => {
-    localStorage.setItem('sidebar_panel_collapsed', isSidebarCollapsed.toString());
-    api.saveSettings({ sidebar_panel_collapsed: isSidebarCollapsed }).catch(() => {});
-  }, [isSidebarCollapsed]);
 
   useEffect(() => {
     if (!templateMode) return;
@@ -473,10 +445,10 @@ export function useMediaPlanner() {
       return;
     }
     const hasSelection = selectionMode ? selectedPaths.size > 0 : !!activePath;
-    if (hasSelection && noteInputRef.current && !showNoteSearch) {
+    if (hasSelection && noteInputRef.current && !noteSearchOps.showNoteSearch) {
       setTimeout(() => noteInputRef.current?.focus(), 50);
     }
-  }, [activePath, selectedPaths.size, selectionMode, showNoteSearch, keybindingOps.preventAutoFocusRef]);
+  }, [activePath, selectedPaths.size, selectionMode, noteSearchOps.showNoteSearch, keybindingOps.preventAutoFocusRef]);
 
   useEffect(() => {
     if (selectionMode) {
@@ -497,7 +469,7 @@ export function useMediaPlanner() {
   }, [activePath]);
 
   useEffect(() => {
-    if (activeViewTab === 'library') {
+    if (layoutOps.activeViewTab === 'library') {
       if (!activePath && lastActivePathRef.current) {
         const exists = videos.some(v => v.path === lastActivePathRef.current);
         if (exists) {
@@ -507,7 +479,7 @@ export function useMediaPlanner() {
         }
       }
     }
-  }, [activeViewTab, activePath, videos]);
+  }, [layoutOps.activeViewTab, activePath, videos]);
 
   useEffect(() => {
     if (selectionMode) {
@@ -546,8 +518,8 @@ export function useMediaPlanner() {
       toggleSelection(p);
     } else {
       setActivePath(p);
-      if (activePath === p && isDetailCollapsed) {
-        setIsDetailCollapsed(false);
+      if (activePath === p && layoutOps.isDetailCollapsed) {
+        layoutOps.setIsDetailCollapsed(false);
       }
     }
   };
@@ -557,7 +529,8 @@ export function useMediaPlanner() {
   return {
     currentFolder, parentFolder, subfolders, videos, selectedPaths, activePath, selectionMode,
     volume: mediaPlayer.volume, muted: mediaPlayer.muted, muteFeedback: mediaPlayer.muteFeedback,
-    gridSize, setGridSize, showUnsharedOnly, setShowUnsharedOnly,
+    gridSize: layoutOps.gridSize, setGridSize: layoutOps.setGridSize,
+    showUnsharedOnly: layoutOps.showUnsharedOnly, setShowUnsharedOnly: layoutOps.setShowUnsharedOnly,
     sortOption, setSortOption, sortDirection, setSortDirection,
     isClosed, videoTime: mediaPlayer.videoTime, setVideoTime: mediaPlayer.setVideoTime,
     videoDuration: mediaPlayer.videoDuration, setVideoDuration: mediaPlayer.setVideoDuration,
@@ -575,16 +548,18 @@ export function useMediaPlanner() {
     getVisibleVideos, pickFolder, enterSelectionMode,
     showSettingsModal, setShowSettingsModal, settingsActiveTab, setSettingsActiveTab,
     showSearchModal, setShowSearchModal, hoveredFolder, setHoveredFolder,
-    showNoteSearch, setShowNoteSearch, noteSearchQuery, setNoteSearchQuery, activeMatchIndex, setActiveMatchIndex,
+    showNoteSearch: noteSearchOps.showNoteSearch, setShowNoteSearch: noteSearchOps.setShowNoteSearch,
+    noteSearchQuery: noteSearchOps.noteSearchQuery, setNoteSearchQuery: noteSearchOps.setNoteSearchQuery,
+    activeMatchIndex: noteSearchOps.activeMatchIndex, setActiveMatchIndex: noteSearchOps.setActiveMatchIndex,
     ...clipboardOps,
     ...fileOps,
     ...keybindingOps,
     copyCurrentPaths,
     handleOpenLink,
-    isSidebarCollapsed,
-    isDetailCollapsed,
-    setIsSidebarCollapsed,
-    setIsDetailCollapsed,
+    isSidebarCollapsed: layoutOps.isSidebarCollapsed,
+    isDetailCollapsed: layoutOps.isDetailCollapsed,
+    setIsSidebarCollapsed: layoutOps.setIsSidebarCollapsed,
+    setIsDetailCollapsed: layoutOps.setIsDetailCollapsed,
     showToast,
     language,
     setLanguage,
@@ -632,8 +607,8 @@ export function useMediaPlanner() {
     toggleHidden,
     processToast,
     setProcessToast,
-    activeViewTab,
-    setActiveViewTab,
+    activeViewTab: layoutOps.activeViewTab,
+    setActiveViewTab: layoutOps.setActiveViewTab,
     customScheduleTime: publishTaskOps.customScheduleTime,
     setCustomScheduleTime: publishTaskOps.setCustomScheduleTime,
     openPublishModalWithTime: publishTaskOps.openPublishModalWithTime,
