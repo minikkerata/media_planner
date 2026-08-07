@@ -3,8 +3,9 @@ import SelectionToolbar from './SelectionToolbar';
 import NavigationToolbar from './NavigationToolbar';
 import GridSizeControl from './GridSizeControl';
 import ShutdownControl from './ShutdownControl';
+import CalendarHeader from './CalendarHeader';
 import SortControls from '../SortControls';
-import { Eye, EyeOff, Check, Loader2, X } from 'lucide-react';
+import { Eye, EyeOff, Check, Loader2, X, Plus } from 'lucide-react';
 import SelectDropdown from '../ui/SelectDropdown';
 import Button from '../ui/Button';
 import { getShortcutString } from '../../utils/shortcutUtils';
@@ -22,7 +23,7 @@ export default function Header(props) {
     sortOption, setSortOption, sortDirection, setSortDirection,
     uiStyle, onOpenSearch, language,
     isSidebarCollapsed, setIsSidebarCollapsed, isServerHealthy,
-    
+
     // Scan & Folder props
     currentFolder, scanFolder,
 
@@ -31,15 +32,20 @@ export default function Header(props) {
     activePath,
 
     // View tab props
-    activeViewTab, setActiveViewTab
+    activeViewTab, setActiveViewTab,
+
+    // Calendar props
+    calendarDate, setCalendarDate, calendarView, setCalendarView, setCalendarSelectorCell,
+    openPublishModalWithTime,
+    bufferProfile,
   } = props;
 
   const renderQueueIndicator = () => {
     if (uploadStatus === 'idle') return null;
-    
+
     const progressCount = uploadStatus === 'success' ? uploadQueue.length : uploadCurrentIndex;
     const totalCount = uploadQueue.length;
-    
+
     let btnColor = 'bg-blue-600 hover:bg-blue-500 text-white';
     let labelText = `${progressCount}/${totalCount} Paylaşılıyor`;
 
@@ -85,24 +91,39 @@ export default function Header(props) {
         />
       ) : (
         <div className="flex items-center justify-between h-[38px] w-full">
-          <NavigationToolbar 
-            videos={videos} 
-            enterSelectionMode={enterSelectionMode}
-            visibleVideosCount={getVisibleVideos().length}
-            onOpenSearch={onOpenSearch}
-            language={language}
-            isSidebarCollapsed={isSidebarCollapsed}
-            onOpenSidebar={() => setIsSidebarCollapsed(false)}
-            currentFolder={currentFolder}
-            scanFolder={scanFolder}
-            activePath={activePath}
-          />
 
-          {/* View Tab Switcher */}
+          {/* ── Left side ── */}
+          {activeViewTab === 'calendar' ? (
+            <CalendarHeader
+              currentDate={calendarDate}
+              setCurrentDate={setCalendarDate}
+              calendarView={calendarView}
+              language={language}
+              bufferProfile={bufferProfile}
+            />
+          ) : (
+            <NavigationToolbar 
+              videos={videos} 
+              enterSelectionMode={enterSelectionMode}
+              visibleVideosCount={getVisibleVideos().length}
+              onOpenSearch={onOpenSearch}
+              language={language}
+              isSidebarCollapsed={isSidebarCollapsed}
+              onOpenSidebar={() => setIsSidebarCollapsed(false)}
+              currentFolder={currentFolder}
+              scanFolder={scanFolder}
+              activePath={activePath}
+              activeViewTab={activeViewTab}
+            />
+          )}
+
+          {/* ── View Tab Switcher (center) ── */}
           {currentFolder && (
             <div className="flex items-center gap-0.5 bg-muted/20 border border-muted/10 p-0.5 rounded-lg select-none">
               <button
-                onClick={() => setActiveViewTab('library')}
+                onClick={() => {
+                  setActiveViewTab('library');
+                }}
                 className={`text-[10px] font-bold px-3 py-1 rounded-md transition-all cursor-pointer
                   ${activeViewTab === 'library'
                     ? 'bg-active text-foreground shadow-sm font-black'
@@ -112,7 +133,10 @@ export default function Header(props) {
                 {t('library', language)}
               </button>
               <button
-                onClick={() => setActiveViewTab('calendar')}
+                onClick={() => {
+                  setActiveViewTab('calendar');
+                  setIsSidebarCollapsed(true);
+                }}
                 className={`text-[10px] font-bold px-3 py-1 rounded-md transition-all cursor-pointer
                   ${activeViewTab === 'calendar'
                     ? 'bg-active text-foreground shadow-sm font-black'
@@ -124,8 +148,8 @@ export default function Header(props) {
             </div>
           )}
 
-          {/* Sağ Kısım */}
-          <div className="flex items-center gap-2 shrink-0">
+          {/* ── Right side ── */}
+          <div className="flex items-center gap-3 shrink-0">
             {uploadStatus !== 'idle' && (
               <>
                 {renderQueueIndicator()}
@@ -133,7 +157,36 @@ export default function Header(props) {
               </>
             )}
 
-            {activeViewTab === 'library' && (
+            {activeViewTab === 'calendar' ? (
+              <>
+                {/* Publish Video */}
+                <button
+                  onClick={() => {
+                    if (setCalendarSelectorCell) {
+                      const today = new Date();
+                      setCalendarSelectorCell({ day: today, hour: 9, smartTime: null });
+                    }
+                  }}
+                  className="text-xs font-bold text-accent-foreground bg-accent hover:opacity-90 px-3 py-1.5 rounded-lg transition-all cursor-pointer shadow-sm flex items-center gap-1.5 select-none"
+                >
+                  <Plus size={13} strokeWidth={2.5} />
+                  <span>{language === 'tr' ? 'Video Paylaş' : 'Publish Video'}</span>
+                </button>
+
+                {/* View dropdown (ghost) */}
+                <SelectDropdown
+                  ghost
+                  value={calendarView}
+                  onChange={setCalendarView}
+                  options={[
+                    { value: 'week', label: language === 'tr' ? 'Haftalık' : 'Weekly' },
+                    { value: 'month', label: language === 'tr' ? 'Aylık' : 'Monthly' },
+                  ]}
+                />
+
+                <div className="h-5 w-[1px] bg-muted/15" />
+              </>
+            ) : (
               <>
                 <SelectDropdown
                   value={showUnsharedOnly}
@@ -176,4 +229,3 @@ export default function Header(props) {
     </header>
   );
 }
-

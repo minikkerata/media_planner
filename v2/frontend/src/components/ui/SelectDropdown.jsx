@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react';
 import Button from './Button';
 import DropdownMenu from './DropdownMenu';
 
-export default function SelectDropdown({ value, options, onChange, icon: DefaultIcon, className = "", classic = false }) {
+export default function SelectDropdown({ value, options, onChange, icon: DefaultIcon, className = "", classic = false, ghost = false }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const selectedOption = options.find(o => o.value === value) || options[0];
@@ -11,7 +11,18 @@ export default function SelectDropdown({ value, options, onChange, icon: Default
 
   return (
     <div className="relative">
-      {classic ? (
+      {ghost ? (
+        <Button 
+          variant="none"
+          size="none"
+          onClick={() => setIsOpen(!isOpen)}
+          className={`${className} flex items-center gap-1 text-foreground/70 hover:text-foreground transition cursor-pointer`}
+          title={selectedOption?.label}
+        >
+          <span className="text-xs font-semibold">{selectedOption?.label}</span>
+          <ChevronDown size={11} className="opacity-50 shrink-0" />
+        </Button>
+      ) : classic ? (
         <Button 
           variant="none"
           size="none"

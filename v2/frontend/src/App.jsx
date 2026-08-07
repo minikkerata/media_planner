@@ -15,12 +15,32 @@ import BulkUploadModal from './components/BulkUploadModal';
 import ProcessToast from './components/ui/ProcessToast';
 import WeeklyCalendar from './components/WeeklyCalendar';
 import { t } from './utils/translations';
+import { api } from './services/api';
 
 const API_URL = 'http://127.0.0.1:' + (import.meta.env.VITE_BACKEND_PORT || '8085');
 
 export default function App() {
   const planner = useMediaPlanner();
   const themeProps = useTheme();
+  const [calendarDate, setCalendarDate] = React.useState(new Date());
+  const [calendarView, setCalendarView] = React.useState('week');
+  const [calendarSelectorCell, setCalendarSelectorCell] = React.useState(null);
+  const [bufferProfile, setBufferProfile] = React.useState(null);
+
+  // Fetch buffer/instagram profile once on mount
+  React.useEffect(() => {
+    api.getBufferProfile()
+      .then(p => { if (p?.success) setBufferProfile(p); })
+      .catch(() => {});
+    // Re-fetch when settings change
+    const onSettingsChanged = () => {
+      api.getBufferProfile()
+        .then(p => { if (p?.success) setBufferProfile(p); })
+        .catch(() => {});
+    };
+    window.addEventListener('settings-changed', onSettingsChanged);
+    return () => window.removeEventListener('settings-changed', onSettingsChanged);
+  }, []);
 
   React.useEffect(() => {
     const handleTriggerUpload = () => {
@@ -68,6 +88,7 @@ export default function App() {
         goForward={planner.goForward}
         canGoBack={planner.canGoBack}
         canGoForward={planner.canGoForward}
+        activeViewTab={planner.activeViewTab}
       />
       <div className="flex-1 flex flex-col h-full overflow-hidden relative">
         <Header 
@@ -75,10 +96,16 @@ export default function App() {
           sortOption={planner.sortOption} 
           sortDirection={planner.sortDirection} 
           {...themeProps} 
-          onOpenSearch={() => planner.setShowSearchModal(true)} 
+          onOpenSearch={() => planner.setShowSearchModal(true)}
+          calendarDate={calendarDate}
+          setCalendarDate={setCalendarDate}
+          calendarView={calendarView}
+          setCalendarView={setCalendarView}
+          setCalendarSelectorCell={setCalendarSelectorCell}
+          bufferProfile={bufferProfile}
         />
         <main 
-          className="flex-1 overflow-y-auto px-4 pb-4 pt-4 relative flex flex-col gap-4" 
+          className={`flex-1 overflow-y-auto relative flex flex-col gap-4 ${planner.activeViewTab === 'calendar' ? 'p-0' : 'px-4 pb-4 pt-4'}`}
           onContextMenu={(e) => { 
             e.preventDefault(); 
             planner.setContextMenu({ x: e.clientX, y: e.clientY, visible: true, targetPath: null, isFolder: false }); 
@@ -100,6 +127,12 @@ export default function App() {
               openPublishModalWithTime={planner.openPublishModalWithTime}
               activeUploads={planner.activeUploads}
               openVideoDetailModal={planner.openVideoDetailModal}
+              currentDate={calendarDate}
+              setCurrentDate={setCalendarDate}
+              calendarView={calendarView}
+              setCalendarView={setCalendarView}
+              selectorCell={calendarSelectorCell}
+              setSelectorCell={setCalendarSelectorCell}
             />
           ) : planner.getVisibleVideos().length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-foreground/40 gap-2">
@@ -374,6 +407,7 @@ export default function App() {
         isDetailView={planner.isDetailView}
         videos={planner.videos}
         activeUploads={planner.activeUploads}
+        openVideoDetailModal={planner.openVideoDetailModal}
       />
       <BulkUploadModal
         isOpen={planner.showBulkUploadModal}
@@ -386,6 +420,14 @@ export default function App() {
         processToast={planner.processToast}
         setProcessToast={planner.setProcessToast}
         language={planner.language}
+        onRetry={(payload) => {
+          planner.setProcessToast(null);
+          planner.startPublishTask(payload.video, payload.caption, payload.formattedScheduleTime, payload.isScheduled);
+        }}
+        onOpen={(videoPath) => {
+          planner.setProcessToast(null);
+          planner.openVideoDetailModal(videoPath);
+        }}
       />
       {planner.toast.visible && (
         <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 flex justify-center z-50">

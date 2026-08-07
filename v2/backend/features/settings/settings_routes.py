@@ -104,6 +104,83 @@ async def test_buffer(data: BufferTestModel):
         except Exception as e:
             return {"success": False, "message": f"Connection error: {str(e)}"}
 
+@router.get('/buffer-profile')
+async def get_buffer_profile():
+    """Fetch connected Instagram channel name, avatar and follower count from Buffer."""
+    settings_data = get_settings()
+    api_key = settings_data.get("buffer_api_key", "").strip()
+    channel_id = settings_data.get("buffer_channel_id", "").strip()
+    
+    if not api_key or not channel_id:
+        return {"success": False, "name": None, "avatar": None, "followers": None}
+    
+    async with httpx.AsyncClient() as client:
+        # GraphQL: try with statistics first, fall back to basic fields if not supported
+        for query in [
+            """query GetChannels {
+              channels {
+                id name avatar service
+                statistics { followers }
+              }
+            }""",
+            """query GetChannels {
+              channels { id name avatar service type }
+            }"""
+        ]:
+            try:
+                resp = await client.post(
+                    "https://api.buffer.com",
+                    headers={"Authorization": f"Bearer {api_key}"},
+                    json={"query": query},
+                    timeout=10.0
+                )
+                if resp.status_code == 200:
+                    body = resp.json()
+                    if "errors" in body:
+                        continue  # try next query variant
+                    channels = body.get("data", {}).get("channels", [])
+                    match = next((c for c in channels if c.get("id") == channel_id), None)
+                    if not match:
+                        match = next((c for c in channels if (c.get("service") or "").lower() == "instagram"), None)
+                    if match:
+                        stats = match.get("statistics") or {}
+                        return {
+                            "success": True,
+                            "name": match.get("name"),
+                            "avatar": match.get("avatar"),
+                            "service": match.get("service") or match.get("type"),
+                            "followers": stats.get("followers"),
+                        }
+                    break  # got a valid response but no matching channel
+            except Exception:
+                pass
+
+        # Fallback: Buffer legacy REST profiles
+        try:
+            resp = await client.get(
+                "https://api.bufferapp.com/1/profiles.json",
+                params={"access_token": api_key},
+                timeout=10.0
+            )
+            if resp.status_code == 200:
+                profiles = resp.json()
+                match = next((p for p in profiles if p.get("id") == channel_id), None)
+                if match:
+                    stats = match.get("statistics") or {}
+                    followers = stats.get("followers") or match.get("followers_count")
+                    return {
+                        "success": True,
+                        "name": match.get("formatted_username") or match.get("username"),
+                        "avatar": match.get("avatar_https") or match.get("avatar"),
+                        "service": match.get("service"),
+                        "followers": followers,
+                    }
+        except Exception:
+            pass
+    
+    return {"success": False, "name": None, "avatar": None, "followers": None}
+
+
 @router.post('/settings/test-cloudinary')
 async def test_cloudinary(data: CloudinaryTestModel):
     cloud_name = data.cloudinary_cloud_name.strip() if data.cloudinary_cloud_name else ""
@@ -157,11 +234,6 @@ async def publish_to_buffer(api_key: str, channel_id: str, text: str, video_url:
         try:
             mode = "shareNow" if not schedule_time else "customScheduled"
             
-            thumbnail_url = None
-            if "cloudinary.com" in video_url:
-                base, _ = os.path.splitext(video_url)
-                thumbnail_url = base + ".jpg"
-                
             input_data = {
                 "text": text,
                 "channelId": channel_id,
@@ -181,8 +253,6 @@ async def publish_to_buffer(api_key: str, channel_id: str, text: str, video_url:
                     }
                 ]
             }
-            if thumbnail_url:
-                input_data["assets"][0]["video"]["thumbnailUrl"] = thumbnail_url
                 
             if schedule_time:
                 input_data["dueAt"] = schedule_time

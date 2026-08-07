@@ -6,7 +6,7 @@ import { t } from '../../utils/translations';
 
 export default function NavigationToolbar({
   videos, enterSelectionMode, visibleVideosCount, onOpenSearch, language,
-  isSidebarCollapsed, onOpenSidebar, currentFolder, scanFolder, activePath
+  isSidebarCollapsed, onOpenSidebar, currentFolder, scanFolder, activePath, activeViewTab
 }) {
   const handleRefresh = () => {
     if (scanFolder && currentFolder) {
@@ -18,8 +18,8 @@ export default function NavigationToolbar({
     <>
       {/* Sol Kısım */}
       <div className="flex items-center gap-3 shrink-0">
-        {/* Sidebar açma butonu — sadece sidebar kapalıyken */}
-        {isSidebarCollapsed && (
+        {/* Sidebar açma butonu — sadece sidebar kapalıyken ve calendar modunda değilken */}
+        {isSidebarCollapsed && activeViewTab !== 'calendar' && (
           <button
             onClick={onOpenSidebar}
             tabIndex={-1}

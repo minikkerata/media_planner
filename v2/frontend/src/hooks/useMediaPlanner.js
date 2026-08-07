@@ -292,7 +292,8 @@ export function useMediaPlanner() {
             image: video.path,
             status: 'failed',
             progress: 100,
-            error: err.message || 'Paylaşım başarısız.'
+            error: err.message || 'Paylaşım başarısız.',
+            retryPayload: { video, caption, formattedScheduleTime, isScheduled }
           });
         }
       }

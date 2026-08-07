@@ -23,7 +23,8 @@ export default function UploadModal({
   startPublishTask,
   isDetailView,
   videos = [],
-  activeUploads = {}
+  activeUploads = {},
+  openVideoDetailModal
 }) {
   const [scheduleTime, setScheduleTime] = useState('');
   const [postInterval, setPostInterval] = useState(24);
@@ -39,6 +40,7 @@ export default function UploadModal({
   ]);
 
   const activeUpload = activeUploads && activeVideo ? activeUploads[activeVideo.path] : null;
+  const isActivelyUploading = activeUpload && (activeUpload.status === 'running');
   const isFailedUpload = activeUpload && activeUpload.status === 'error';
   const failedErrorMessage = activeUpload ? activeUpload.error : '';
 
@@ -356,7 +358,7 @@ export default function UploadModal({
   return (
     <Modal
       isOpen={isOpen}
-      onClose={() => publishStatus === 'idle' && onClose()}
+      onClose={() => publishStatus === 'idle' && !isActivelyUploading && onClose()}
       className="bg-modal-surface border border-foreground/5 rounded-2xl shadow-2xl flex overflow-hidden animate-in fade-in zoom-in duration-200 w-full max-w-4xl h-[780px] relative"
     >
       {/* Left Column: Video Preview - Styling matches Settings modal left side layout */}
@@ -402,7 +404,7 @@ export default function UploadModal({
         {/* Absolute Close Button */}
         <button
           onClick={onClose}
-          disabled={publishStatus !== 'idle'}
+          disabled={publishStatus !== 'idle' || isActivelyUploading}
           className="absolute top-4 right-4 p-1.5 rounded-md text-foreground/60 hover:text-foreground hover:bg-hover transition cursor-pointer disabled:opacity-30 z-10"
           title={t('close_title', language) || "Kapat"}
         >
@@ -411,6 +413,7 @@ export default function UploadModal({
 
         {/* Content Form Area */}
         <div className="flex-1 p-8 pt-10 flex flex-col gap-5 min-h-0 overflow-y-auto relative">
+
           {/* Failed upload warning banner */}
           {isFailedUpload && (
             <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3.5 flex items-start gap-3 text-red-400 select-none animate-in fade-in slide-in-from-top-1 duration-200">
@@ -444,110 +447,185 @@ export default function UploadModal({
             />
           </div>
 
-          {/* Action Buttons */}
+          {/* Action Buttons / Progress */}
           <div className="flex flex-col gap-2 pt-5 border-t border-foreground/5 mt-auto shrink-0">
 
-            {/* Past schedule time warning (publish flow only) */}
-            {!isDetailView && isScheduleInPast && (
-              <div className="flex items-center gap-1.5 select-none justify-end">
-                <AlertTriangle size={10} className="text-amber-400 shrink-0" />
-                <span className="text-[10px] text-amber-400/80 font-medium tracking-wide">
-                  {language === 'tr' ? 'Seçilen saat geçmişte kaldı' : 'Selected time is in the past'}
-                </span>
-              </div>
-            )}
-
-            {/* CASE 1: Past video in calendar detail view — show date/time only */}
-            {isPastVideo && (
-              <div className="flex items-center gap-2 select-none">
-                <Calendar size={13} className="text-foreground/40 shrink-0" />
-                <span className="text-xs text-foreground/55 font-medium">
-                  {formatFullDateTime(activeVideo?.publish_time)}
-                </span>
-              </div>
-            )}
-
-            {/* CASE 2: Future/upcoming video in detail view — Save / Close */}
-            {!isPastVideo && isDetailView && (
-              <div className="flex gap-3 items-center justify-end">
-                <Button
-                  variant="secondary"
-                  onClick={onClose}
-                  disabled={publishStatus !== 'idle'}
-                  className="py-1.5 px-5 text-xs font-semibold h-[34px]"
-                >
-                  {language === 'tr' ? 'Kapat' : 'Close'}
-                </Button>
-                <Button
-                  variant="primary"
-                  onClick={handleSaveDetails}
-                  disabled={publishStatus !== 'idle'}
-                  className="py-1.5 px-5 text-xs font-bold h-[34px] flex items-center gap-1.5"
-                >
-                  {language === 'tr' ? 'Değişiklikleri Kaydet' : 'Save Changes'}
-                </Button>
-              </div>
-            )}
-
-            {/* CASE 3: Normal publish flow — Schedule + Publish Now */}
-            {!isDetailView && (
-              <div className="flex gap-3 items-center justify-end">
-                {/* Date/Time + Schedule capsule */}
-                <div className="flex items-center bg-active rounded-lg overflow-hidden border border-foreground/5 h-[34px] p-0.5 shrink-0 select-none">
-                  <input
-                    type="date"
-                    value={datePart}
-                    onChange={(e) => {
-                      const newDate = e.target.value;
-                      const timeVal = timePart || '12:00';
-                      setScheduleTime(`${newDate}T${timeVal}`);
-                    }}
-                    onClick={(e) => { try { e.target.showPicker(); } catch (err) {} }}
-                    disabled={publishStatus !== 'idle'}
-                    className="bg-transparent border-0 focus:ring-0 focus:outline-none pl-2.5 pr-1 text-xs text-foreground cursor-pointer h-full w-[88px] outline-none hover:bg-hover hover:rounded-l-md transition-all [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden [&::-webkit-datetime-edit]:flex [&::-webkit-datetime-edit]:justify-center [&::-webkit-datetime-edit]:mx-auto"
-                    style={{ accentColor: 'var(--theme-accent)', colorScheme: document.documentElement.classList.contains('light') ? 'light' : 'dark' }}
-                    title={`${t('suggested_time', language)} ${postInterval} saat sonra`}
-                  />
-                  <div className="h-3 w-[1px] bg-foreground/10 shrink-0 mx-0.5" />
-                  <input
-                    type="time"
-                    value={timePart}
-                    onChange={(e) => {
-                      const newTime = e.target.value;
-                      const dateVal = datePart || getLocalDateString();
-                      setScheduleTime(`${dateVal}T${newTime}`);
-                    }}
-                    onClick={(e) => { try { e.target.showPicker(); } catch (err) {} }}
-                    disabled={publishStatus !== 'idle'}
-                    className="bg-transparent border-0 focus:ring-0 focus:outline-none px-1 text-xs text-foreground cursor-pointer h-full w-[50px] outline-none hover:bg-hover hover:rounded-md transition-all [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden [&::-webkit-datetime-edit]:flex [&::-webkit-datetime-edit]:justify-center [&::-webkit-datetime-edit]:mx-auto"
-                    style={{ accentColor: 'var(--theme-accent)', colorScheme: document.documentElement.classList.contains('light') ? 'light' : 'dark' }}
-                    title={`${t('suggested_time', language)} ${postInterval} saat sonra`}
-                  />
-                  <button
-                    onClick={() => handlePublish(true)}
-                    disabled={publishStatus !== 'idle' || isScheduleInPast}
-                    className={`h-full px-3.5 text-xs font-semibold rounded-r-md transition-all shrink-0 flex items-center justify-center gap-1.5 ml-1.5 border-l border-foreground/5
-                      ${publishStatus !== 'idle' || isScheduleInPast ? 'opacity-35 cursor-not-allowed' : 'cursor-pointer'}
-                      ${initialScheduleTime ? 'bg-accent text-accent-foreground font-bold hover:opacity-90' : 'text-foreground bg-muted hover:bg-hover'}`}
-                  >
-                    <Calendar size={13} className={initialScheduleTime ? 'text-accent-foreground' : 'text-foreground/75'} />
-                    <span>{t('schedule_btn', language)}</span>
-                  </button>
+            {/* Active upload progress — replaces buttons while publishing */}
+            {isActivelyUploading && activeUpload ? (
+              <div className="flex flex-col gap-2.5 select-none animate-in fade-in duration-200">
+                <div className="flex items-center gap-2">
+                  <Loader2 className="w-3.5 h-3.5 text-accent animate-spin shrink-0" />
+                  <span className="text-xs font-bold text-foreground">
+                    {language === 'tr' ? 'Paylaşılıyor...' : 'Publishing...'}
+                  </span>
+                  <span className="ml-auto text-[11px] font-bold text-accent">{activeUpload.progress ?? 0}%</span>
                 </div>
-
-                {/* Publish Now Button */}
-                {!initialScheduleTime && (
-                  <Button
-                    variant="primary"
-                    onClick={() => handlePublish(false)}
-                    disabled={publishStatus !== 'idle'}
-                    className="py-1.5 px-5 text-xs font-bold h-[34px] shrink-0 flex items-center gap-1.5"
-                  >
-                    <Share2 size={13} />
-                    <span>{t('upload_now_btn', language)}</span>
-                  </Button>
+                {/* Progress bar */}
+                <div className="w-full h-1.5 bg-foreground/10 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-accent rounded-full transition-all duration-500"
+                    style={{ width: `${activeUpload.progress ?? 0}%` }}
+                  />
+                </div>
+                {/* Steps */}
+                {activeUpload.steps && (
+                  <div className="flex flex-col gap-1.5 mt-0.5">
+                    {activeUpload.steps.map((step) => {
+                      const sRunning = step.status === 'running';
+                      const sSuccess = step.status === 'success';
+                      const sError = step.status === 'error';
+                      return (
+                        <div key={step.id} className="flex items-center justify-between text-[11px] gap-2">
+                          <span className={`font-medium ${
+                            sRunning ? 'text-foreground font-semibold' :
+                            sSuccess ? 'text-foreground/50' :
+                            sError ? 'text-red-400 font-semibold' :
+                            'text-foreground/25'
+                          }`}>{step.label}</span>
+                          <div className="shrink-0 w-4 h-4 flex items-center justify-center">
+                            {sRunning && <Loader2 className="w-3 h-3 text-accent animate-spin" />}
+                            {sSuccess && <Check className="w-3.5 h-3.5 text-green-500" />}
+                            {sError && <X className="w-3.5 h-3.5 text-red-500" />}
+                            {step.status === 'idle' && <div className="w-1.5 h-1.5 rounded-full bg-foreground/20" />}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 )}
               </div>
+            ) : (
+              <>
+                {/* Past schedule time warning (publish flow only) */}
+                {!isDetailView && isScheduleInPast && (
+                  <div className="flex items-center gap-1.5 select-none justify-end">
+                    <AlertTriangle size={10} className="text-amber-400 shrink-0" />
+                    <span className="text-[10px] text-amber-400/80 font-medium tracking-wide">
+                      {language === 'tr' ? 'Seçilen saat geçmişte kaldı' : 'Selected time is in the past'}
+                    </span>
+                  </div>
+                )}
+
+                {/* CASE 1: Past video in calendar detail view — show date/time only */}
+                {isPastVideo && (
+                  <div className="flex items-center gap-2 select-none">
+                    <Calendar size={13} className="text-foreground/40 shrink-0" />
+                    <span className="text-xs text-foreground/55 font-medium">
+                      {formatFullDateTime(activeVideo?.publish_time)}
+                    </span>
+                  </div>
+                )}
+
+                {/* CASE 2: Future/upcoming video in detail view — Save / Close */}
+                {!isPastVideo && isDetailView && (
+                  <div className="flex gap-3 items-center justify-end">
+                    <Button
+                      variant="secondary"
+                      onClick={onClose}
+                      disabled={publishStatus !== 'idle'}
+                      className="py-1.5 px-5 text-xs font-semibold h-[34px]"
+                    >
+                      {language === 'tr' ? 'Kapat' : 'Close'}
+                    </Button>
+                    <Button
+                      variant="primary"
+                      onClick={handleSaveDetails}
+                      disabled={publishStatus !== 'idle'}
+                      className="py-1.5 px-5 text-xs font-bold h-[34px] flex items-center gap-1.5"
+                    >
+                      {language === 'tr' ? 'Değişiklikleri Kaydet' : 'Save Changes'}
+                    </Button>
+                  </div>
+                )}
+
+                {/* CASE 3: Normal publish flow — Schedule + Publish Now / or Published badge */}
+                {!isDetailView && (
+                  activeVideo?.shared ? (
+                    /* Video already published — show green badge, click opens detail */
+                    <button
+                      onClick={() => openVideoDetailModal && openVideoDetailModal(activeVideo.path)}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl
+                        bg-green-500/10 hover:bg-green-500/18 border border-green-500/25 hover:border-green-500/40
+                        text-green-400 transition-all duration-200 cursor-pointer group select-none"
+                    >
+                      <div className="w-7 h-7 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center shrink-0 group-hover:bg-green-500/30 transition-colors">
+                        <Check size={15} strokeWidth={3} className="text-green-400" />
+                      </div>
+                      <div className="flex flex-col items-start gap-0.5 min-w-0">
+                        <span className="text-xs font-bold tracking-wide">
+                          {language === 'tr' ? 'Paylaşıldı' : 'Published'}
+                        </span>
+                        {activeVideo.publish_time && (
+                          <span className="text-[10px] text-green-400/70 font-medium truncate">
+                            {formatFullDateTime(activeVideo.publish_time)}
+                          </span>
+                        )}
+                      </div>
+                      <svg className="ml-auto w-4 h-4 text-green-400/50 group-hover:text-green-400/80 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  ) : (
+                    <div className="flex gap-3 items-center justify-end">
+                      {/* Date/Time + Schedule capsule */}
+                      <div className="flex items-center bg-active rounded-lg overflow-hidden border border-foreground/5 h-[34px] p-0.5 shrink-0 select-none">
+                        <input
+                          type="date"
+                          value={datePart}
+                          onChange={(e) => {
+                            const newDate = e.target.value;
+                            const timeVal = timePart || '12:00';
+                            setScheduleTime(`${newDate}T${timeVal}`);
+                          }}
+                          onClick={(e) => { try { e.target.showPicker(); } catch (err) {} }}
+                          disabled={publishStatus !== 'idle'}
+                          className="bg-transparent border-0 focus:ring-0 focus:outline-none pl-2.5 pr-1 text-xs text-foreground cursor-pointer h-full w-[88px] outline-none hover:bg-hover hover:rounded-l-md transition-all [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden [&::-webkit-datetime-edit]:flex [&::-webkit-datetime-edit]:justify-center [&::-webkit-datetime-edit]:mx-auto"
+                          style={{ accentColor: 'var(--theme-accent)', colorScheme: document.documentElement.classList.contains('light') ? 'light' : 'dark' }}
+                          title={`${t('suggested_time', language)} ${postInterval} saat sonra`}
+                        />
+                        <div className="h-3 w-[1px] bg-foreground/10 shrink-0 mx-0.5" />
+                        <input
+                          type="time"
+                          value={timePart}
+                          onChange={(e) => {
+                            const newTime = e.target.value;
+                            const dateVal = datePart || getLocalDateString();
+                            setScheduleTime(`${dateVal}T${newTime}`);
+                          }}
+                          onClick={(e) => { try { e.target.showPicker(); } catch (err) {} }}
+                          disabled={publishStatus !== 'idle'}
+                          className="bg-transparent border-0 focus:ring-0 focus:outline-none px-1 text-xs text-foreground cursor-pointer h-full w-[50px] outline-none hover:bg-hover hover:rounded-md transition-all [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden [&::-webkit-datetime-edit]:flex [&::-webkit-datetime-edit]:justify-center [&::-webkit-datetime-edit]:mx-auto"
+                          style={{ accentColor: 'var(--theme-accent)', colorScheme: document.documentElement.classList.contains('light') ? 'light' : 'dark' }}
+                          title={`${t('suggested_time', language)} ${postInterval} saat sonra`}
+                        />
+                        <button
+                          onClick={() => handlePublish(true)}
+                          disabled={publishStatus !== 'idle' || isScheduleInPast}
+                          className={`h-full px-3.5 text-xs font-semibold rounded-r-md transition-all shrink-0 flex items-center justify-center gap-1.5 ml-1.5 border-l border-foreground/5
+                            ${publishStatus !== 'idle' || isScheduleInPast ? 'opacity-35 cursor-not-allowed' : 'cursor-pointer'}
+                            ${initialScheduleTime ? 'bg-accent text-accent-foreground font-bold hover:opacity-90' : 'text-foreground bg-muted hover:bg-hover'}`}
+                        >
+                          <Calendar size={13} className={initialScheduleTime ? 'text-accent-foreground' : 'text-foreground/75'} />
+                          <span>{t('schedule_btn', language)}</span>
+                        </button>
+                      </div>
+
+                      {/* Publish Now Button */}
+                      {!initialScheduleTime && (
+                        <Button
+                          variant="primary"
+                          onClick={() => handlePublish(false)}
+                          disabled={publishStatus !== 'idle'}
+                          className="py-1.5 px-5 text-xs font-bold h-[34px] shrink-0 flex items-center gap-1.5"
+                        >
+                          <Share2 size={13} />
+                          <span>{t('upload_now_btn', language)}</span>
+                        </Button>
+                      )}
+                    </div>
+                  )
+                )}
+              </>
             )}
 
           </div>
@@ -610,13 +688,54 @@ export default function UploadModal({
                 <p className="text-[11px] text-danger/80 break-words font-mono bg-red-500/[0.03] p-2.5 rounded-lg border border-red-500/10 max-h-24 overflow-y-auto">
                   {errorMessage}
                 </p>
-                <Button
-                  variant="secondary"
-                  onClick={() => setPublishStatus('idle')}
-                  className="py-2 text-xs font-semibold w-full"
-                >
-                  Forma Geri Dön
-                </Button>
+                {/* Schedule + Publish Now — same as normal publish flow */}
+                <div className="flex gap-2 items-center">
+                  <div className="flex items-center bg-active rounded-lg overflow-hidden border border-foreground/5 h-[34px] p-0.5 shrink-0 select-none flex-1 min-w-0">
+                    <input
+                      type="date"
+                      value={datePart}
+                      onChange={(e) => {
+                        const newDate = e.target.value;
+                        const timeVal = timePart || '12:00';
+                        setScheduleTime(`${newDate}T${timeVal}`);
+                      }}
+                      onClick={(e) => { try { e.target.showPicker(); } catch (err) {} }}
+                      className="bg-transparent border-0 focus:ring-0 focus:outline-none pl-2 pr-1 text-xs text-foreground cursor-pointer h-full w-[82px] outline-none hover:bg-hover hover:rounded-l-md transition-all [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden"
+                      style={{ accentColor: 'var(--theme-accent)', colorScheme: document.documentElement.classList.contains('light') ? 'light' : 'dark' }}
+                    />
+                    <div className="h-3 w-[1px] bg-foreground/10 shrink-0 mx-0.5" />
+                    <input
+                      type="time"
+                      value={timePart}
+                      onChange={(e) => {
+                        const newTime = e.target.value;
+                        const dateVal = datePart || getLocalDateString();
+                        setScheduleTime(`${dateVal}T${newTime}`);
+                      }}
+                      onClick={(e) => { try { e.target.showPicker(); } catch (err) {} }}
+                      className="bg-transparent border-0 focus:ring-0 focus:outline-none px-1 text-xs text-foreground cursor-pointer h-full w-[48px] outline-none hover:bg-hover hover:rounded-md transition-all [&::-webkit-calendar-picker-indicator]:hidden"
+                      style={{ accentColor: 'var(--theme-accent)', colorScheme: document.documentElement.classList.contains('light') ? 'light' : 'dark' }}
+                    />
+                    <button
+                      onClick={() => { setPublishStatus('idle'); handlePublish(true); }}
+                      disabled={isScheduleInPast}
+                      className={`h-full px-3 text-xs font-semibold rounded-r-md transition-all shrink-0 flex items-center justify-center gap-1.5 ml-1 border-l border-foreground/5
+                        ${isScheduleInPast ? 'opacity-35 cursor-not-allowed' : 'cursor-pointer'}
+                        text-foreground bg-muted hover:bg-hover`}
+                    >
+                      <Calendar size={12} />
+                      <span>{t('schedule_btn', language)}</span>
+                    </button>
+                  </div>
+                  <Button
+                    variant="primary"
+                    onClick={() => { setPublishStatus('idle'); handlePublish(false); }}
+                    className="py-1.5 px-4 text-xs font-bold h-[34px] shrink-0 flex items-center gap-1.5"
+                  >
+                    <Share2 size={12} />
+                    <span>{t('upload_now_btn', language)}</span>
+                  </Button>
+                </div>
               </div>
             )}
 

@@ -139,5 +139,8 @@ export const api = {
         throw new Error('Yayın takvimi yüklenemedi.');
       }
       return res.json();
-    })
+    }),
+
+  getBufferProfile: () =>
+    fetch(`${API_URL}/api/buffer-profile`).then(res => res.json()),
 };

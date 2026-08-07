@@ -17,8 +17,9 @@ export default function IntegrationsTab({ language, onClose, showToast, highligh
     fixed_text: ''
   });
 
-  const [bufferTestStatus, setBufferTestStatus] = useState({ state: 'idle', message: '' }); // 'idle' | 'testing' | 'success' | 'error'
-  const [cloudinaryTestStatus, setCloudinaryTestStatus] = useState({ state: 'idle', message: '' }); // 'idle' | 'testing' | 'success' | 'error'
+  const [bufferTestStatus, setBufferTestStatus] = useState({ state: 'idle', message: '' });
+  const [cloudinaryTestStatus, setCloudinaryTestStatus] = useState({ state: 'idle', message: '' });
+  const [bufferProfile, setBufferProfile] = useState(null); // { name, avatar, service }
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -35,6 +36,10 @@ export default function IntegrationsTab({ language, onClose, showToast, highligh
             cloudinary_api_secret: data.cloudinary_api_secret || '',
             fixed_text: data.fixed_text || ''
           });
+          // Also try to fetch buffer profile if key+id are set
+          if (data.buffer_api_key && data.buffer_channel_id) {
+            api.getBufferProfile().then(p => { if (active && p.success) setBufferProfile(p); }).catch(() => {});
+          }
         }
       })
       .catch(err => {
@@ -80,6 +85,11 @@ export default function IntegrationsTab({ language, onClose, showToast, highligh
       const res = await api.testBuffer(settings.buffer_api_key);
       if (res.success) {
         setBufferTestStatus({ state: 'success', message: res.message || t('test_success', language) });
+        // Try to fetch profile info
+        try {
+          const profile = await api.getBufferProfile();
+          if (profile.success) setBufferProfile(profile);
+        } catch (_) {}
       } else {
         setBufferTestStatus({ state: 'error', message: res.message || 'Doğrulama başarısız.' });
       }
@@ -127,7 +137,29 @@ export default function IntegrationsTab({ language, onClose, showToast, highligh
           <h3 className="text-sm font-semibold text-foreground flex items-center gap-2 border-b border-foreground/5 pb-2">
             {highlight(t('buffer_settings', language))}
           </h3>
-          
+
+          {/* Connected Instagram profile card */}
+          {bufferProfile && bufferProfile.name && (
+            <div className="flex items-center gap-3 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/15 rounded-xl px-3 py-2.5">
+              {bufferProfile.avatar ? (
+                <img
+                  src={bufferProfile.avatar}
+                  alt={bufferProfile.name}
+                  className="w-9 h-9 rounded-full object-cover ring-2 ring-purple-500/30 shrink-0"
+                />
+              ) : (
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shrink-0">
+                  <span className="text-white text-xs font-bold">{bufferProfile.name[0]?.toUpperCase()}</span>
+                </div>
+              )}
+              <div className="flex flex-col min-w-0">
+                <span className="text-xs font-bold text-foreground truncate">@{bufferProfile.name}</span>
+                <span className="text-[10px] text-foreground/45 capitalize">{bufferProfile.service || 'instagram'} · Buffer</span>
+              </div>
+              <div className="ml-auto shrink-0 w-2 h-2 rounded-full bg-green-500" title="Connected" />
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5 col-span-2">
               <label className="text-xs font-medium text-foreground/75">

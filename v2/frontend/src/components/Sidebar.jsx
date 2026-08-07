@@ -84,7 +84,8 @@ const getFolderName = (path) => {
 
 export default function Sidebar({ 
   currentFolder, subfolders, scanFolder, setShowSettingsModal, language, keybindings,
-  isCollapsed, setIsCollapsed, onContextMenu, goBack, goForward, canGoBack, canGoForward
+  isCollapsed, setIsCollapsed, onContextMenu, goBack, goForward, canGoBack, canGoForward,
+  activeViewTab
 }) {
   const [sidebarWidth, setSidebarWidth] = useState(() => {
     const saved = localStorage.getItem('sidebar_width');
@@ -229,18 +230,20 @@ export default function Sidebar({
               </div>
             </div>
           )}
-          <Button 
-            variant="ghost"
-            size="icon"
-            onClick={(e) => {
-              if (isCollapsed) e.stopPropagation();
-              setIsCollapsed(!isCollapsed);
-            }}
-            className={isCollapsed ? 'mx-auto' : 'p-1.5'}
-            title={isCollapsed ? t('expand', language) : t('collapse', language)}
-          >
-            <PanelLeft size={18} />
-          </Button>
+          {activeViewTab !== 'calendar' && (
+            <Button 
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                if (isCollapsed) e.stopPropagation();
+                setIsCollapsed(!isCollapsed);
+              }}
+              className={isCollapsed ? 'mx-auto' : 'p-1.5'}
+              title={isCollapsed ? t('expand', language) : t('collapse', language)}
+            >
+              <PanelLeft size={18} />
+            </Button>
+          )}
         </div>
 
         {/* Folder Tree Body */}

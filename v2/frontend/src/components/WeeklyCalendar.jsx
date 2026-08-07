@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Calendar, Check, Loader2, Plus, X, CalendarDays } from 'lucide-react';
+import { Calendar, Check, Loader2, Plus, X } from 'lucide-react';
 import { api } from '../services/api';
 import { t } from '../utils/translations';
 import VideoCard from './VideoCard';
 import Modal from './ui/Modal';
+import Button from './ui/Button';
+
 
 /* ─── Mini card component for the calendar grid ─── */
 function CalendarVideoCard({ video, isSelected, upload, API_URL, language, formatPublishTime, onClick }) {
@@ -173,14 +175,18 @@ export default function WeeklyCalendar({
   showToast,
   openPublishModalWithTime,
   activeUploads,
-  openVideoDetailModal
+  openVideoDetailModal,
+  // Controlled from App
+  currentDate,
+  setCurrentDate,
+  calendarView,
+  setCalendarView,
+  selectorCell,
+  setSelectorCell,
 }) {
   const [scheduledVideos, setScheduledVideos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [calendarView, setCalendarView] = useState('week'); // 'week' | 'month'
-  const [selectorCell, setSelectorCell] = useState(null); // { day, hour }
-  const [viewUploadTask, setViewUploadTask] = useState(null); // Active upload task state!
+  const [viewUploadTask, setViewUploadTask] = useState(null);
   const gridContainerRef = useRef(null);
 
   const fetchScheduledVideos = () => {
@@ -201,6 +207,7 @@ export default function WeeklyCalendar({
   useEffect(() => {
     fetchScheduledVideos();
   }, [videos]);
+
 
   // Scroll to a reasonable hour (e.g. 09:00) on mount/load only in week view
   useEffect(() => {
@@ -542,85 +549,12 @@ export default function WeeklyCalendar({
   }
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-background/30 backdrop-blur rounded-2xl border border-muted/10 py-5 px-0 gap-4 animate-in fade-in duration-200">
-      {/* Calendar Header Controls */}
-      <div className="flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center border-b border-muted/10 pb-4 shrink-0 px-5">
-        <div className="flex items-center gap-2">
-          <Calendar size={18} className="text-accent" />
-          <h2 className="text-base font-semibold text-foreground">
-            {language === 'tr' ? 'Yayın Planlayıcı Takvimi' : 'Publish Planner Calendar'}
-          </h2>
-        </div>
-        
-        <div className="flex items-center gap-3 self-center">
-          <button
-            onClick={() => {
-              const today = new Date();
-              const timeStr = getNextSlotForDay(today);
-              setSelectorCell({ day: today, hour: parseInt(timeStr.split('T')[1]), smartTime: timeStr });
-            }}
-            className="text-xs font-bold text-accent-foreground bg-accent hover:opacity-90 px-3 py-1.5 rounded-lg transition-all cursor-pointer shadow-sm flex items-center gap-1.5 select-none"
-            title={language === 'tr' ? 'Bugün için hızlı video paylaş/planla' : 'Quickly publish/schedule video for today'}
-          >
-            <Plus size={13} strokeWidth={2.5} />
-            <span>{language === 'tr' ? 'Video Paylaş' : 'Publish Video'}</span>
-          </button>
-
-          <button
-            onClick={calendarView === 'month' ? handlePrevMonth : handlePrevWeek}
-            className="p-1.5 hover:bg-muted/40 text-foreground/70 hover:text-foreground rounded-lg transition-colors border border-muted/10 bg-muted/20 cursor-pointer"
-          >
-            <ChevronLeft size={16} />
-          </button>
-          
-          <span className="text-xs font-semibold text-foreground bg-muted/30 px-3 py-1.5 rounded-lg border border-muted/10 min-w-[180px] text-center select-none text-ellipsis overflow-hidden whitespace-nowrap">
-            {calendarView === 'month' ? formatMonthRange(currentDate) : formatWeekRange(daysOfWeek)}
-          </span>
-          
-          <button
-            onClick={calendarView === 'month' ? handleNextMonth : handleNextWeek}
-            className="p-1.5 hover:bg-muted/40 text-foreground/70 hover:text-foreground rounded-lg transition-colors border border-muted/10 bg-muted/20 cursor-pointer"
-          >
-            <ChevronRight size={16} />
-          </button>
-
-          <button
-            onClick={handleToday}
-            className="text-xs font-semibold text-accent hover:bg-accent/10 border border-accent/20 bg-accent/5 px-3 py-1.5 rounded-lg transition-all cursor-pointer"
-          >
-            {language === 'tr' ? 'Bugün' : 'Today'}
-          </button>
-
-          {/* Toggle buttons for Week/Month view */}
-          <div className="flex items-center bg-muted/20 border border-muted/10 rounded-lg p-0.5 select-none gap-0.5 ml-1">
-            <button
-              onClick={() => setCalendarView('week')}
-              className={`p-1.5 rounded-md transition-colors cursor-pointer flex items-center justify-center
-                ${calendarView === 'week' 
-                  ? 'bg-accent text-accent-foreground shadow-sm font-bold' 
-                  : 'text-foreground/60 hover:text-foreground hover:bg-muted/20'}`}
-              title={language === 'tr' ? 'Haftalık Görünüm' : 'Weekly View'}
-            >
-              <CalendarDays size={14} />
-            </button>
-            <button
-              onClick={() => setCalendarView('month')}
-              className={`p-1.5 rounded-md transition-colors cursor-pointer flex items-center justify-center
-                ${calendarView === 'month' 
-                  ? 'bg-accent text-accent-foreground shadow-sm font-bold' 
-                  : 'text-foreground/60 hover:text-foreground hover:bg-muted/20'}`}
-              title={language === 'tr' ? 'Aylık Görünüm' : 'Monthly View'}
-            >
-              <Calendar size={14} />
-            </button>
-          </div>
-        </div>
-      </div>
+    <div className="flex-1 flex flex-col min-h-0 animate-in fade-in duration-200">
 
       {/* Main Grid Wrapper */}
       <div 
         ref={gridContainerRef}
-        className="flex-1 min-h-0 overflow-y-auto pr-1 border border-muted/10 rounded-xl relative bg-muted/[0.02] scrollbar-thin mx-5"
+        className="flex-1 min-h-0 overflow-y-auto border-t border-muted/10 relative bg-muted/[0.02] scrollbar-thin"
       >
         {calendarView === 'week' ? (
           <>
