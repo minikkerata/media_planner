@@ -80,19 +80,30 @@ export function useMediaPlanner() {
   // Media Player State Sub-hook
   const mediaPlayer = useMediaPlayerState({ activePath, videoRef });
 
+  const getSortedSelectedVideos = useCallback(() => videos.filter(v => selectionOps.selectedPaths.has(v.path)), [videos, selectionOps.selectedPaths]);
+
+  const updateNoteText = useCallback(() => {
+    if (selectionOps.selectionMode) {
+      const sorted = getSortedSelectedVideos();
+      setNoteText(sorted.length > 0 ? sorted.map((v, i) => `${i + 1}. ${v.description || ''}`).join('\n') : '');
+    } else if (activePath) {
+      const activeVideo = videos.find(v => v.path === activePath);
+      setNoteText(activeVideo ? (activeVideo.description || '') : '');
+    } else { setNoteText(''); }
+  }, [activePath, getSortedSelectedVideos, selectionOps.selectedPaths, selectionOps.selectionMode, videos]);
+
   // Drag Selection Sub-hook
   const dragSel = useDragSelection({
     selectionMode: selectionOps.selectionMode,
     setSelectionMode: selectionOps.setSelectionMode,
     setActivePath,
     selectedPaths: selectionOps.selectedPaths,
-    setSelectedPaths: selectionOps.setSelectedPaths
+    setSelectedPaths: selectionOps.setSelectedPaths,
+    onDragEnd: updateNoteText
   });
 
   // Note Search Sub-hook
   const noteSearchOps = useNoteSearch();
-
-  const getSortedSelectedVideos = useCallback(() => videos.filter(v => selectionOps.selectedPaths.has(v.path)), [videos, selectionOps.selectedPaths]);
 
   const getVisibleVideos = useCallback(() => {
     let visible = layoutOps.showUnsharedOnly === 'unshared'
@@ -391,14 +402,9 @@ export function useMediaPlanner() {
   }, [activePath, selectionOps.selectedPaths.size, selectionOps.selectionMode, noteSearchOps.showNoteSearch, keybindingOps.preventAutoFocusRef]);
 
   useEffect(() => {
-    if (selectionOps.selectionMode) {
-      const sorted = getSortedSelectedVideos();
-      setNoteText(sorted.length > 0 ? sorted.map((v, i) => `${i + 1}. ${v.description || ''}`).join('\n') : '');
-    } else if (activePath) {
-      const activeVideo = videos.find(v => v.path === activePath);
-      setNoteText(activeVideo ? (activeVideo.description || '') : '');
-    } else { setNoteText(''); }
-  }, [activePath, getSortedSelectedVideos, selectionOps.selectedPaths, selectionOps.selectionMode, videos]);
+    if (dragSel.isMouseDown) return;
+    updateNoteText();
+  }, [dragSel.isMouseDown, updateNoteText]);
 
   const lastActivePathRef = useRef(null);
 

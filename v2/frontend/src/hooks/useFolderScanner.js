@@ -3,7 +3,9 @@ import { api } from '../services/api';
 import { t } from '../utils/translations';
 
 export function useFolderScanner(language, showToast, selectionMode, activePath, setActivePath, clipboardOps) {
-  const [currentFolder, setCurrentFolder] = useState(null);
+  const [currentFolder, setCurrentFolder] = useState(() => {
+    return localStorage.getItem('last_folder') || null;
+  });
   const [parentFolder, setParentFolder] = useState(null);
   const [subfolders, setSubfolders] = useState([]);
   const [videos, setVideos] = useState([]);
@@ -19,6 +21,7 @@ export function useFolderScanner(language, showToast, selectionMode, activePath,
       const data = await api.scan(path);
       if (data.success) {
         setCurrentFolder(data.current_folder);
+        localStorage.setItem('last_folder', data.current_folder);
         setParentFolder(data.parent_folder);
         setSubfolders(data.subfolders);
         setVideos(data.videos);
