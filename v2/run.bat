@@ -1,14 +1,13 @@
 @echo off
-cd /d "%~dp0.."
+cd /d "%~dp0"
 
 :: Kill any existing processes using our target ports to avoid EADDRINUSE errors
 for /f "tokens=5" %%a in ('netstat -aon ^| findstr "LISTENING" ^| findstr ":8085 :5173"') do taskkill /f /pid %%a 2>nul
 
-:: Start FastAPI Backend Server visibly
-start "Media Planner Backend" "C:\Users\emred\AppData\Local\Programs\Python\Python312\python.exe" "%~dp0backend\main.py"
+:: Start Node.js Backend Server
+start "Media Planner Backend (Node.js)" cmd /k "node server/index.js"
 
-:: Start Vite Dev Server visibly
-start "MediaPlannerVite" cmd /c "cd /d "%~dp0frontend" && npm run dev < NUL"
+:: Start Vite Dev Server
+start "Media Planner Frontend (Vite)" cmd /k "cd /d "%~dp0frontend" && npm run dev"
 
 exit
-

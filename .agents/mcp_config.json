@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "codebase-memory-mcp": {
+      "command": "C:/Users/emred/.local/bin/codebase-memory-mcp.exe"
+    }
+  }
+}

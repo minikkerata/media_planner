@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:all": "start /min \"Media Planner Backend\" \"C:\\Users\\emred\\anaconda3\\python.exe\" ../backend/main.py && vite",
+    "dev:all": "start /min \"Media Planner Backend\" node ../server/index.js && vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

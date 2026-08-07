@@ -1,0 +1,19 @@
+# Node modules (Dependencies)
+node_modules/
+**/node_modules/
+
+# Build & Dist
+dist/
+**/dist/
+build/
+
+# Logs & Temp
+*.log
+.trash/
+.medi_thumbs/
+__pycache__/
+*.pyc
+
+# Environment & OS files
+.DS_Store
+Thumbs.db
