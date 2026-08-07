@@ -28,19 +28,23 @@ export default function App() {
   const [calendarSelectorCell, setCalendarSelectorCell] = React.useState(null);
   const [bufferProfile, setBufferProfile] = React.useState(null);
 
-  // Fetch buffer/instagram profile once on mount
+  // Fetch buffer/instagram profile after a short delay — not needed on first render
   React.useEffect(() => {
-    api.getBufferProfile()
-      .then(p => { if (p?.success) setBufferProfile(p); })
-      .catch(() => {});
-    // Re-fetch when settings change
+    const timeout = setTimeout(() => {
+      api.getBufferProfile()
+        .then(p => { if (p?.success) setBufferProfile(p); })
+        .catch(() => {});
+    }, 2000);
     const onSettingsChanged = () => {
       api.getBufferProfile()
         .then(p => { if (p?.success) setBufferProfile(p); })
         .catch(() => {});
     };
     window.addEventListener('settings-changed', onSettingsChanged);
-    return () => window.removeEventListener('settings-changed', onSettingsChanged);
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener('settings-changed', onSettingsChanged);
+    };
   }, []);
 
   React.useEffect(() => {

@@ -357,6 +357,8 @@ export function useMediaPlanner() {
     };
   }, []);
 
+
+
   const [isServerHealthy, setIsServerHealthy] = useState(true);
 
   useEffect(() => {
@@ -375,7 +377,7 @@ export function useMediaPlanner() {
     };
 
     checkHealth();
-    const interval = setInterval(checkHealth, 5000);
+    const interval = setInterval(checkHealth, 30000);
     return () => clearInterval(interval);
   }, []);
   const [showNoteSearch, setShowNoteSearch] = useState(false);

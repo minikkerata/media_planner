@@ -1,6 +1,7 @@
 import { app, BrowserWindow, Tray, Menu, shell, ipcMain, dialog } from 'electron';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 import { fileURLToPath } from 'url';
 import { spawn } from 'child_process';
 import pkg from 'electron-updater';
@@ -9,6 +10,14 @@ const { autoUpdater } = pkg;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
+
+// Give MediaPlanner its own userData so localStorage is NOT shared with other Electron apps.
+// Must be called before app.whenReady().
+const userDataPath = path.join(
+  process.env.APPDATA || path.join(os.homedir(), '.config'),
+  'MediaPlanner', 'ElectronData'
+);
+app.setPath('userData', userDataPath);
 
 let mainWindow = null;
 let tray = null;
