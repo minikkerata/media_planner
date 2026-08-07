@@ -35,7 +35,11 @@ export function loadSettings() {
     fixed_text: 'Daha fazla yamaç paraşütü videosu görmek için takip etmeyi unutmayın',
     app_theme: 'system',
     app_ui_style: 'old',
-    last_folder: ''
+    last_folder: '',
+    sidebar_width: 260,
+    sidebar_panel_collapsed: false,
+    detail_panel_width: 380,
+    detail_panel_collapsed: false
   };
 }
 

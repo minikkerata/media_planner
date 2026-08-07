@@ -64,11 +64,28 @@ export default function NotesEditor({
   const getFormattedEditTime = () => {
     if (selectionMode || !activeVideo || !activeVideo.updated_at) return null;
     try {
-      const date = new Date(activeVideo.updated_at);
-      const pad = (n) => String(n).padStart(2, '0');
-      const dateStr = `${pad(date.getDate())}.${pad(date.getMonth() + 1)}.${date.getFullYear()}`;
-      const timeStr = `${pad(date.getHours())}:${pad(date.getMinutes())}`;
-      return `${t('last_edited', language)}: ${dateStr} ${timeStr}`;
+      const now = Date.now();
+      const updated = new Date(activeVideo.updated_at).getTime();
+      const diffSec = Math.max(0, Math.floor((now - updated) / 1000));
+      const isTr = language === 'tr';
+
+      if (diffSec < 60) {
+        return isTr ? 'şimdi' : 'just now';
+      }
+      const diffMin = Math.floor(diffSec / 60);
+      if (diffMin < 60) {
+        return isTr ? `${diffMin}d önce` : `${diffMin}m ago`;
+      }
+      const diffHour = Math.floor(diffMin / 60);
+      if (diffHour < 24) {
+        return isTr ? `${diffHour}s önce` : `${diffHour}h ago`;
+      }
+      const diffDay = Math.floor(diffHour / 24);
+      if (diffDay < 365) {
+        return isTr ? `${diffDay}g önce` : `${diffDay}d ago`;
+      }
+      const diffYear = Math.floor(diffDay / 365);
+      return isTr ? `${diffYear}y önce` : `${diffYear}y ago`;
     } catch (e) {
       return null;
     }
@@ -109,12 +126,12 @@ export default function NotesEditor({
     <div className="flex-1 flex flex-col gap-2 min-h-0 min-w-0">
       {/* Notes Header */}
       <div className="h-8 flex items-center justify-between px-1 shrink-0">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-foreground/80">
+        <div className="flex items-center gap-2 min-w-0 truncate">
+          <span className="text-xs font-bold text-foreground/80 shrink-0">
             {t('notes_title', language)}
           </span>
           {pendingSuggestion && (
-            <span className="text-[9px] font-mono text-foreground/30">Enter onayla · ESC iptal</span>
+            <span className="text-[9px] font-mono text-foreground/30 shrink-0">Enter onayla · ESC iptal</span>
           )}
 
           {/* Copy note button */}
@@ -133,7 +150,7 @@ export default function NotesEditor({
                 setTimeout(() => setShowNoteCopyTick(false), 1500);
               }}
               tabIndex={-1}
-              className="transition-all flex items-center gap-1.5"
+              className="transition-all flex items-center gap-1.5 shrink-0"
               title={selectionMode ? t('copy_selected_notes_combined', language) : t('copy_desc_title', language)}
             >
               {showNoteCopyTick ? (
@@ -152,14 +169,14 @@ export default function NotesEditor({
 
           {/* Edit time label */}
           {!selectionMode && activeVideo && activeVideo.updated_at > 0 && (
-            <span className="text-[10px] text-foreground/30 font-medium select-none pointer-events-none whitespace-nowrap ml-1 shrink-0">
+            <span className="text-xs text-foreground/70 font-semibold select-none pointer-events-none whitespace-nowrap ml-1.5 shrink-0">
               {getFormattedEditTime()}
             </span>
           )}
         </div>
 
         {/* Panel Actions */}
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-1 shrink-0 ml-auto z-20">
           {/* Save as template (star) button */}
           {!selectionMode && activePath && addTemplate && (
             <button
@@ -181,7 +198,7 @@ export default function NotesEditor({
                   );
                 }
               }}
-              className="p-1 rounded hover:bg-amber-400/15 text-foreground/40 hover:text-amber-400 transition cursor-pointer"
+              className="p-1 rounded hover:bg-amber-400/15 text-foreground/40 hover:text-amber-400 cursor-pointer shrink-0"
               title="Şablon olarak kaydet"
               tabIndex={-1}
             >
@@ -191,7 +208,7 @@ export default function NotesEditor({
           {selectionMode && (
             <button 
               onClick={exitSelectionMode}
-              className="p-1 rounded hover:bg-foreground/5 text-foreground/60 hover:text-foreground transition cursor-pointer mr-1"
+              className="p-1 rounded hover:bg-foreground/5 text-foreground/60 hover:text-foreground cursor-pointer mr-1 shrink-0"
               title={t('exit_selection_title', language)}
             >
               <X size={14} />
@@ -199,7 +216,7 @@ export default function NotesEditor({
           )}
           <button 
             onClick={() => setIsCollapsed(true)}
-            className="p-1 rounded hover:bg-foreground/5 text-foreground/60 hover:text-foreground transition cursor-pointer"
+            className="p-1 rounded hover:bg-foreground/5 text-foreground/60 hover:text-foreground cursor-pointer shrink-0"
             title={t('close_btn', language)}
           >
             <X size={15} />

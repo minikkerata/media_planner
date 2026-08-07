@@ -620,6 +620,10 @@ export default function DetailPanel({
 
     const handleMouseUp = () => {
       setIsResizing(false);
+      const currentW = localStorage.getItem('detail_panel_width');
+      if (currentW) {
+        api.saveSettings({ detail_panel_width: parseInt(currentW, 10) }).catch(() => {});
+      }
     };
 
     window.addEventListener('mousemove', handleMouseMove);

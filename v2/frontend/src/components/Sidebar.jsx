@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { PanelLeft, Settings, Folder, FolderOpen, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import Button from './ui/Button';
 import { t } from '../utils/translations';
+import { api } from '../services/api';
 import { getShortcutString } from '../utils/shortcutUtils';
 import logoLight from '../assets/logo_light.svg';
 import logoDark from '../assets/logo_dark.svg';
@@ -114,6 +115,10 @@ export default function Sidebar({
 
     const handleMouseUp = () => {
       setIsResizing(false);
+      const currentW = localStorage.getItem('sidebar_width');
+      if (currentW) {
+        api.saveSettings({ sidebar_width: parseInt(currentW, 10) }).catch(() => {});
+      }
     };
 
     window.addEventListener('mousemove', handleMouseMove);

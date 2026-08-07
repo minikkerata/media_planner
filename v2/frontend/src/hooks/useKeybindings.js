@@ -82,20 +82,24 @@ export function useKeybindings({
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
+        e.preventDefault();
+        // Priority #1: Exit selection mode if active, no matter what
+        if (selectionMode) {
+          exitSelectionMode();
+          return;
+        }
+
         const target = e.target;
         const isEditingText = target && (target.tagName === 'TEXTAREA' || (target.tagName === 'INPUT' && target.type === 'text'));
         if (isEditingText) {
           if (showNoteSearch) {
-            e.preventDefault();
             setShowNoteSearch(false);
           }
           return;
         }
 
-        e.preventDefault();
         preventAutoFocusRef.current = true;
         if (templateMode) { toggleTemplates(); return; }
-        if (selectionMode) { exitSelectionMode(); return; }
         if (showNoteSearch) setShowNoteSearch(false);
         else if (aiAssistant?.isPromptOpen) aiAssistant.closeAIPrompt();
         else if (aiAssistant?.isDiffMode) aiAssistant.discardAIChanges();

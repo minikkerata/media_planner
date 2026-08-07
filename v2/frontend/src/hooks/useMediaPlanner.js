@@ -345,6 +345,20 @@ export function useMediaPlanner() {
           if (data.app_ui_style) {
             localStorage.setItem('app_ui_style', data.app_ui_style);
           }
+          if (data.sidebar_panel_collapsed !== undefined) {
+            setIsSidebarCollapsed(Boolean(data.sidebar_panel_collapsed));
+            localStorage.setItem('sidebar_panel_collapsed', String(data.sidebar_panel_collapsed));
+          }
+          if (data.sidebar_width !== undefined && Number(data.sidebar_width) > 0) {
+            localStorage.setItem('sidebar_width', String(data.sidebar_width));
+          }
+          if (data.detail_panel_collapsed !== undefined) {
+            setIsDetailCollapsed(Boolean(data.detail_panel_collapsed));
+            localStorage.setItem('detail_panel_collapsed', String(data.detail_panel_collapsed));
+          }
+          if (data.detail_panel_width !== undefined && Number(data.detail_panel_width) > 0) {
+            localStorage.setItem('detail_panel_width', String(data.detail_panel_width));
+          }
           // Auto-restore last opened folder on startup
           if (data.last_folder && typeof data.last_folder === 'string' && data.last_folder.trim()) {
             scanFolderRef.current(data.last_folder.trim(), 'manual');
@@ -644,10 +658,12 @@ export function useMediaPlanner() {
 
   useEffect(() => {
     localStorage.setItem('detail_panel_collapsed', isDetailCollapsed.toString());
+    api.saveSettings({ detail_panel_collapsed: isDetailCollapsed }).catch(() => {});
   }, [isDetailCollapsed]);
 
   useEffect(() => {
     localStorage.setItem('sidebar_panel_collapsed', isSidebarCollapsed.toString());
+    api.saveSettings({ sidebar_panel_collapsed: isSidebarCollapsed }).catch(() => {});
   }, [isSidebarCollapsed]);
 
   useEffect(() => {
