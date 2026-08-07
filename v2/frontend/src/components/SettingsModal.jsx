@@ -293,81 +293,81 @@ export default function SettingsModal({
             variant="none"
             size="none"
             onClick={() => setActiveTab('folder')}
-            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start text-left text-start
               ${activeTab === 'folder' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
           >
             <FolderOpen size={16} />
-            {t('folder', language)}
+            <span className="text-left text-start">{t('folder', language)}</span>
           </Button>
           <Button
             variant="none"
             size="none"
             onClick={() => setActiveTab('shortcuts')}
-            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start text-left text-start
               ${activeTab === 'shortcuts' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
           >
             <Keyboard size={16} />
-            {t('shortcuts', language)}
+            <span className="text-left text-start">{t('shortcuts', language)}</span>
           </Button>
           <Button
             variant="none"
             size="none"
             onClick={() => setActiveTab('language')}
-            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start text-left text-start
               ${activeTab === 'language' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
           >
             <Globe size={16} />
-            {t('language_options', language)}
+            <span className="text-left text-start">{t('language_options', language)}</span>
           </Button>
           <Button
             variant="none"
             size="none"
             onClick={() => setActiveTab('theme')}
-            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start text-left text-start
               ${activeTab === 'theme' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
           >
             <Palette size={16} />
-            {t('theme', language)}
+            <span className="text-left text-start">{t('theme', language)}</span>
           </Button>
           <Button
             variant="none"
             size="none"
             onClick={() => setActiveTab('backup')}
-            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start text-left text-start
               ${activeTab === 'backup' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
           >
             <Database size={16} />
-            {t('backup_tab_title', language)}
+            <span className="text-left text-start">{t('backup_tab_title', language)}</span>
           </Button>
           <Button
             variant="none"
             size="none"
             onClick={() => setActiveTab('ai')}
-            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start text-left text-start
               ${activeTab === 'ai' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
           >
             <Brain size={16} />
-            {t('ai_settings', language)}
+            <span className="text-left text-start">{t('ai_settings', language)}</span>
           </Button>
           <Button
             variant="none"
             size="none"
             onClick={() => setActiveTab('integrations')}
-            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start text-left text-start
               ${activeTab === 'integrations' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
           >
             <Link2 size={16} />
-            {t('integrations', language)}
+            <span className="text-left text-start">{t('integrations', language)}</span>
           </Button>
           <Button
             variant="none"
             size="none"
             onClick={() => setActiveTab('fixed_notes')}
-            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start
+            className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors text-sm font-medium w-full justify-start text-left text-start
               ${activeTab === 'fixed_notes' ? 'bg-active text-foreground font-semibold' : 'text-foreground/70 hover:bg-active/50 hover:text-foreground'}`}
           >
             <Layers size={16} />
-            {t('fixed_notes', language)}
+            <span className="text-left text-start">{t('fixed_notes', language)}</span>
           </Button>
         </div>
       </div>

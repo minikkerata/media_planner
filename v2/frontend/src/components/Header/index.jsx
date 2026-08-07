@@ -2,6 +2,8 @@ import React from 'react';
 import SelectionToolbar from './SelectionToolbar';
 import NavigationToolbar from './NavigationToolbar';
 import GridSizeControl from './GridSizeControl';
+import ViewTabToggle from './ViewTabToggle';
+import HeaderActions from './HeaderActions';
 
 import CalendarHeader from './CalendarHeader';
 import SortControls from '../SortControls';
@@ -118,33 +120,12 @@ export default function Header(props) {
 
           {/* ── View Tab Switcher (center) ── */}
           {currentFolder && (
-            <div className="flex items-center gap-0.5 bg-muted/20 border border-muted/10 p-0.5 rounded-lg select-none">
-              <button
-                onClick={() => {
-                  setActiveViewTab('library');
-                }}
-                className={`text-[10px] font-bold px-3 py-1 rounded-md transition-all cursor-pointer focus:outline-none focus:ring-0 focus-visible:outline-none
-                  ${activeViewTab === 'library'
-                    ? 'bg-active text-foreground shadow-sm font-black'
-                    : 'text-foreground/60 hover:text-foreground'
-                  }`}
-              >
-                {t('library', language)}
-              </button>
-              <button
-                onClick={() => {
-                  setActiveViewTab('calendar');
-                  setIsSidebarCollapsed(true);
-                }}
-                className={`text-[10px] font-bold px-3 py-1 rounded-md transition-all cursor-pointer focus:outline-none focus:ring-0 focus-visible:outline-none
-                  ${activeViewTab === 'calendar'
-                    ? 'bg-active text-foreground shadow-sm font-black'
-                    : 'text-foreground/60 hover:text-foreground'
-                  }`}
-              >
-                {t('weekly_calendar', language)}
-              </button>
-            </div>
+            <ViewTabToggle
+              activeViewTab={activeViewTab}
+              setActiveViewTab={setActiveViewTab}
+              setIsSidebarCollapsed={setIsSidebarCollapsed}
+              language={language}
+            />
           )}
 
           {/* ── Right side ── */}

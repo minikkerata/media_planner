@@ -5,6 +5,7 @@ import Button from '../ui/Button';
 import { t } from '../../utils/translations';
 import { api } from '../../services/api';
 
+import DetailPanelHeader from './DetailPanelHeader';
 import SelectionList from './SelectionList';
 import VideoPlayer from './VideoPlayer';
 import NotesEditor from './NotesEditor';
