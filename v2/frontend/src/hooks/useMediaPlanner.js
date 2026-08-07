@@ -15,12 +15,14 @@ import { useFixedTextResolver } from './useFixedTextResolver';
 import { useDragSelection } from './useDragSelection';
 import { useAppLayout } from './useAppLayout';
 import { useNoteSearch } from './useNoteSearch';
+import { useSelectionMode } from './useSelectionMode';
+import { useVideoMetadata } from './useVideoMetadata';
+import { useContextMenuState } from './useContextMenuState';
+import { useModalState } from './useModalState';
 import { t } from '../utils/translations';
 
 export function useMediaPlanner() {
   const [activePath, setActivePath] = useState(null);
-  const [selectionMode, setSelectionMode] = useState(false);
-  const [selectedPaths, setSelectedPaths] = useState(new Set());
   const [toast, setToast] = useState({ message: '', type: 'success', visible: false });
   const [language, setLanguage] = useState(() => localStorage.getItem('app_language') || 'tr');
   const [completedFeedback, setCompletedFeedback] = useState(false);
@@ -38,15 +40,24 @@ export function useMediaPlanner() {
   const clipboardOpsRef = useRef(null);
   const videoRef = useRef(null);
 
-  // Layout Sub-hook (sidebar/detail collapse, grid size, view tab)
+  // App Layout (Sidebar/Detail collapse, grid size, view tab)
   const layoutOps = useAppLayout();
 
-  // Folder scanning sub-hook
+  // Modal Visibility State
+  const modalOps = useModalState();
+
+  // Context Menu State
+  const contextMenuOps = useContextMenuState();
+
+  // Folder Scanner Sub-hook
   const {
     currentFolder, setCurrentFolder, parentFolder, setParentFolder,
     subfolders, setSubfolders, videos, setVideos, forwardStack, setForwardStack,
     scanFolder, goBack, goForward, canGoBack, canGoForward
-  } = useFolderScanner(language, showToast, selectionMode, activePath, setActivePath, clipboardOpsRef);
+  } = useFolderScanner(language, showToast, false, activePath, setActivePath, clipboardOpsRef);
+
+  // Selection Mode Sub-hook
+  const selectionOps = useSelectionMode({ videos, setActivePath });
 
   const scanFolderRef = useRef(scanFolder);
   useEffect(() => { scanFolderRef.current = scanFolder; });
@@ -70,12 +81,18 @@ export function useMediaPlanner() {
   const mediaPlayer = useMediaPlayerState({ activePath, videoRef });
 
   // Drag Selection Sub-hook
-  const dragSel = useDragSelection({ selectionMode, setSelectionMode, setActivePath, selectedPaths, setSelectedPaths });
+  const dragSel = useDragSelection({
+    selectionMode: selectionOps.selectionMode,
+    setSelectionMode: selectionOps.setSelectionMode,
+    setActivePath,
+    selectedPaths: selectionOps.selectedPaths,
+    setSelectedPaths: selectionOps.setSelectedPaths
+  });
 
   // Note Search Sub-hook
   const noteSearchOps = useNoteSearch();
 
-  const getSortedSelectedVideos = useCallback(() => videos.filter(v => selectedPaths.has(v.path)), [videos, selectedPaths]);
+  const getSortedSelectedVideos = useCallback(() => videos.filter(v => selectionOps.selectedPaths.has(v.path)), [videos, selectionOps.selectedPaths]);
 
   const getVisibleVideos = useCallback(() => {
     let visible = layoutOps.showUnsharedOnly === 'unshared'
@@ -88,20 +105,30 @@ export function useMediaPlanner() {
     return sortVideos(visible);
   }, [videos, layoutOps.showUnsharedOnly, sortVideos]);
 
+  // Video Metadata Actions (Starring & Hiding)
+  const videoMetaOps = useVideoMetadata({
+    activePath, setActivePath, currentFolder, language,
+    selectionMode: selectionOps.selectionMode,
+    toggleSelection: selectionOps.toggleSelection,
+    getVisibleVideos, showToast, triggerCompletedFeedback, setVideos
+  });
+
   // Fixed Text & Username Resolver Sub-hook
   const fixedTextOps = useFixedTextResolver({
-    videos, setVideos, activePath, selectionMode, currentFolder, selectedPaths, getSortedSelectedVideos, showToast
+    videos, setVideos, activePath,
+    selectionMode: selectionOps.selectionMode,
+    currentFolder,
+    selectedPaths: selectionOps.selectedPaths,
+    getSortedSelectedVideos, showToast
   });
 
   const fixedTextOpsRef = useRef(fixedTextOps);
   useEffect(() => { fixedTextOpsRef.current = fixedTextOps; });
 
-  const [showUploadModal, setShowUploadModal] = useState(false);
-
   // Single Publishing Task Sub-hook
   const publishTaskOps = usePublishTask({
     videos, setVideos, language, showToast, triggerCompletedFeedback, setProcessToast,
-    setShowUploadModal, setActivePath, setFixedText: fixedTextOps.setFixedText
+    setShowUploadModal: modalOps.setShowUploadModal, setActivePath, setFixedText: fixedTextOps.setFixedText
   });
 
   const [defaultPrompt, setDefaultPrompt] = useState(() => {
@@ -113,7 +140,6 @@ export function useMediaPlanner() {
   const [templateMode, setTemplateMode] = useState(false);
   const [duplicateSuggestion, setDuplicateSuggestion] = useState(null);
 
-  // Fixed useEffect dependency array to [] to eliminate infinite re-render loop on sidebar collapse
   useEffect(() => {
     const handleAISettingsChanged = () => {
       setDefaultPrompt(localStorage.getItem('ai_default_prompt') || 'Metni imla ve dilbilgisi açısından düzelt, daha akıcı hale getir.');
@@ -173,7 +199,7 @@ export function useMediaPlanner() {
       window.removeEventListener('show-toast', handleShowToast);
       window.removeEventListener('settings-changed', loadGlobalSettings);
     };
-  }, []); // Run ONCE on mount
+  }, []);
 
   const [isServerHealthy, setIsServerHealthy] = useState(true);
 
@@ -195,141 +221,34 @@ export function useMediaPlanner() {
     return () => clearInterval(interval);
   }, []);
 
-  const [contextMenu, setContextMenu] = useState({ x: 0, y: 0, visible: false, targetPath: null, isFolder: false });
-  const [hoveredFolder, setHoveredFolder] = useState(null);
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [settingsActiveTab, setSettingsActiveTab] = useState('folder');
-  const [showSearchModal, setShowSearchModal] = useState(false);
-
   const noteInputRef = useRef(null);
   const aiInputRef = useRef(null);
   const isInputFocusedRef = useRef(false);
 
-  const exitSelectionMode = useCallback(() => {
-    setSelectionMode(false);
-    setSelectedPaths(new Set());
-    if (videos.length > 0) {
-      const uns = videos.find(v => !v.shared);
-      setActivePath(uns ? uns.path : videos[0].path);
-    }
-    if (document.activeElement && (
-      document.activeElement.tagName === 'INPUT' ||
-      document.activeElement.tagName === 'TEXTAREA' ||
-      document.activeElement.isContentEditable
-    )) {
-      document.activeElement.blur();
-    }
-  }, [videos]);
-
-  const enterSelectionMode = useCallback((p) => {
-    setSelectionMode(true);
-    setActivePath(null);
-    if (p) {
-      setSelectedPaths(new Set([p]));
-    }
-  }, []);
-
-  const toggleSelection = useCallback((p) => {
-    setSelectedPaths(prev => {
-      const next = new Set(prev);
-      if (next.has(p)) next.delete(p);
-      else next.add(p);
-      return next;
-    });
-  }, []);
-
   const navOps = useNavigation({
-    language, videos, getVisibleVideos, activePath, setActivePath, selectionMode,
-    setSelectedPaths, showToast, parentFolder, scanFolder, setSelectionMode, getSortedSelectedVideos
+    language, videos, getVisibleVideos, activePath, setActivePath,
+    selectionMode: selectionOps.selectionMode,
+    setSelectedPaths: selectionOps.setSelectedPaths,
+    showToast, parentFolder, scanFolder,
+    setSelectionMode: selectionOps.setSelectionMode,
+    getSortedSelectedVideos
   });
 
-  const toggleSharedState = useCallback(async (video, e) => {
-    if (e) e.stopPropagation();
-    if (selectionMode) { toggleSelection(video.path); return; }
-    const nextState = !video.shared;
-
-    let nextVideoPathToJump = null;
-    if (activePath === video.path) {
-      const currentPool = getVisibleVideos().filter(v => v.shared === video.shared);
-      const idx = currentPool.findIndex(v => v.path === video.path);
-      if (idx !== -1 && currentPool.length > 1) {
-        nextVideoPathToJump = currentPool[(idx + 1) % currentPool.length].path;
-      }
-    }
-
-    let videoFolder = currentFolder;
-    if (video.path) {
-      const lastSlash = Math.max(video.path.lastIndexOf('\\'), video.path.lastIndexOf('/'));
-      if (lastSlash !== -1) videoFolder = video.path.substring(0, lastSlash);
-    }
-
-    const finalPublishTime = nextState ? new Date().toISOString() : '';
-    const data = await api.updateMetadata(videoFolder, [{
-      name: video.name,
-      shared: nextState,
-      publish_time: finalPublishTime
-    }]);
-
-    if (data.success) {
-      setVideos(p => p.map(v => v.path === video.path ? {
-        ...v,
-        shared: nextState,
-        publish_time: finalPublishTime,
-        updated_at: Date.now()
-      } : v));
-
-      const performJump = () => {
-        if (nextVideoPathToJump) {
-          setActivePath(nextVideoPathToJump);
-        } else if (activePath === video.path) {
-          const oppositePool = getVisibleVideos().filter(v => v.shared !== video.shared);
-          if (oppositePool.length > 0) {
-            setActivePath(oppositePool[0].path);
-          } else {
-            setActivePath(null);
-          }
-        }
-      };
-
-      if (nextState) {
-        triggerCompletedFeedback();
-        showToast(t('shared_msg', language));
-        setTimeout(performJump, 500);
-      } else {
-        showToast(t('unshared_msg', language));
-        performJump();
-      }
-    }
-  }, [activePath, currentFolder, getVisibleVideos, language, selectionMode, setVideos, showToast, toggleSelection, triggerCompletedFeedback]);
-
-  const toggleHidden = useCallback(async (video, e) => {
-    if (e) e.stopPropagation();
-    const nextHidden = !video.hidden;
-
-    let videoFolder = currentFolder;
-    if (video.path) {
-      const lastSlash = Math.max(video.path.lastIndexOf('\\'), video.path.lastIndexOf('/'));
-      if (lastSlash !== -1) videoFolder = video.path.substring(0, lastSlash);
-    }
-
-    const data = await api.updateMetadata(videoFolder, [{ name: video.name, hidden: nextHidden }]);
-    if (data.success) {
-      setVideos(p => p.map(v => v.path === video.path ? { ...v, hidden: nextHidden } : v));
-      if (activePath === video.path && nextHidden) {
-        const visible = getVisibleVideos().filter(v => v.path !== video.path);
-        setActivePath(visible.length > 0 ? visible[0].path : null);
-      }
-      showToast(nextHidden ? 'Video gizlendi' : 'Video görünür yapıldı');
-    }
-  }, [activePath, currentFolder, getVisibleVideos, setVideos, showToast]);
-
-  const clipboardOps = useClipboard({ language, contextMenu, selectionMode, selectedPaths, activePath, hoveredFolder, currentFolder, api, showToast, scanFolder });
+  const clipboardOps = useClipboard({
+    language,
+    contextMenu: contextMenuOps.contextMenu,
+    selectionMode: selectionOps.selectionMode,
+    selectedPaths: selectionOps.selectedPaths,
+    activePath,
+    hoveredFolder: contextMenuOps.hoveredFolder,
+    currentFolder, api, showToast, scanFolder
+  });
   clipboardOpsRef.current = clipboardOps;
 
   const copyCurrentPaths = useCallback(() => {
     let paths = [];
-    if (selectionMode && selectedPaths.size > 0) {
-      paths = Array.from(selectedPaths);
+    if (selectionOps.selectionMode && selectionOps.selectedPaths.size > 0) {
+      paths = Array.from(selectionOps.selectedPaths);
     } else if (activePath) {
       paths = [activePath];
     }
@@ -337,7 +256,7 @@ export function useMediaPlanner() {
       navigator.clipboard.writeText(paths.join('\n'));
       showToast(paths.length > 1 ? `${paths.length} ${t('paths_copied', language)}` : `${paths[0]} ${t('copied_msg', language)}`, "success");
     }
-  }, [activePath, language, selectedPaths, selectionMode, showToast]);
+  }, [activePath, language, selectionOps.selectedPaths, selectionOps.selectionMode, showToast]);
 
   const handleOpenLink = useCallback((e) => {
     if (e) e.stopPropagation();
@@ -373,21 +292,42 @@ export function useMediaPlanner() {
     window.open(url, '_blank', 'noopener,noreferrer');
   }, [activePath, videos]);
 
-  const fileOps = useFileOperations({ language, contextMenu, selectionMode, selectedPaths, activePath, currentFolder, api, showToast, scanFolder, setSelectedPaths, setActivePath, videos, setVideos, getSortedSelectedVideos, exitSelectionMode });
+  const fileOps = useFileOperations({
+    language,
+    contextMenu: contextMenuOps.contextMenu,
+    selectionMode: selectionOps.selectionMode,
+    selectedPaths: selectionOps.selectedPaths,
+    activePath, currentFolder, api, showToast, scanFolder,
+    setSelectedPaths: selectionOps.setSelectedPaths,
+    setActivePath, videos, setVideos, getSortedSelectedVideos,
+    exitSelectionMode: selectionOps.exitSelectionMode
+  });
 
   const keybindingOps = useKeybindings({
-    selectionMode, videos, activePath, selectedPaths, clipboardState: clipboardOps.clipboardState,
+    selectionMode: selectionOps.selectionMode,
+    videos, activePath,
+    selectedPaths: selectionOps.selectedPaths,
+    clipboardState: clipboardOps.clipboardState,
     showAIModal: fileOps.showAIModal, setShowAIModal: fileOps.setShowAIModal,
     showDeleteModal: fileOps.showDeleteModal, setShowDeleteModal: fileOps.setShowDeleteModal,
-    showSettingsModal, setShowSettingsModal,
-    settingsActiveTab, setSettingsActiveTab,
-    showSearchModal, setShowSearchModal,
-    contextMenu, setContextMenu, isInputFocusedRef, videoRef,
-    navigateVideo: navOps.navigateVideo, exitSelectionMode, enterSelectionMode,
-    cancelClipboard: clipboardOps.cancelClipboard, handleShutdown: async () => { setIsClosed(true); try { await api.shutdown(); } catch { } window.close(); },
-    toggleMute: mediaPlayer.toggleMute, toggleSharedState, openInExplorer: fileOps.openInExplorer,
-    triggerClipboardAction: clipboardOps.triggerClipboardAction, pasteClipboard: clipboardOps.pasteClipboard,
-    handleUndo: fileOps.handleUndo, applyBulkNotes: () => fileOps.applyBulkNotes(noteText), triggerDeleteAction: fileOps.triggerDeleteAction,
+    showSettingsModal: modalOps.showSettingsModal, setShowSettingsModal: modalOps.setShowSettingsModal,
+    settingsActiveTab: modalOps.settingsActiveTab, setSettingsActiveTab: modalOps.setSettingsActiveTab,
+    showSearchModal: modalOps.showSearchModal, setShowSearchModal: modalOps.setShowSearchModal,
+    contextMenu: contextMenuOps.contextMenu, setContextMenu: contextMenuOps.setContextMenu,
+    isInputFocusedRef, videoRef,
+    navigateVideo: navOps.navigateVideo,
+    exitSelectionMode: selectionOps.exitSelectionMode,
+    enterSelectionMode: selectionOps.enterSelectionMode,
+    cancelClipboard: clipboardOps.cancelClipboard,
+    handleShutdown: async () => { setIsClosed(true); try { await api.shutdown(); } catch { } window.close(); },
+    toggleMute: mediaPlayer.toggleMute,
+    toggleSharedState: videoMetaOps.toggleSharedState,
+    openInExplorer: fileOps.openInExplorer,
+    triggerClipboardAction: clipboardOps.triggerClipboardAction,
+    pasteClipboard: clipboardOps.pasteClipboard,
+    handleUndo: fileOps.handleUndo,
+    applyBulkNotes: () => fileOps.applyBulkNotes(noteText),
+    triggerDeleteAction: fileOps.triggerDeleteAction,
     navigateToParent: navOps.navigateToParent,
     jumpToNextShared: navOps.jumpToNextShared,
     copyCurrentPaths,
@@ -401,8 +341,8 @@ export function useMediaPlanner() {
     templateMode,
     showNoteSearch: noteSearchOps.showNoteSearch, setShowNoteSearch: noteSearchOps.setShowNoteSearch,
     aiAssistant,
-    selectAll: () => setSelectedPaths(new Set(getVisibleVideos().map(v => v.path))),
-    showUploadModal, setShowUploadModal
+    selectAll: () => selectionOps.selectAll(getVisibleVideos()),
+    showUploadModal: modalOps.showUploadModal, setShowUploadModal: modalOps.setShowUploadModal
   });
 
   useEffect(() => {
@@ -444,21 +384,21 @@ export function useMediaPlanner() {
       keybindingOps.preventAutoFocusRef.current = false;
       return;
     }
-    const hasSelection = selectionMode ? selectedPaths.size > 0 : !!activePath;
+    const hasSelection = selectionOps.selectionMode ? selectionOps.selectedPaths.size > 0 : !!activePath;
     if (hasSelection && noteInputRef.current && !noteSearchOps.showNoteSearch) {
       setTimeout(() => noteInputRef.current?.focus(), 50);
     }
-  }, [activePath, selectedPaths.size, selectionMode, noteSearchOps.showNoteSearch, keybindingOps.preventAutoFocusRef]);
+  }, [activePath, selectionOps.selectedPaths.size, selectionOps.selectionMode, noteSearchOps.showNoteSearch, keybindingOps.preventAutoFocusRef]);
 
   useEffect(() => {
-    if (selectionMode) {
+    if (selectionOps.selectionMode) {
       const sorted = getSortedSelectedVideos();
       setNoteText(sorted.length > 0 ? sorted.map((v, i) => `${i + 1}. ${v.description || ''}`).join('\n') : '');
     } else if (activePath) {
       const activeVideo = videos.find(v => v.path === activePath);
       setNoteText(activeVideo ? (activeVideo.description || '') : '');
     } else { setNoteText(''); }
-  }, [activePath, getSortedSelectedVideos, selectedPaths, selectionMode, videos]);
+  }, [activePath, getSortedSelectedVideos, selectionOps.selectedPaths, selectionOps.selectionMode, videos]);
 
   const lastActivePathRef = useRef(null);
 
@@ -482,7 +422,7 @@ export function useMediaPlanner() {
   }, [layoutOps.activeViewTab, activePath, videos]);
 
   useEffect(() => {
-    if (selectionMode) {
+    if (selectionOps.selectionMode) {
       fixedTextOps.setFixedText('');
     } else if (activePath) {
       const activeVideo = videos.find(v => v.path === activePath);
@@ -491,17 +431,11 @@ export function useMediaPlanner() {
     } else {
       fixedTextOps.setFixedText('');
     }
-  }, [activePath, fixedTextOps, selectionMode, videos]);
+  }, [activePath, fixedTextOps, selectionOps.selectionMode, videos]);
 
   useEffect(() => {
     if (toast.visible) { const timer = setTimeout(() => setToast(p => ({ ...p, visible: false })), 2500); return () => clearTimeout(timer); }
   }, [toast.visible]);
-
-  useEffect(() => {
-    const handleWindowClick = () => setContextMenu(prev => prev.visible ? { ...prev, visible: false } : prev);
-    window.addEventListener('click', handleWindowClick);
-    return () => window.removeEventListener('click', handleWindowClick);
-  }, []);
 
   const pickFolder = async () => {
     try {
@@ -511,11 +445,10 @@ export function useMediaPlanner() {
   };
 
   const handleShutdown = async () => { setIsClosed(true); try { await api.shutdown(); } catch { } window.close(); };
-  const selectAll = () => setSelectedPaths(new Set(getVisibleVideos().map(v => v.path)));
-  const clearSelection = () => setSelectedPaths(new Set());
+  
   const handleItemClick = (p) => {
-    if (selectionMode) {
-      toggleSelection(p);
+    if (selectionOps.selectionMode) {
+      selectionOps.toggleSelection(p);
     } else {
       setActivePath(p);
       if (activePath === p && layoutOps.isDetailCollapsed) {
@@ -527,27 +460,43 @@ export function useMediaPlanner() {
   const handleInputFocus = (isFocused) => { isInputFocusedRef.current = isFocused; };
 
   return {
-    currentFolder, parentFolder, subfolders, videos, selectedPaths, activePath, selectionMode,
+    currentFolder, parentFolder, subfolders, videos,
+    selectedPaths: selectionOps.selectedPaths,
+    activePath,
+    selectionMode: selectionOps.selectionMode,
     volume: mediaPlayer.volume, muted: mediaPlayer.muted, muteFeedback: mediaPlayer.muteFeedback,
     gridSize: layoutOps.gridSize, setGridSize: layoutOps.setGridSize,
     showUnsharedOnly: layoutOps.showUnsharedOnly, setShowUnsharedOnly: layoutOps.setShowUnsharedOnly,
     sortOption, setSortOption, sortDirection, setSortDirection,
     isClosed, videoTime: mediaPlayer.videoTime, setVideoTime: mediaPlayer.setVideoTime,
     videoDuration: mediaPlayer.videoDuration, setVideoDuration: mediaPlayer.setVideoDuration,
-    folderInput, setFolderInput, noteText, toast, contextMenu, setContextMenu, scanFolder, handleShutdown,
-    navigateToParent: navOps.navigateToParent, exitSelectionMode, selectAll, clearSelection,
+    folderInput, setFolderInput, noteText, toast,
+    contextMenu: contextMenuOps.contextMenu,
+    setContextMenu: contextMenuOps.setContextMenu,
+    scanFolder, handleShutdown,
+    navigateToParent: navOps.navigateToParent,
+    exitSelectionMode: selectionOps.exitSelectionMode,
+    selectAll: () => selectionOps.selectAll(getVisibleVideos()),
+    clearSelection: selectionOps.clearSelection,
     copyCurrentNote: fixedTextOps.copyCurrentNote, handleInputFocus,
     handleCardMouseDown: dragSel.handleCardMouseDown,
     handleCardMouseEnter: dragSel.handleCardMouseEnter,
     handleItemClick,
     toggleMute: mediaPlayer.toggleMute,
-    toggleSharedState,
+    toggleSharedState: videoMetaOps.toggleSharedState,
     noteInputRef, aiInputRef, isInputFocusedRef, videoRef,
     handleVolumeChange: mediaPlayer.handleVolumeChange,
     handleSeek: mediaPlayer.handleSeek,
-    getVisibleVideos, pickFolder, enterSelectionMode,
-    showSettingsModal, setShowSettingsModal, settingsActiveTab, setSettingsActiveTab,
-    showSearchModal, setShowSearchModal, hoveredFolder, setHoveredFolder,
+    getVisibleVideos, pickFolder,
+    enterSelectionMode: selectionOps.enterSelectionMode,
+    showSettingsModal: modalOps.showSettingsModal,
+    setShowSettingsModal: modalOps.setShowSettingsModal,
+    settingsActiveTab: modalOps.settingsActiveTab,
+    setSettingsActiveTab: modalOps.setSettingsActiveTab,
+    showSearchModal: modalOps.showSearchModal,
+    setShowSearchModal: modalOps.setShowSearchModal,
+    hoveredFolder: contextMenuOps.hoveredFolder,
+    setHoveredFolder: contextMenuOps.setHoveredFolder,
     showNoteSearch: noteSearchOps.showNoteSearch, setShowNoteSearch: noteSearchOps.setShowNoteSearch,
     noteSearchQuery: noteSearchOps.noteSearchQuery, setNoteSearchQuery: noteSearchOps.setNoteSearchQuery,
     activeMatchIndex: noteSearchOps.activeMatchIndex, setActiveMatchIndex: noteSearchOps.setActiveMatchIndex,
@@ -564,8 +513,8 @@ export function useMediaPlanner() {
     language,
     setLanguage,
     isServerHealthy,
-    showUploadModal,
-    setShowUploadModal,
+    showUploadModal: modalOps.showUploadModal,
+    setShowUploadModal: modalOps.setShowUploadModal,
     uploadingPath: publishTaskOps.uploadingPath,
     setUploadingPath: publishTaskOps.setUploadingPath,
     uploadQueue,
@@ -604,7 +553,7 @@ export function useMediaPlanner() {
     toggleTemplates: () => setTemplateMode(p => !p),
     duplicateSuggestion,
     setDuplicateSuggestion,
-    toggleHidden,
+    toggleHidden: videoMetaOps.toggleHidden,
     processToast,
     setProcessToast,
     activeViewTab: layoutOps.activeViewTab,
