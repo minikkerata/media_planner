@@ -725,11 +725,26 @@ export function useMediaPlanner() {
     } else { setNoteText(''); }
   }, [activePath, selectedPaths, selectionMode, videos]);
 
+  const lastActivePathRef = useRef(null);
+
   useEffect(() => {
-    if (activeViewTab === 'calendar') {
-      setActivePath(null);
+    if (activePath) {
+      lastActivePathRef.current = activePath;
     }
-  }, [activeViewTab]);
+  }, [activePath]);
+
+  useEffect(() => {
+    if (activeViewTab === 'library') {
+      if (!activePath && lastActivePathRef.current) {
+        const exists = videos.some(v => v.path === lastActivePathRef.current);
+        if (exists) {
+          setActivePath(lastActivePathRef.current);
+        } else if (videos.length > 0) {
+          setActivePath(videos[0].path);
+        }
+      }
+    }
+  }, [activeViewTab, videos]);
 
   useEffect(() => {
     if (selectionMode) {

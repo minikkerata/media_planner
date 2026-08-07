@@ -55,7 +55,7 @@ export default function VideoListCard({
       onMouseEnter={() => handleCardMouseEnter(video.path)}
       onClick={() => !selectionMode && handleItemClick(video.path)}
       onContextMenu={(e) => handleContextMenu(e, video.path, false)}
-      className={`group flex flex-row items-center gap-3.5 py-1.5 px-2 rounded-lg border border-solid transition-all duration-150 cursor-pointer relative ${
+      className={`group flex flex-row items-center gap-3.5 py-1.5 px-2 rounded-lg border border-solid transition-all duration-150 cursor-pointer relative isolate ${
         isSelectedOrActive ? 'is-selected-active' : ''
       } ${listBgClass} ${listBorderClass} ${isCut ? 'opacity-50' : ''}`}
     >

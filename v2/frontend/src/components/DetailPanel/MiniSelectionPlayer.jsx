@@ -6,7 +6,7 @@ export default function MiniSelectionPlayer({ video, API_URL }) {
 
   return (
     <div 
-      className="relative aspect-[9/16] rounded-md overflow-hidden bg-black/40 border border-muted/10 group/thumb cursor-pointer transition-all hover:border-accent/40 z-10"
+      className="w-full h-auto min-w-0 min-h-0 isolate relative aspect-[9/16] rounded-md overflow-hidden bg-black/40 border border-muted/10 group/thumb cursor-pointer transition-all hover:border-accent/40 z-10"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
