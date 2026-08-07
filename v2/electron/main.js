@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Tray, Menu, shell } from 'electron';
+import { app, BrowserWindow, Tray, Menu, shell, ipcMain, dialog } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -17,7 +17,21 @@ const API_PORT = 8085;
 const API_URL = `http://127.0.0.1:${API_PORT}`;
 const DEV_FRONTEND_URL = 'http://localhost:5173';
 
-function startServer() {
+async function isServerRunning() {
+  try {
+    const res = await fetch(`${API_URL}/api/health`);
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function startServer() {
+  if (await isServerRunning()) {
+    console.log('Backend server is already running.');
+    return;
+  }
+
   const serverScript = path.join(rootDir, 'server', 'index.js');
   if (fs.existsSync(serverScript)) {
     serverProcess = spawn(process.execPath, [serverScript], {
@@ -42,6 +56,8 @@ function createWindow() {
     minHeight: 600,
     title: 'Media Planner',
     icon: fs.existsSync(iconPath) ? iconPath : undefined,
+    show: false, // Prevents white screen flash
+    backgroundColor: '#0F172A', // Dark theme matching background
     autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: false,
@@ -50,15 +66,20 @@ function createWindow() {
     }
   });
 
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+    mainWindow.focus();
+  });
+
   const isDev = !app.isPackaged && process.argv.includes('--dev');
 
   if (isDev) {
     mainWindow.loadURL(DEV_FRONTEND_URL).catch(() => {
-      setTimeout(() => mainWindow.loadURL(DEV_FRONTEND_URL), 1500);
+      setTimeout(() => mainWindow.loadURL(DEV_FRONTEND_URL), 1000);
     });
   } else {
     mainWindow.loadURL(API_URL).catch(() => {
-      setTimeout(() => mainWindow.loadURL(API_URL), 1500);
+      setTimeout(() => mainWindow.loadURL(API_URL), 1000);
     });
   }
 
@@ -140,8 +161,8 @@ function setupAutoUpdater() {
   });
 }
 
-app.whenReady().then(() => {
-  startServer();
+app.whenReady().then(async () => {
+  await startServer();
   createWindow();
   createTray();
   setupAutoUpdater();

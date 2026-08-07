@@ -83,7 +83,7 @@ export async function scanFolderContents(folderPath) {
     // Legacy migration
     await migrateLegacyMetadata(folderPath, videoEntries);
 
-    // Fetch DB notes bulk (with key and name/path fallback)
+    // Fetch DB notes bulk
     const notesMap = await getNotesBulk(videoEntries);
 
     for (const item of videoEntries) {
@@ -181,20 +181,9 @@ router.post('/open-explorer', (req, res) => {
 // GET /api/pick-folder
 router.get('/pick-folder', (req, res) => {
   if (process.platform === 'win32') {
-    const psScript = `
-      Add-Type -AssemblyName System.Windows.Forms
-      $f = New-Object System.Windows.Forms.FolderBrowserDialog
-      $f.Description = "Video klasörünü seçin"
-      $f.ShowNewFolderButton = $true
-      $top = New-Object System.Windows.Forms.Form
-      $top.TopMost = $true
-      if ($f.ShowDialog($top) -eq 'OK') {
-        Write-Output $f.SelectedPath
-      }
-      $top.Dispose()
-    `;
+    const psCmd = `powershell -Sta -NoProfile -ExecutionPolicy Bypass -Command "Add-Type -AssemblyName System.Windows.Forms; $f = New-Object System.Windows.Forms.FolderBrowserDialog; $f.Description = 'Video klasörünü seçin'; $f.ShowNewFolderButton = $true; $top = New-Object System.Windows.Forms.Form; $top.TopMost = $true; if ($f.ShowDialog($top) -eq 'OK') { Write-Output $f.SelectedPath }; $top.Dispose()"`;
 
-    exec(`powershell -NoProfile -ExecutionPolicy Bypass -Command "${psScript.replace(/\n/g, ' ')}"`, (err, stdout) => {
+    exec(psCmd, (err, stdout) => {
       const selectedPath = (stdout || '').trim();
       if (selectedPath) {
         return res.json({ success: true, folder: selectedPath });
