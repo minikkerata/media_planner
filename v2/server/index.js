@@ -41,6 +41,16 @@ app.use('/api', settingsRouter);
 app.use('/api', aiRouter);
 app.use('/api', mediaRouter);
 
+// Serve static frontend files if production dist exists
+const distDir = path.join(parentDir, 'frontend', 'dist');
+if (fs.existsSync(distDir)) {
+  app.use(express.static(distDir));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(distDir, 'index.html'));
+  });
+}
+
 let port = 8085;
 const configPath = path.join(parentDir, 'config.json');
 if (fs.existsSync(configPath)) {

@@ -98,6 +98,7 @@ export default function VideoGridCard({
         >
           <img
             src={`${API_URL}/api/thumbnail?path=${encodeURIComponent(video.path)}`}
+            loading="lazy"
             onError={(e) => { e.target.style.display = 'none'; }}
             draggable="false"
             onDragStart={(e) => e.preventDefault()}

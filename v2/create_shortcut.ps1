@@ -1,18 +1,17 @@
 $DesktopPath = [Environment]::GetFolderPath("Desktop")
-$ShortcutPath = Join-Path $DesktopPath "Media Planner.lnk"
+$ShortcutPath = Join-Path $DesktopPath "Media Planner v2.lnk"
 
 $V2Dir = $PSScriptRoot
-$ProjectDir = (Get-Item $V2Dir).Parent.FullName
 $LaunchVbsPath = Join-Path $V2Dir "launch.vbs"
+$IconPath = Join-Path $V2Dir "logo.ico"
 
 $WshShell = New-Object -ComObject WScript.Shell
 $Shortcut = $WshShell.CreateShortcut($ShortcutPath)
 $Shortcut.TargetPath = "wscript.exe"
 $Shortcut.Arguments = "`"$LaunchVbsPath`""
-$Shortcut.WorkingDirectory = $ProjectDir
-$Shortcut.IconLocation = Join-Path $V2Dir "logo.ico"
+$Shortcut.WorkingDirectory = $V2Dir
+$Shortcut.IconLocation = $IconPath
 $Shortcut.WindowStyle = 7
 $Shortcut.Save()
 
-Write-Host "Shortcut created successfully at: $ShortcutPath"
-
+Write-Host "Independent shortcut created successfully at: $ShortcutPath"
