@@ -549,7 +549,7 @@ export default function WeeklyCalendar({
   }
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 animate-in fade-in duration-200">
+    <div className="flex-1 flex flex-col min-h-0">
 
       {/* Main Grid Wrapper */}
       <div 
