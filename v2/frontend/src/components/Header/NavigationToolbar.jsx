@@ -23,7 +23,7 @@ export default function NavigationToolbar({
           <button
             onClick={onOpenSidebar}
             tabIndex={-1}
-            className="p-1.5 rounded-ui-md hover:bg-hover text-foreground/50 hover:text-foreground transition cursor-pointer"
+            className="p-1.5 rounded-ui-md hover:bg-hover text-foreground/50 hover:text-foreground cursor-pointer"
             title={t('expand', language)}
           >
             <PanelLeft size={16} />

@@ -3,6 +3,7 @@ import { Moon, Sun, Monitor, Palette } from 'lucide-react';
 import SelectDropdown from './SelectDropdown';
 import SettingsSection from './SettingsSection';
 import { t } from '../../utils/translations';
+import { api } from '../../services/api';
 
 export default function ThemeTab({ theme, setTheme, uiStyle, setUiStyle, language, onClose, highlight = (x) => x }) {
   const [tempTheme, setTempTheme] = useState(theme);
@@ -11,6 +12,9 @@ export default function ThemeTab({ theme, setTheme, uiStyle, setUiStyle, languag
   const handleSave = () => {
     setUiStyle(tempUiStyle);
     setTheme(tempTheme);
+    api.saveSettings({ app_theme: tempTheme, app_ui_style: tempUiStyle })
+      .then(() => window.dispatchEvent(new Event('settings-changed')))
+      .catch(() => {});
     onClose();
   };
 

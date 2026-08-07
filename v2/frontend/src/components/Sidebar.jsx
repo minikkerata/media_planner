@@ -16,7 +16,7 @@ function FolderTreeNode({ path, label, depth, currentFolder, scannedFolders, exp
     <div className="flex flex-col">
       {/* Folder Row */}
       <div 
-        className={`flex items-center group py-1.5 px-2 rounded-lg cursor-pointer transition-colors text-sm ${
+        className={`flex items-center group py-1.5 px-2 rounded-lg cursor-pointer text-sm ${
           isActive 
             ? 'bg-active text-accent font-semibold' 
             : 'text-foreground/80 hover:bg-hover hover:text-foreground'
@@ -35,7 +35,7 @@ function FolderTreeNode({ path, label, depth, currentFolder, scannedFolders, exp
             e.stopPropagation();
             onToggleExpand(path);
           }}
-          className={`p-1 rounded hover:bg-foreground/10 text-foreground/50 hover:text-foreground transition mr-1 flex items-center justify-center w-5 h-5 ${!hasChildren ? 'opacity-0 pointer-events-none' : ''}`}
+          className={`p-1 rounded hover:bg-foreground/10 text-foreground/50 hover:text-foreground mr-1 flex items-center justify-center w-5 h-5 ${!hasChildren ? 'opacity-0 pointer-events-none' : ''}`}
         >
           {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
         </button>
@@ -301,7 +301,7 @@ export default function Sidebar({
             variant="none"
             size="none"
             onClick={() => setShowSettingsModal(true)}
-            className={`flex items-center gap-3 w-full rounded-lg hover:bg-hover transition-colors ${isCollapsed ? 'justify-center p-2' : 'p-2.5'}`}
+            className={`flex items-center gap-3 w-full rounded-lg hover:bg-hover ${isCollapsed ? 'justify-center p-2' : 'p-2.5'}`}
             title={`${t('settings', language)} (${keybindings ? getShortcutString(keybindings.toggleSettings, language) : 'Alt+,'})`}
           >
             <div className="w-7 h-7 bg-active text-foreground rounded-full flex items-center justify-center shrink-0 border border-foreground/5">
@@ -323,7 +323,7 @@ export default function Sidebar({
       {!isCollapsed && (
         <div 
           onMouseDown={startResizing}
-          className="absolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-accent/20 active:bg-accent/40 transition-colors z-50"
+          className="absolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-accent/20 active:bg-accent/40 z-50"
         />
       )}
     </div>

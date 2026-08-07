@@ -334,12 +334,19 @@ export function useMediaPlanner() {
     const loadGlobalSettings = () => {
       api.getSettings()
         .then(data => {
-          if (data && data.fixed_text !== undefined) {
+          if (!data) return;
+          if (data.fixed_text !== undefined) {
             setGlobalFixedText(data.fixed_text);
             localStorage.setItem('fixed_text', data.fixed_text);
           }
+          if (data.app_theme) {
+            localStorage.setItem('app_theme', data.app_theme);
+          }
+          if (data.app_ui_style) {
+            localStorage.setItem('app_ui_style', data.app_ui_style);
+          }
           // Auto-restore last opened folder on startup
-          if (data && data.last_folder && typeof data.last_folder === 'string' && data.last_folder.trim()) {
+          if (data.last_folder && typeof data.last_folder === 'string' && data.last_folder.trim()) {
             scanFolderRef.current(data.last_folder.trim(), 'manual');
           }
         })
