@@ -79,7 +79,7 @@ function createWindow() {
     title: 'Media Planner',
     icon: fs.existsSync(iconPath) ? iconPath : undefined,
     show: true, // Show window immediately on creation
-    backgroundColor: '#0F172A', // Dark theme matching background
+    backgroundColor: '#090d16', // Dark modern theme matching background to eliminate white flashes
     autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: false,
