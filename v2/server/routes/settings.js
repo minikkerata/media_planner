@@ -19,7 +19,7 @@ export function loadSettings() {
       if (data && typeof data === 'object') {
         const cleaned = {};
         for (const [k, v] of Object.entries(data)) {
-          cleaned[k] = typeof v === 'string' ? v.trim() : v;
+          cleaned[k] = (typeof v === 'string') ? v.trim() : v;
         }
         return cleaned;
       }
@@ -32,7 +32,10 @@ export function loadSettings() {
     cloudinary_cloud_name: '',
     cloudinary_api_key: '',
     cloudinary_api_secret: '',
-    fixed_text: 'Daha fazla yamaç paraşütü videosu görmek için takip etmeyi unutmayın'
+    fixed_text: 'Daha fazla yamaç paraşütü videosu görmek için takip etmeyi unutmayın',
+    app_theme: 'system',
+    app_ui_style: 'old',
+    last_folder: ''
   };
 }
 
@@ -45,14 +48,16 @@ router.get('/settings', (req, res) => {
 router.post('/settings', (req, res) => {
   try {
     const settingsPath = getSettingsPath();
+    const existing = loadSettings();
     const data = req.body || {};
-    const settingsDict = {};
+    
+    const merged = { ...existing };
     for (const [k, v] of Object.entries(data)) {
-      settingsDict[k] = typeof v === 'string' ? v.trim() : v;
+      merged[k] = (typeof v === 'string') ? v.trim() : v;
     }
 
-    fs.writeFileSync(settingsPath, JSON.stringify(settingsDict, null, 4), 'utf-8');
-    res.json({ success: true });
+    fs.writeFileSync(settingsPath, JSON.stringify(merged, null, 4), 'utf-8');
+    res.json({ success: true, settings: merged });
   } catch (err) {
     res.status(500).json({ detail: `Ayarlar kaydedilemedi: ${err.message}` });
   }
