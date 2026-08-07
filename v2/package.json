@@ -12,7 +12,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "ffmpeg-static": "^5.2.0"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

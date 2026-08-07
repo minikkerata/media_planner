@@ -50,7 +50,6 @@ export async function scanFolderContents(folderPath) {
   try {
     const entries = fs.readdirSync(folderPath, { withFileTypes: true });
     const videoEntries = [];
-    const videoKeys = [];
 
     for (const entry of entries) {
       if (entry.name.startsWith('.')) continue;
@@ -77,7 +76,6 @@ export async function scanFolderContents(folderPath) {
           const fileTime = (stat.ctimeMs || stat.mtimeMs) / 1000;
 
           videoEntries.push({ name: entry.name, fullPath, stat, key, ctimeMs, fileTime });
-          videoKeys.push(key);
         }
       }
     }
@@ -85,8 +83,8 @@ export async function scanFolderContents(folderPath) {
     // Legacy migration
     await migrateLegacyMetadata(folderPath, videoEntries);
 
-    // Fetch DB notes bulk
-    const notesMap = await getNotesBulk(videoKeys);
+    // Fetch DB notes bulk (with key and name/path fallback)
+    const notesMap = await getNotesBulk(videoEntries);
 
     for (const item of videoEntries) {
       const meta = notesMap[item.key] || {};
@@ -184,16 +182,19 @@ router.post('/open-explorer', (req, res) => {
 router.get('/pick-folder', (req, res) => {
   if (process.platform === 'win32') {
     const psScript = `
-      [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
-      $dialog = New-Object System.Windows.Forms.FolderBrowserDialog
-      $dialog.Description = "Video klasörünü seçin"
-      $dialog.ShowNewFolderButton = $true
-      if ($dialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
-        Write-Output $dialog.SelectedPath
+      Add-Type -AssemblyName System.Windows.Forms
+      $f = New-Object System.Windows.Forms.FolderBrowserDialog
+      $f.Description = "Video klasörünü seçin"
+      $f.ShowNewFolderButton = $true
+      $top = New-Object System.Windows.Forms.Form
+      $top.TopMost = $true
+      if ($f.ShowDialog($top) -eq 'OK') {
+        Write-Output $f.SelectedPath
       }
+      $top.Dispose()
     `;
 
-    exec(`powershell -Command "${psScript.replace(/\n/g, ' ')}"`, (err, stdout) => {
+    exec(`powershell -NoProfile -ExecutionPolicy Bypass -Command "${psScript.replace(/\n/g, ' ')}"`, (err, stdout) => {
       const selectedPath = (stdout || '').trim();
       if (selectedPath) {
         return res.json({ success: true, folder: selectedPath });

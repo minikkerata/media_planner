@@ -47,7 +47,6 @@ export default function VideoPlayer({
   currentFolder
 }) {
   const activeTime = isDragging ? dragTime : videoTime;
-  const seekPercent = videoDuration ? (activeTime / videoDuration) * 100 : 0;
 
   return (
     <div className="flex flex-col gap-2 shrink-0 h-full w-full">
@@ -147,7 +146,6 @@ export default function VideoPlayer({
           onLoadedMetadata={(e) => {
             e.target.volume = muted ? 0 : volume;
             setVideoDuration(e.target.duration);
-            setIsPlaying(true);
           }}
           onTimeUpdate={(e) => setVideoTime(e.target.currentTime)}
           onDurationChange={(e) => setVideoDuration(e.target.duration)}
@@ -240,7 +238,7 @@ export default function VideoPlayer({
             </div>
 
             <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-600/80 text-white uppercase select-none">
-              {activeVideo.extension.replace('.', '')}
+              {activeVideo.extension ? activeVideo.extension.replace('.', '') : ''}
             </span>
           </div>
         </div>

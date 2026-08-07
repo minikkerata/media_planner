@@ -29,7 +29,6 @@ export function getDb() {
   return dbInstance;
 }
 
-// Helper methods returning promises for sqlite3
 export function runQuery(sql, params = []) {
   return new Promise((resolve, reject) => {
     getDb().run(sql, params, function (err) {
@@ -111,10 +110,14 @@ export async function getNote(key) {
   };
 }
 
-export async function getNotesBulk(keys) {
-  if (!keys || keys.length === 0) return {};
+export async function getNotesBulk(videoEntries) {
+  if (!videoEntries || videoEntries.length === 0) return {};
+  
+  const keys = videoEntries.map(e => e.key);
   const placeholders = keys.map(() => '?').join(',');
-  const rows = await allQuery(`SELECT key, description, shared, hidden, path, updated_at, fixed_text, publish_time FROM notes WHERE key IN (${placeholders})`, keys);
+  
+  // 1. Direct query by key
+  const rows = await allQuery(`SELECT key, name, size, ctime, description, shared, hidden, path, updated_at, fixed_text, publish_time FROM notes WHERE key IN (${placeholders})`, keys);
 
   const result = {};
   for (const row of rows) {
@@ -128,6 +131,42 @@ export async function getNotesBulk(keys) {
       publish_time: row.publish_time || ''
     };
   }
+
+  // 2. Fallback query by file name or path for any missing keys
+  for (const entry of videoEntries) {
+    if (!result[entry.key]) {
+      const fallbackRow = await getQuery(
+        'SELECT description, shared, hidden, path, updated_at, fixed_text, publish_time FROM notes WHERE name = ? OR path = ?',
+        [entry.name, entry.fullPath]
+      );
+      if (fallbackRow) {
+        result[entry.key] = {
+          description: fallbackRow.description || '',
+          shared: Boolean(fallbackRow.shared),
+          hidden: Boolean(fallbackRow.hidden),
+          path: fallbackRow.path || entry.fullPath,
+          updated_at: fallbackRow.updated_at || 0,
+          fixed_text: fallbackRow.fixed_text || '',
+          publish_time: fallbackRow.publish_time || ''
+        };
+        // Auto update key in background
+        saveNote({
+          key: entry.key,
+          name: entry.name,
+          size: entry.stat.size,
+          ctime: entry.ctimeMs,
+          description: fallbackRow.description || '',
+          shared: Boolean(fallbackRow.shared),
+          path: entry.fullPath,
+          hidden: Boolean(fallbackRow.hidden),
+          updated_at: fallbackRow.updated_at || 0,
+          fixed_text: fallbackRow.fixed_text || '',
+          publish_time: fallbackRow.publish_time || ''
+        }).catch(() => {});
+      }
+    }
+  }
+
   return result;
 }
 

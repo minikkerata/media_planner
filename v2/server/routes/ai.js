@@ -13,7 +13,9 @@ router.post('/ai/rewrite', async (req, res) => {
   res.setHeader('Connection', 'keep-alive');
 
   const sendEvent = (data) => {
-    res.write(JSON.stringify(data) + '\n');
+    try {
+      res.write(JSON.stringify(data) + '\n');
+    } catch {}
   };
 
   if (!text.trim()) {
@@ -32,10 +34,14 @@ router.post('/ai/rewrite', async (req, res) => {
 
   sendEvent({ type: 'status', message: 'Ollama sunucusuna bağlanılıyor...' });
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s fast timeout
+
   try {
     const response = await fetch(OLLAMA_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
       body: JSON.stringify({
         model: DEFAULT_MODEL,
         prompt,
@@ -44,6 +50,8 @@ router.post('/ai/rewrite', async (req, res) => {
         options: { temperature: 0.3 }
       })
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       sendEvent({ type: 'error', message: `Ollama hatası (Kod: ${response.status})` });
@@ -79,11 +87,12 @@ router.post('/ai/rewrite', async (req, res) => {
     sendEvent({ type: 'done' });
     res.end();
   } catch (err) {
-    // Fallback to local mock rewrite if Ollama is offline
+    clearTimeout(timeoutId);
+    // Fallback to local mock rewrite if Ollama is offline or timed out
     sendEvent({ type: 'status', message: 'Ollama sunucusuna bağlanılamadı. Demo moduna geçiliyor...' });
-    await new Promise(r => setTimeout(r, 400));
+    await new Promise(r => setTimeout(r, 300));
     sendEvent({ type: 'status', message: 'Demo modunda revizyon hazırlanıyor...' });
-    await new Promise(r => setTimeout(r, 400));
+    await new Promise(r => setTimeout(r, 300));
 
     let replacement = text;
     const lowerPrompt = custom_prompt.toLowerCase().trim();
@@ -103,7 +112,7 @@ router.post('/ai/rewrite', async (req, res) => {
 
     const words = replacement.split(' ');
     for (let i = 0; i < words.length; i++) {
-      await new Promise(r => setTimeout(r, 50));
+      await new Promise(r => setTimeout(r, 40));
       sendEvent({ type: 'token', text: words[i] + (i < words.length - 1 ? ' ' : '') });
     }
 

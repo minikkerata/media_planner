@@ -65,7 +65,6 @@ router.post('/settings/test-buffer', async (req, res) => {
     return res.json({ success: false, message: 'API Key is required.' });
   }
 
-  // GraphQL first
   try {
     const graphRes = await fetch('https://api.buffer.com', {
       method: 'POST',
@@ -83,7 +82,6 @@ router.post('/settings/test-buffer', async (req, res) => {
     }
   } catch {}
 
-  // Fallback REST
   try {
     const restRes = await fetch(`https://api.bufferapp.com/1/user.json?access_token=${encodeURIComponent(apiKey)}`);
     if (restRes.ok) {
@@ -108,7 +106,6 @@ router.get('/buffer-profile', async (req, res) => {
     return res.json({ success: false, name: null, avatar: null, followers: null });
   }
 
-  // GraphQL queries
   const queries = [
     `query GetChannels { channels { id name avatar service statistics { followers } } }`,
     `query GetChannels { channels { id name avatar service type } }`
@@ -148,7 +145,6 @@ router.get('/buffer-profile', async (req, res) => {
     } catch {}
   }
 
-  // Fallback REST
   try {
     const resp = await fetch(`https://api.bufferapp.com/1/profiles.json?access_token=${encodeURIComponent(apiKey)}`);
     if (resp.ok) {
@@ -211,6 +207,199 @@ router.post('/settings/test-cloudinary', async (req, res) => {
     }
   } catch (err) {
     res.json({ success: false, message: `Connection error: ${err.message}` });
+  }
+});
+
+// Helper function to upload video file to Cloudinary
+async function uploadVideoToCloudinary(videoPath, cloudName, apiKey, apiSecret) {
+  const timestamp = Math.floor(Date.now() / 1000);
+  const toSign = `timestamp=${timestamp}${apiSecret}`;
+  const signature = crypto.createHash('sha1').update(toSign).digest('hex');
+
+  const fileBuffer = fs.readFileSync(videoPath);
+  const blob = new Blob([fileBuffer]);
+
+  const formData = new FormData();
+  formData.append('file', blob, path.basename(videoPath));
+  formData.append('api_key', apiKey);
+  formData.append('timestamp', timestamp.toString());
+  formData.append('signature', signature);
+
+  const resp = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/video/upload`, {
+    method: 'POST',
+    body: formData
+  });
+
+  const json = await resp.json();
+  if (resp.ok && json.secure_url) {
+    return json.secure_url;
+  }
+  throw new Error(json.error?.message || 'Cloudinary video upload failed.');
+}
+
+// POST /api/settings/upload-cloudinary
+router.post('/settings/upload-cloudinary', async (req, res) => {
+  const settings = loadSettings();
+  const cloudName = settings.cloudinary_cloud_name;
+  const apiKey = settings.cloudinary_api_key;
+  const apiSecret = settings.cloudinary_api_secret;
+
+  if (!cloudName || !apiKey || !apiSecret) {
+    return res.status(400).json({ detail: 'Cloudinary ayarları eksik. Lütfen ayarlardan yapılandırın.' });
+  }
+
+  const videoPath = req.body.video_path;
+  if (!videoPath || !fs.existsSync(videoPath)) {
+    return res.status(404).json({ detail: 'Video dosyası yerel diskte bulunamadı.' });
+  }
+
+  try {
+    const videoUrl = await uploadVideoToCloudinary(videoPath, cloudName, apiKey, apiSecret);
+    res.json({ success: true, video_url: videoUrl });
+  } catch (err) {
+    res.status(500).json({ detail: `Cloudinary yükleme hatası: ${err.message}` });
+  }
+});
+
+// Helper function to publish to Buffer
+async function publishToBuffer(apiKey, channelId, text, videoUrl, scheduleTime) {
+  // GraphQL first
+  try {
+    const mode = scheduleTime ? 'customScheduled' : 'shareNow';
+    const inputData = {
+      text,
+      channelId,
+      schedulingType: 'automatic',
+      mode,
+      metadata: {
+        instagram: {
+          type: 'reel',
+          shouldShareToFeed: true
+        }
+      },
+      assets: [{ video: { url: videoUrl } }]
+    };
+    if (scheduleTime) {
+      inputData.dueAt = scheduleTime;
+    }
+
+    const mutation = `
+      mutation CreatePost($input: CreatePostInput!) {
+        createPost(input: $input) {
+          ... on PostActionSuccess { post { id } }
+          ... on MutationError { message }
+        }
+      }
+    `;
+
+    const resp = await fetch('https://api.buffer.com', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ query: mutation, variables: { input: inputData } })
+    });
+
+    if (resp.ok) {
+      const json = await resp.json();
+      const data = json.data?.createPost;
+      if (data?.post) {
+        return { success: true, message: 'Buffer GraphQL successful.' };
+      } else if (data?.message) {
+        return { success: false, message: data.message };
+      }
+    }
+  } catch {}
+
+  // Fallback REST
+  try {
+    let thumbnailUrl = null;
+    if (videoUrl.includes('cloudinary.com')) {
+      const extIndex = videoUrl.lastIndexOf('.');
+      if (extIndex !== -1) {
+        thumbnailUrl = videoUrl.substring(0, extIndex) + '.jpg';
+      }
+    }
+
+    const params = new URLSearchParams();
+    params.append('text', text);
+    params.append('profile_ids[]', channelId);
+    params.append('media[video]', videoUrl);
+    if (thumbnailUrl) {
+      params.append('media[thumbnail]', thumbnailUrl);
+    }
+
+    if (scheduleTime) {
+      const dt = new Date(scheduleTime);
+      params.append('scheduled_at', Math.floor(dt.getTime() / 1000).toString());
+    } else {
+      params.append('now', 'true');
+    }
+
+    const resp = await fetch(`https://api.bufferapp.com/1/updates/create.json?access_token=${encodeURIComponent(apiKey)}`, {
+      method: 'POST',
+      body: params
+    });
+
+    if (resp.ok) {
+      return { success: true, message: 'Buffer REST successful.' };
+    } else {
+      const json = await resp.json().catch(() => ({}));
+      return { success: false, message: `Buffer API error: ${json.message || `HTTP ${resp.status}`}` };
+    }
+  } catch (err) {
+    return { success: false, message: `Buffer connection error: ${err.message}` };
+  }
+}
+
+// POST /api/settings/publish-buffer
+router.post('/settings/publish-buffer', async (req, res) => {
+  const settings = loadSettings();
+  const apiKey = settings.buffer_api_key;
+  const channelId = settings.buffer_channel_id;
+
+  if (!apiKey || !channelId) {
+    return res.status(400).json({ detail: 'Buffer ayarları eksik. Lütfen ayarlardan yapılandırın.' });
+  }
+
+  const { text, video_url, schedule_time } = req.body || {};
+  const result = await publishToBuffer(apiKey, channelId, text, video_url, schedule_time);
+  if (result.success) {
+    res.json({ success: true, message: result.message });
+  } else {
+    res.status(500).json({ detail: result.message });
+  }
+});
+
+// POST /api/settings/upload-publish
+router.post('/settings/upload-publish', async (req, res) => {
+  const settings = loadSettings();
+  const apiKey = settings.buffer_api_key;
+  const channelId = settings.buffer_channel_id;
+  const cloudName = settings.cloudinary_cloud_name;
+  const cloudApiKey = settings.cloudinary_api_key;
+  const cloudApiSecret = settings.cloudinary_api_secret;
+
+  if (!apiKey || !channelId || !cloudName || !cloudApiKey || !cloudApiSecret) {
+    return res.status(400).json({ detail: 'Buffer veya Cloudinary ayarları eksik. Lütfen ayarlardan yapılandırın.' });
+  }
+
+  const { video_path, text, schedule_time } = req.body || {};
+  if (!video_path || !fs.existsSync(video_path)) {
+    return res.status(404).json({ detail: 'Video dosyası yerel diskte bulunamadı.' });
+  }
+
+  try {
+    const videoUrl = await uploadVideoToCloudinary(video_path, cloudName, cloudApiKey, cloudApiSecret);
+    const result = await publishToBuffer(apiKey, channelId, text, videoUrl, schedule_time);
+    if (result.success) {
+      res.json({ success: true, message: result.message });
+    } else {
+      res.status(500).json({ detail: result.message });
+    }
+  } catch (err) {
+    res.status(500).json({ detail: err.message });
   }
 });
 

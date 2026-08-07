@@ -9,6 +9,7 @@ import explorerRouter from './routes/explorer.js';
 import fileOpsRouter from './routes/file_ops.js';
 import settingsRouter from './routes/settings.js';
 import aiRouter from './routes/ai.js';
+import mediaRouter from './routes/media.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,21 +21,25 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Register API Routers
-app.use('/api', explorerRouter);
-app.use('/api', fileOpsRouter);
-app.use('/api', settingsRouter);
-app.use('/api', aiRouter);
-
-// Health Check Endpoint
-app.get('/health', (req, res) => {
+// Health Check Endpoints
+const healthHandler = (req, res) => {
   res.json({
     status: 'ok',
     service: 'Media Planner Node API',
     version: '3.0.0-node',
     db_path: getDbPath()
   });
-});
+};
+
+app.get('/health', healthHandler);
+app.get('/api/health', healthHandler);
+
+// Register API Routers
+app.use('/api', explorerRouter);
+app.use('/api', fileOpsRouter);
+app.use('/api', settingsRouter);
+app.use('/api', aiRouter);
+app.use('/api', mediaRouter);
 
 let port = 8085;
 const configPath = path.join(parentDir, 'config.json');
