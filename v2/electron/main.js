@@ -17,6 +17,19 @@ const API_PORT = 8085;
 const API_URL = `http://127.0.0.1:${API_PORT}`;
 const DEV_FRONTEND_URL = 'http://localhost:5173';
 
+// Expose native folder picker to global scope for Express API route
+global.electronPickFolder = async () => {
+  if (!mainWindow) return null;
+  const result = await dialog.showOpenDialog(mainWindow, {
+    title: 'Video Klasörünü Seçin',
+    properties: ['openDirectory', 'createDirectory']
+  });
+  if (!result.canceled && result.filePaths.length > 0) {
+    return result.filePaths[0];
+  }
+  return null;
+};
+
 async function isServerRunning() {
   try {
     const res = await fetch(`${API_URL}/api/health`);

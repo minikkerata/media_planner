@@ -179,7 +179,21 @@ router.post('/open-explorer', (req, res) => {
 });
 
 // GET /api/pick-folder
-router.get('/pick-folder', (req, res) => {
+router.get('/pick-folder', async (req, res) => {
+  // If running inside Electron, use Electron's 100% native Windows Explorer dialog!
+  if (typeof global.electronPickFolder === 'function') {
+    try {
+      const selectedFolder = await global.electronPickFolder();
+      if (selectedFolder) {
+        return res.json({ success: true, folder: selectedFolder });
+      }
+      return res.json({ success: false, folder: null });
+    } catch (err) {
+      console.error('Electron native pick-folder error:', err);
+    }
+  }
+
+  // Standalone fallback using PowerShell STA FolderBrowserDialog
   if (process.platform === 'win32') {
     const psCmd = `powershell -Sta -NoProfile -ExecutionPolicy Bypass -Command "Add-Type -AssemblyName System.Windows.Forms; $f = New-Object System.Windows.Forms.FolderBrowserDialog; $f.Description = 'Video klasörünü seçin'; $f.ShowNewFolderButton = $true; $top = New-Object System.Windows.Forms.Form; $top.TopMost = $true; if ($f.ShowDialog($top) -eq 'OK') { Write-Output $f.SelectedPath }; $top.Dispose()"`;
 
