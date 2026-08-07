@@ -700,8 +700,10 @@ export default function DetailPanel({
   }
 
   const availableHeight = window.innerHeight - 32;
-  const videoHeight = availableHeight - 32;
-  const videoWidth = Math.max(120, Math.floor((videoHeight * 9) / 16));
+  const maxVideoHeight = availableHeight - 32;
+  const maxVideoWidthByHeight = Math.floor((maxVideoHeight * 9) / 16);
+  const proportionalVideoWidth = Math.floor((detailWidth - 48) * 0.42);
+  const videoWidth = Math.max(130, Math.min(proportionalVideoWidth, maxVideoWidthByHeight));
 
   return (
     <div 
