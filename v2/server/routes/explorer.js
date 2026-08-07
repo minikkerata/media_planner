@@ -1,9 +1,14 @@
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
-import { exec } from 'child_process';
+import { exec, execFile } from 'child_process';
+import { fileURLToPath } from 'url';
 import { makeKey, getNotesBulk, getNote, saveNote } from '../core/database.js';
 import { clipboardState } from './file_ops.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const PICK_FOLDER_PS1 = path.join(__dirname, '..', 'pick_folder.ps1');
 
 const router = express.Router();
 
@@ -133,24 +138,33 @@ export async function scanFolderContents(folderPath) {
 
 // GET /api/scan
 router.get('/scan', async (req, res) => {
-  const folder = req.query.folder;
-  if (!folder) {
+  const rawFolder = req.query.folder;
+  if (!rawFolder) {
     return res.status(400).json({ detail: 'Klasör yolu boş olamaz.' });
   }
 
-  const cleanFolder = folder.replace(/["']/g, '').trim();
-  if (!fs.existsSync(cleanFolder) || !fs.statSync(cleanFolder).isDirectory()) {
-    return res.status(400).json({ detail: 'Geçersiz veya bulunamayan klasör yolu.' });
+  // Decode URI-encoded chars (e.g. %C3%BC -> ü), strip quotes, normalize backslashes
+  let cleanFolder;
+  try {
+    cleanFolder = path.resolve(path.normalize(
+      decodeURIComponent(String(rawFolder)).replace(/^["']|["']$/g, '').trim()
+    ));
+  } catch {
+    cleanFolder = path.resolve(path.normalize(
+      String(rawFolder).replace(/^["']|["']$/g, '').trim()
+    ));
   }
 
-  const absFolder = path.resolve(cleanFolder);
-  const { folders, videos } = await scanFolderContents(absFolder);
+  if (!fs.existsSync(cleanFolder) || !fs.statSync(cleanFolder).isDirectory()) {
+    return res.status(400).json({ detail: `Geçersiz veya bulunamayan klasör yolu: ${cleanFolder}` });
+  }
 
-  const parentFolder = path.dirname(absFolder) === absFolder ? null : path.dirname(absFolder);
+  const { folders, videos } = await scanFolderContents(cleanFolder);
+  const parentFolder = path.dirname(cleanFolder) === cleanFolder ? null : path.dirname(cleanFolder);
 
   res.json({
     success: true,
-    current_folder: absFolder,
+    current_folder: cleanFolder,
     parent_folder: parentFolder,
     subfolders: folders,
     videos: videos,
@@ -180,12 +194,13 @@ router.post('/open-explorer', (req, res) => {
 
 // GET /api/pick-folder
 router.get('/pick-folder', async (req, res) => {
-  // If running inside Electron, use Electron's 100% native Windows Explorer dialog!
+  // Primary: Electron native dialog if running inside Electron
   if (typeof global.electronPickFolder === 'function') {
     try {
       const selectedFolder = await global.electronPickFolder();
       if (selectedFolder) {
-        return res.json({ success: true, folder: selectedFolder });
+        const cleanPath = path.resolve(path.normalize(selectedFolder));
+        return res.json({ success: true, folder: cleanPath });
       }
       return res.json({ success: false, folder: null });
     } catch (err) {
@@ -193,14 +208,18 @@ router.get('/pick-folder', async (req, res) => {
     }
   }
 
-  // Standalone fallback using PowerShell STA FolderBrowserDialog
+  // Secondary: Invoke .ps1 helper with UTF-8 output encoding (Windows)
   if (process.platform === 'win32') {
-    const psCmd = `powershell -Sta -NoProfile -ExecutionPolicy Bypass -Command "Add-Type -AssemblyName System.Windows.Forms; $f = New-Object System.Windows.Forms.FolderBrowserDialog; $f.Description = 'Video klasörünü seçin'; $f.ShowNewFolderButton = $true; $top = New-Object System.Windows.Forms.Form; $top.TopMost = $true; if ($f.ShowDialog($top) -eq 'OK') { Write-Output $f.SelectedPath }; $top.Dispose()"`;
-
-    exec(psCmd, (err, stdout) => {
+    execFile('powershell', [
+      '-Sta',
+      '-NoProfile',
+      '-ExecutionPolicy', 'Bypass',
+      '-File', PICK_FOLDER_PS1
+    ], { encoding: 'utf8', maxBuffer: 4096 }, (err, stdout) => {
       const selectedPath = (stdout || '').trim();
       if (selectedPath) {
-        return res.json({ success: true, folder: selectedPath });
+        const cleanPath = path.resolve(path.normalize(selectedPath));
+        return res.json({ success: true, folder: cleanPath });
       }
       return res.json({ success: false, folder: null });
     });
@@ -210,3 +229,4 @@ router.get('/pick-folder', async (req, res) => {
 });
 
 export default router;
+
