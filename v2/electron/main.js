@@ -78,7 +78,7 @@ function createWindow() {
     minHeight: 600,
     title: 'Media Planner',
     icon: fs.existsSync(iconPath) ? iconPath : undefined,
-    show: false, // Prevents white screen flash
+    show: true, // Show window immediately on creation
     backgroundColor: '#0F172A', // Dark theme matching background
     autoHideMenuBar: true,
     webPreferences: {
@@ -88,22 +88,24 @@ function createWindow() {
     }
   });
 
-  mainWindow.once('ready-to-show', () => {
+  const forceShow = () => {
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore();
       mainWindow.show();
       mainWindow.focus();
+      try {
+        mainWindow.setAlwaysOnTop(true);
+        setTimeout(() => {
+          if (mainWindow && !mainWindow.isDestroyed()) {
+            mainWindow.setAlwaysOnTop(false);
+          }
+        }, 500);
+      } catch {}
     }
-  });
+  };
 
-  // Backup fallback: guarantee window is shown even if ready-to-show event fails to fire
-  setTimeout(() => {
-    if (mainWindow && !mainWindow.isVisible()) {
-      if (mainWindow.isMinimized()) mainWindow.restore();
-      mainWindow.show();
-      mainWindow.focus();
-    }
-  }, 600);
+  mainWindow.once('ready-to-show', forceShow);
+  forceShow();
 
   const isDev = !app.isPackaged && process.argv.includes('--dev');
 
