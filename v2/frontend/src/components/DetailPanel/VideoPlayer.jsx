@@ -109,19 +109,7 @@ export default function VideoPlayer({
               <FolderOpen size={14} className="text-foreground shrink-0" />
             </Button>
           )}
-          {/* Volume controls */}
-          <div className="flex items-center gap-1 shrink-0">
-            <Button 
-              variant="none"
-              size="none"
-              onClick={(e) => { e.stopPropagation(); toggleMute(); }}
-              className="p-1 rounded hover:bg-foreground/5 text-foreground/80 hover:text-foreground transition-all flex items-center justify-center shrink-0"
-              title={muted ? t('unmute_title', language) : t('mute_title', language)}
-            >
-              {muted ? <VolumeX size={15} className="shrink-0" /> : <Volume2 size={15} className="shrink-0" />}
-            </Button>
-          </div>
-        </div>
+
       </div>
 
       {/* Player Container */}

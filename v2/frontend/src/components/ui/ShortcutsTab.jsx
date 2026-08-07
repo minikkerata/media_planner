@@ -71,7 +71,7 @@ export default function ShortcutsTab({ keybindings, saveKeybindings, resetKeybin
     },
     {
       titleKey: 'shortcut_group_sys',
-      keys: ['goUp', 'toggleSettings', 'shutdown']
+      keys: ['goUp', 'toggleSettings']
     }
   ];
 

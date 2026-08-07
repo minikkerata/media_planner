@@ -76,16 +76,6 @@ export default function SelectionToolbar({
         </>
       )}
 
-      <Button 
-        variant="header-flat" 
-        size="none" 
-        onClick={handleShutdown} 
-        tabIndex={-1} 
-        className="transition-all ml-auto hover:text-danger!" 
-        title={t('shutdown_tooltip', language)}
-      >
-        <span>{t('shutdown_short', language)}</span>
-      </Button>
     </div>
   );
 }

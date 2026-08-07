@@ -205,7 +205,7 @@ export default function Sidebar({
     );
   };
 
-  const transitionClass = isResizing ? '' : 'transition-all duration-300 ease-in-out';
+  const transitionClass = '';
 
   return (
     <div 

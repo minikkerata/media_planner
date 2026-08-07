@@ -2,7 +2,7 @@ import React from 'react';
 import SelectionToolbar from './SelectionToolbar';
 import NavigationToolbar from './NavigationToolbar';
 import GridSizeControl from './GridSizeControl';
-import ShutdownControl from './ShutdownControl';
+
 import CalendarHeader from './CalendarHeader';
 import SortControls from '../SortControls';
 import { Eye, EyeOff, Check, Loader2, X, Plus } from 'lucide-react';
@@ -217,12 +217,7 @@ export default function Header(props) {
               </>
             )}
 
-            <ShutdownControl 
-              handleShutdown={handleShutdown}
-              uiStyle={uiStyle}
-              language={language}
-              isServerHealthy={isServerHealthy}
-            />
+
           </div>
         </div>
       )}

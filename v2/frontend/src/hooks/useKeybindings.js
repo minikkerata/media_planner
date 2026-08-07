@@ -24,7 +24,7 @@ const defaultKeybindings = {
   playPause: { key: 'k', altKey: true, ctrlKey: false, shiftKey: false },
   seekForward: { key: 'l', altKey: true, ctrlKey: false, shiftKey: false },
   toggleMute: { key: 'm', altKey: true, ctrlKey: false, shiftKey: false },
-  shutdown: { key: 'w', altKey: true, ctrlKey: false, shiftKey: false },
+
   markShared: { key: 'a', altKey: true, ctrlKey: false, shiftKey: false },
   openExplorer: { key: 'c', altKey: true, ctrlKey: false, shiftKey: false },
   prevVideo: { key: 's', altKey: true, ctrlKey: false, shiftKey: false },
@@ -146,7 +146,7 @@ export function useKeybindings({
       const hasModifier = e.altKey || e.ctrlKey || e.metaKey;
 
       if (!isInputFocused || hasModifier) {
-        if (matchesBinding(e, keybindings.shutdown)) { e.preventDefault(); handleShutdown(); return; }
+
         if (matchesBinding(e, keybindings.seekBackward)) { e.preventDefault(); if (videoRef.current) { videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 5); } return; }
         if (matchesBinding(e, keybindings.playPause)) { e.preventDefault(); if (videoRef.current) { if (videoRef.current.paused) { videoRef.current.play().catch(err => console.error(err)); } else { videoRef.current.pause(); } } return; }
         if (matchesBinding(e, keybindings.seekForward)) { e.preventDefault(); if (videoRef.current) { videoRef.current.currentTime = Math.min(videoRef.current.duration || 0, videoRef.current.currentTime + 5); } return; }
