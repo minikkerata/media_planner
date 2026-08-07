@@ -13,6 +13,8 @@ export default function MiniSelectionPlayer({ video, API_URL }) {
       <img
         src={`${API_URL}/api/thumbnail?path=${encodeURIComponent(video.path)}`}
         alt=""
+        loading="lazy"
+        decoding="async"
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-150 z-10 ${isHovering ? 'opacity-0' : 'opacity-100'}`}
       />
       {isHovering && (

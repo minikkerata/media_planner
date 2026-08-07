@@ -8,6 +8,7 @@ import { allQuery } from '../core/database.js';
 
 const router = express.Router();
 const ffmpegExec = ffmpegPath || 'ffmpeg';
+const thumbCache = new Set();
 
 // GET /api/video
 router.get('/video', (req, res) => {
@@ -21,30 +22,37 @@ router.get('/video', (req, res) => {
 // GET /api/thumbnail
 router.get('/thumbnail', (req, res) => {
   const videoPath = req.query.path;
-  if (!videoPath || !fs.existsSync(videoPath)) {
+  if (!videoPath) {
     return res.status(400).json({ detail: 'Video yolu gerekli.' });
   }
 
   const folder = path.dirname(videoPath);
   const thumbDir = path.join(folder, '.medi_thumbs');
-  if (!fs.existsSync(thumbDir)) {
-    fs.mkdirSync(thumbDir, { recursive: true });
-  }
-
   const cacheKey = `${videoPath}_540x960_q95`;
   const hName = crypto.createHash('md5').update(cacheKey).digest('hex');
   const thumbPath = path.join(thumbDir, `${hName}.jpg`);
 
-  // 1. If cached thumbnail exists, return immediately
-  if (fs.existsSync(thumbPath)) {
+  // 1. Memory cache check (0ms response)
+  if (thumbCache.has(thumbPath)) {
     return res.sendFile(path.resolve(thumbPath));
   }
 
-  // 2. Generate high quality 9:16 thumbnail via bundled ffmpeg executable
+  // 2. Disk check
+  if (fs.existsSync(thumbPath)) {
+    thumbCache.add(thumbPath);
+    return res.sendFile(path.resolve(thumbPath));
+  }
+
+  if (!fs.existsSync(thumbDir)) {
+    fs.mkdirSync(thumbDir, { recursive: true });
+  }
+
+  // 3. Generate high quality 9:16 thumbnail via bundled ffmpeg executable
   const ffmpegCmd = `"${ffmpegExec}" -y -ss 00:00:02 -i "${videoPath}" -vframes 1 -vf "scale=540:960:force_original_aspect_ratio=decrease,pad=540:960:(ow-iw)/2:(oh-ih)/2:color=0x161B22" -q:v 2 "${thumbPath}"`;
 
   exec(ffmpegCmd, (err) => {
     if (!err && fs.existsSync(thumbPath)) {
+      thumbCache.add(thumbPath);
       return res.sendFile(path.resolve(thumbPath));
     }
     // Fallback if ffmpeg failed on offset 2s: try offset 0s

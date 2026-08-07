@@ -332,6 +332,12 @@ export function useMediaPlanner() {
       }
     };
     const loadGlobalSettings = () => {
+      // Fast parallel scan from cached localStorage last_folder
+      const cachedFolder = localStorage.getItem('last_folder');
+      if (cachedFolder && typeof cachedFolder === 'string' && cachedFolder.trim()) {
+        scanFolderRef.current(cachedFolder.trim(), 'manual');
+      }
+
       api.getSettings()
         .then(data => {
           if (!data) return;
@@ -341,9 +347,6 @@ export function useMediaPlanner() {
           }
           if (data.app_theme) {
             localStorage.setItem('app_theme', data.app_theme);
-          }
-          if (data.app_ui_style) {
-            localStorage.setItem('app_ui_style', data.app_ui_style);
           }
           if (data.sidebar_panel_collapsed !== undefined) {
             setIsSidebarCollapsed(Boolean(data.sidebar_panel_collapsed));
@@ -359,9 +362,13 @@ export function useMediaPlanner() {
           if (data.detail_panel_width !== undefined && Number(data.detail_panel_width) > 0) {
             localStorage.setItem('detail_panel_width', String(data.detail_panel_width));
           }
-          // Auto-restore last opened folder on startup
+          // Auto-restore last opened folder on startup if different from cached
           if (data.last_folder && typeof data.last_folder === 'string' && data.last_folder.trim()) {
-            scanFolderRef.current(data.last_folder.trim(), 'manual');
+            const serverFolder = data.last_folder.trim();
+            localStorage.setItem('last_folder', serverFolder);
+            if (!cachedFolder || cachedFolder !== serverFolder) {
+              scanFolderRef.current(serverFolder, 'manual');
+            }
           }
         })
         .catch(err => console.error("Failed to load settings:", err));

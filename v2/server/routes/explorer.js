@@ -51,13 +51,13 @@ async function migrateLegacyMetadata(folderPath, videoEntries) {
 export async function scanFolderContents(folderPath) {
   const folders = [];
   const videos = [];
+  const videoEntries = [];
 
   try {
-    const entries = fs.readdirSync(folderPath, { withFileTypes: true });
-    const videoEntries = [];
+    const entries = await fs.promises.readdir(folderPath, { withFileTypes: true });
 
-    for (const entry of entries) {
-      if (entry.name.startsWith('.')) continue;
+    const tasks = entries.map(async (entry) => {
+      if (entry.name.startsWith('.')) return;
 
       const fullPath = path.resolve(folderPath, entry.name);
 
@@ -70,20 +70,19 @@ export async function scanFolderContents(folderPath) {
       } else if (entry.isFile()) {
         const ext = path.extname(entry.name).toLowerCase();
         if (VIDEO_EXTENSIONS.has(ext)) {
-          let stat;
           try {
-            stat = fs.statSync(fullPath);
-          } catch {
-            continue;
-          }
-          const ctimeMs = Math.floor(stat.ctimeMs || stat.mtimeMs);
-          const key = makeKey(entry.name, stat.size, ctimeMs);
-          const fileTime = (stat.ctimeMs || stat.mtimeMs) / 1000;
+            const stat = await fs.promises.stat(fullPath);
+            const ctimeMs = Math.floor(stat.ctimeMs || stat.mtimeMs);
+            const key = makeKey(entry.name, stat.size, ctimeMs);
+            const fileTime = (stat.ctimeMs || stat.mtimeMs) / 1000;
 
-          videoEntries.push({ name: entry.name, fullPath, stat, key, ctimeMs, fileTime });
+            videoEntries.push({ name: entry.name, fullPath, stat, key, ctimeMs, fileTime });
+          } catch {}
         }
       }
-    }
+    });
+
+    await Promise.all(tasks);
 
     // Legacy migration
     await migrateLegacyMetadata(folderPath, videoEntries);
