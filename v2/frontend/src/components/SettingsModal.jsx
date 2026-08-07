@@ -22,8 +22,6 @@ export default function SettingsModal({
   resetKeybindings,
   theme,
   setTheme,
-  uiStyle,
-  setUiStyle,
   currentFolder,
   pickFolder,
   language,
@@ -400,8 +398,6 @@ export default function SettingsModal({
             <ThemeTab 
               theme={theme} 
               setTheme={setTheme} 
-              uiStyle={uiStyle} 
-              setUiStyle={setUiStyle} 
               language={language} 
               onClose={onClose} 
               settingsQuery={settingsQuery}

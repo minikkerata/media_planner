@@ -89,9 +89,21 @@ function createWindow() {
   });
 
   mainWindow.once('ready-to-show', () => {
-    mainWindow.show();
-    mainWindow.focus();
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.show();
+      mainWindow.focus();
+    }
   });
+
+  // Backup fallback: guarantee window is shown even if ready-to-show event fails to fire
+  setTimeout(() => {
+    if (mainWindow && !mainWindow.isVisible()) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.show();
+      mainWindow.focus();
+    }
+  }, 600);
 
   const isDev = !app.isPackaged && process.argv.includes('--dev');
 

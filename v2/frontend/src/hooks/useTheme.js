@@ -5,23 +5,14 @@ export function useTheme() {
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('app_theme') || 'system';
   });
-  const [uiStyle, setUiStyle] = useState(() => {
-    return localStorage.getItem('app_ui_style') || 'old';
-  });
 
-  // Fetch persisted theme & uiStyle from backend settings on mount
+  // Fetch persisted theme from backend settings on mount
   useEffect(() => {
     api.getSettings()
       .then(data => {
-        if (data) {
-          if (data.app_theme && typeof data.app_theme === 'string') {
-            setTheme(data.app_theme);
-            localStorage.setItem('app_theme', data.app_theme);
-          }
-          if (data.app_ui_style && typeof data.app_ui_style === 'string') {
-            setUiStyle(data.app_ui_style);
-            localStorage.setItem('app_ui_style', data.app_ui_style);
-          }
+        if (data && data.app_theme && typeof data.app_theme === 'string') {
+          setTheme(data.app_theme);
+          localStorage.setItem('app_theme', data.app_theme);
         }
       })
       .catch(err => console.error('Failed to load theme settings from backend:', err));
@@ -29,27 +20,24 @@ export function useTheme() {
 
   useEffect(() => {
     localStorage.setItem('app_theme', theme);
-    api.saveSettings({ app_theme: theme, app_ui_style: uiStyle }).catch(() => {});
+    api.saveSettings({ app_theme: theme }).catch(() => {});
     
     const applyTheme = (currentTheme) => {
       let activeTheme = currentTheme;
-      if (uiStyle === 'old') {
+      if (currentTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        activeTheme = 'light';
+      } else if (currentTheme === 'dark') {
         document.documentElement.removeAttribute('data-theme');
         activeTheme = 'dark';
       } else {
-        if (currentTheme === 'light') {
+        // System theme
+        if (window.matchMedia('(prefers-color-scheme: light)').matches) {
           document.documentElement.setAttribute('data-theme', 'light');
-        } else if (currentTheme === 'dark') {
-          document.documentElement.removeAttribute('data-theme');
+          activeTheme = 'light';
         } else {
-          // System theme
-          if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-            document.documentElement.setAttribute('data-theme', 'light');
-            activeTheme = 'light';
-          } else {
-            document.documentElement.removeAttribute('data-theme');
-            activeTheme = 'dark';
-          }
+          document.documentElement.removeAttribute('data-theme');
+          activeTheme = 'dark';
         }
       }
 
@@ -68,13 +56,7 @@ export function useTheme() {
       mediaQuery.addEventListener('change', handleChange);
       return () => mediaQuery.removeEventListener('change', handleChange);
     }
-  }, [theme, uiStyle]);
+  }, [theme]);
 
-  useEffect(() => {
-    localStorage.setItem('app_ui_style', uiStyle);
-    document.documentElement.setAttribute('data-ui-style', uiStyle);
-    api.saveSettings({ app_theme: theme, app_ui_style: uiStyle }).catch(() => {});
-  }, [uiStyle]);
-
-  return { theme, setTheme, uiStyle, setUiStyle };
+  return { theme, setTheme };
 }

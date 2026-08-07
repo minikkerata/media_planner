@@ -21,7 +21,7 @@ export default function Header(props) {
     showUnsharedOnly, setShowUnsharedOnly, getVisibleVideos,
     enterSelectionMode, keybindings,
     sortOption, setSortOption, sortDirection, setSortDirection,
-    uiStyle, onOpenSearch, language,
+    onOpenSearch, language,
     isSidebarCollapsed, setIsSidebarCollapsed, isServerHealthy,
 
     // Scan & Folder props
@@ -82,7 +82,6 @@ export default function Header(props) {
           clearSelection={clearSelection} copyCurrentNote={copyCurrentNote} 
           setShowSettingsModal={setShowSettingsModal} handleShutdown={handleShutdown}
           keybindings={keybindings}
-          uiStyle={uiStyle}
           language={language}
           uploadStatus={uploadStatus}
           uploadQueue={uploadQueue}
@@ -209,7 +208,6 @@ export default function Header(props) {
                 <GridSizeControl 
                   gridSize={gridSize}
                   setGridSize={setGridSize}
-                  uiStyle={uiStyle}
                   language={language}
                 />
 

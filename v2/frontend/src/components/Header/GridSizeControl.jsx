@@ -4,7 +4,7 @@ import DropdownMenu from '../ui/DropdownMenu';
 import Button from '../ui/Button';
 import { t } from '../../utils/translations';
 
-export default function GridSizeControl({ gridSize, setGridSize, uiStyle, language }) {
+export default function GridSizeControl({ gridSize, setGridSize, language }) {
   const [gridDropdownOpen, setGridDropdownOpen] = useState(false);
 
   return (

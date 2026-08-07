@@ -333,8 +333,6 @@ export default function App() {
         {...planner} 
         theme={themeProps.theme} 
         setTheme={themeProps.setTheme} 
-        uiStyle={themeProps.uiStyle} 
-        setUiStyle={themeProps.setUiStyle} 
         API_URL={API_URL}
       />
       <SearchModal 

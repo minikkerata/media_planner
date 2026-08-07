@@ -34,7 +34,6 @@ export function loadSettings() {
     cloudinary_api_secret: '',
     fixed_text: 'Daha fazla yamaç paraşütü videosu görmek için takip etmeyi unutmayın',
     app_theme: 'system',
-    app_ui_style: 'old',
     last_folder: '',
     sidebar_width: 260,
     sidebar_panel_collapsed: false,

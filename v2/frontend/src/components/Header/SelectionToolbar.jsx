@@ -7,7 +7,7 @@ import { t } from '../../utils/translations';
 export default function SelectionToolbar({
   selectedPaths, exitSelectionMode, selectAll, clearSelection,
   copyCurrentNote, setShowSettingsModal, handleShutdown, keybindings, getShortcutString,
-  uiStyle, language,
+  language,
   uploadStatus, uploadQueue, uploadCurrentIndex, setShowBulkUploadModal
 }) {
   return (
