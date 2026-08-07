@@ -109,7 +109,7 @@ export default function VideoPlayer({
               <FolderOpen size={14} className="text-foreground shrink-0" />
             </Button>
           )}
-
+        </div>
       </div>
 
       {/* Player Container */}

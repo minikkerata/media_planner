@@ -37,6 +37,10 @@ export function useMediaPlanner() {
     scanFolder, goBack, goForward, canGoBack, canGoForward
   } = useFolderScanner(language, showToast, selectionMode, activePath, setActivePath, clipboardOpsRef);
 
+  // Keep a ref so startup useEffect always gets the latest scanFolder (avoids stale closure)
+  const scanFolderRef = useRef(scanFolder);
+  useEffect(() => { scanFolderRef.current = scanFolder; });
+
   // Upload/Queue management sub-hook
   const {
     uploadQueue, setUploadQueue, uploadCurrentIndex, setUploadCurrentIndex,
@@ -336,7 +340,7 @@ export function useMediaPlanner() {
           }
           // Auto-restore last opened folder on startup
           if (data && data.last_folder && typeof data.last_folder === 'string' && data.last_folder.trim()) {
-            scanFolder(data.last_folder.trim(), 'manual');
+            scanFolderRef.current(data.last_folder.trim(), 'manual');
           }
         })
         .catch(err => console.error("Failed to load settings:", err));
