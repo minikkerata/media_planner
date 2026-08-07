@@ -6,7 +6,7 @@ export default function EmptyStateFolder({ pickFolder, language }) {
   const isTr = language === 'tr';
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-6 text-center select-none animate-fade-in my-auto min-h-[400px]">
+    <div className="flex-1 flex flex-col items-center justify-center p-6 text-center select-none my-auto min-h-[400px]">
       {/* Clean Main Container without border */}
       <div className="relative max-w-xl w-full bg-transparent flex flex-col items-center gap-5">
         {/* Text Explanations */}
@@ -24,11 +24,10 @@ export default function EmptyStateFolder({ pickFolder, language }) {
         {/* Clean Secondary Button without right arrow */}
         <Button
           variant="secondary"
-          size="lg"
+          size="sm"
           onClick={pickFolder}
-          className="px-6 py-2.5 bg-foreground/5 hover:bg-foreground/10 text-foreground border border-muted/20 font-semibold text-xs rounded-ui-lg transition-all flex items-center gap-2 cursor-pointer active:scale-95"
         >
-          <FolderOpen size={16} className="shrink-0 text-foreground/80" />
+          <FolderOpen size={14} className="shrink-0" />
           <span>{isTr ? 'Video Klasörünü Seç' : 'Choose Video Folder'}</span>
         </Button>
       </div>

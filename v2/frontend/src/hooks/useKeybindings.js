@@ -95,6 +95,7 @@ export function useKeybindings({
         e.preventDefault();
         preventAutoFocusRef.current = true;
         if (templateMode) { toggleTemplates(); return; }
+        if (selectionMode) { exitSelectionMode(); return; }
         if (showNoteSearch) setShowNoteSearch(false);
         else if (aiAssistant?.isPromptOpen) aiAssistant.closeAIPrompt();
         else if (aiAssistant?.isDiffMode) aiAssistant.discardAIChanges();
@@ -103,7 +104,6 @@ export function useKeybindings({
         else if (showSettingsModal) setShowSettingsModal(false);
         else if (showSearchModal) setShowSearchModal(false);
         else if (showUploadModal) setShowUploadModal(false);
-        else if (selectionMode) exitSelectionMode();
         else if (clipboardState.operation) cancelClipboard();
         else if (!isDetailCollapsed) setIsDetailCollapsed(true);
         return;

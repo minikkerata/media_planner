@@ -301,7 +301,7 @@ export default function Sidebar({
             variant="none"
             size="none"
             onClick={() => setShowSettingsModal(true)}
-            className={`flex items-center gap-3 w-full rounded-lg hover:bg-element transition-colors ${isCollapsed ? 'justify-center p-2' : 'p-2.5'}`}
+            className={`flex items-center gap-3 w-full rounded-lg hover:bg-hover transition-colors ${isCollapsed ? 'justify-center p-2' : 'p-2.5'}`}
             title={`${t('settings', language)} (${keybindings ? getShortcutString(keybindings.toggleSettings, language) : 'Alt+,'})`}
           >
             <div className="w-7 h-7 bg-active text-foreground rounded-full flex items-center justify-center shrink-0 border border-foreground/5">

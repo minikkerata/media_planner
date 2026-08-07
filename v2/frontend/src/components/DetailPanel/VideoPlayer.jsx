@@ -120,17 +120,6 @@ export default function VideoPlayer({
             >
               {muted ? <VolumeX size={15} className="shrink-0" /> : <Volume2 size={15} className="shrink-0" />}
             </Button>
-            <div className="flex items-center shrink-0 ml-1.5">
-              <Slider
-                min={0}
-                max={1}
-                step={0.05}
-                value={muted ? 0 : volume}
-                onChange={handleVolumeChange}
-                onMouseDown={(e) => e.stopPropagation()}
-                widthClass="w-32"
-              />
-            </div>
           </div>
         </div>
       </div>

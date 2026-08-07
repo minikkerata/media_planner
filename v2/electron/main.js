@@ -102,12 +102,10 @@ function createWindow() {
     return { action: 'deny' };
   });
 
-  mainWindow.on('close', (event) => {
-    if (!app.isQuitting) {
-      event.preventDefault();
-      mainWindow.hide();
-    }
-    return false;
+  mainWindow.on('close', () => {
+    app.isQuitting = true;
+    if (serverProcess) serverProcess.kill();
+    app.quit();
   });
 }
 

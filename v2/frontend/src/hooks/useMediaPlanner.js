@@ -334,6 +334,10 @@ export function useMediaPlanner() {
             setGlobalFixedText(data.fixed_text);
             localStorage.setItem('fixed_text', data.fixed_text);
           }
+          // Auto-restore last opened folder on startup
+          if (data && data.last_folder && typeof data.last_folder === 'string' && data.last_folder.trim()) {
+            scanFolder(data.last_folder.trim(), 'manual');
+          }
         })
         .catch(err => console.error("Failed to load settings:", err));
     };

@@ -42,6 +42,8 @@ export function useFolderScanner(language, showToast, selectionMode, activePath,
         } else {
           setForwardStack([]);
         }
+        // Persist last opened folder so it auto-restores on next launch
+        api.saveSettings({ last_folder: data.current_folder }).catch(() => {});
       } else {
         showToast(data.detail || data.message || t('scan_failed', language), 'error');
       }
