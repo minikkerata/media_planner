@@ -14,6 +14,7 @@ import { EyeOff, Eye } from 'lucide-react';
 import BulkUploadModal from './components/BulkUploadModal';
 import ProcessToast from './components/ui/ProcessToast';
 import WeeklyCalendar from './components/WeeklyCalendar';
+import EmptyStateFolder from './components/EmptyStateFolder';
 import { t } from './utils/translations';
 import { api } from './services/api';
 
@@ -51,8 +52,6 @@ export default function App() {
     window.addEventListener('trigger-upload-modal', handleTriggerUpload);
     return () => window.removeEventListener('trigger-upload-modal', handleTriggerUpload);
   }, [planner.activePath, planner.openPublishModal]);
-
-
 
   React.useEffect(() => {
     document.title = 'Media Planner (' + (import.meta.env.VITE_BACKEND_PORT || '8085') + ')';
@@ -112,9 +111,11 @@ export default function App() {
           }}
         >
           {!planner.currentFolder ? (
-            <div className="flex flex-col items-center justify-center h-full text-foreground/40 gap-2">
-              <p className="text-sm">{t('enter_folder_start', planner.language)}</p>
-            </div>
+            <EmptyStateFolder
+              pickFolder={planner.pickFolder}
+              scanFolder={planner.scanFolder}
+              language={planner.language}
+            />
           ) : planner.activeViewTab === 'calendar' ? (
             <WeeklyCalendar
               language={planner.language}
@@ -135,7 +136,7 @@ export default function App() {
               setSelectorCell={setCalendarSelectorCell}
             />
           ) : planner.getVisibleVideos().length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-foreground/40 gap-2">
+            <div className="flex flex-col items-center justify-center h-full text-foreground/40 gap-2 my-auto">
               <p className="text-sm">{t('no_videos_found', planner.language)}</p>
             </div>
           ) : (
@@ -156,50 +157,50 @@ export default function App() {
                   )}
                   <VideoCard 
                     key={video.path} 
-                  video={video} 
-                  activePath={planner.activePath} 
-                  selectedPaths={planner.selectedPaths} 
-                  clipboardState={planner.clipboardState} 
-                  selectionMode={planner.selectionMode} 
-                  uploadingPath={planner.uploadingPath}
-                  uploadQueue={planner.uploadQueue}
-                  uploadCurrentIndex={planner.uploadCurrentIndex}
-                  uploadFailedPaths={planner.uploadFailedPaths}
-                  EXT_COLORS={{ ".mp4": "bg-blue-500/80", ".mov": "bg-purple-500/80", ".avi": "bg-red-500/80", ".mkv": "bg-amber-500/80", ".webm": "bg-green-500/80" }} 
-                  API_URL={API_URL} 
-                  videoRef={planner.videoRef} 
-                  muted={planner.muted} 
-                  volume={planner.volume} 
-                  videoTime={planner.videoTime || 0} 
-                  videoDuration={planner.videoDuration || 0} 
-                  muteFeedback={planner.muteFeedback} 
-                  handleSeek={planner.handleSeek} 
-                  toggleMute={planner.toggleMute} 
-                  toggleSharedState={planner.toggleSharedState} 
-                  handleCardMouseDown={planner.handleCardMouseDown} 
-                  handleCardMouseEnter={planner.handleCardMouseEnter} 
-                  handleContextMenu={(e, p, f) => { 
-                    e.preventDefault(); 
-                    e.stopPropagation(); 
-                    planner.setContextMenu({ x: e.clientX, y: e.clientY, visible: true, targetPath: p, isFolder: f }); 
-                  }} 
-                  handleItemClick={planner.handleItemClick} 
-                  setVideoDuration={planner.setVideoDuration} 
-                  setVideoTime={planner.setVideoTime} 
-                  handleCopyPath={(path) => { 
-                    navigator.clipboard.writeText(path); 
-                    planner.showToast(`${path} ${t('copied_msg', planner.language)}`, "success"); 
-                  }} 
-                  isListView={planner.gridSize === 'list'}
-                  language={planner.language}
-                />
-              </React.Fragment>
-            ))}
+                    video={video} 
+                    activePath={planner.activePath} 
+                    selectedPaths={planner.selectedPaths} 
+                    clipboardState={planner.clipboardState} 
+                    selectionMode={planner.selectionMode} 
+                    uploadingPath={planner.uploadingPath}
+                    uploadQueue={planner.uploadQueue}
+                    uploadCurrentIndex={planner.uploadCurrentIndex}
+                    uploadFailedPaths={planner.uploadFailedPaths}
+                    EXT_COLORS={{ ".mp4": "bg-blue-500/80", ".mov": "bg-purple-500/80", ".avi": "bg-red-500/80", ".mkv": "bg-amber-500/80", ".webm": "bg-green-500/80" }} 
+                    API_URL={API_URL} 
+                    videoRef={planner.videoRef} 
+                    muted={planner.muted} 
+                    volume={planner.volume} 
+                    videoTime={planner.videoTime || 0} 
+                    videoDuration={planner.videoDuration || 0} 
+                    muteFeedback={planner.muteFeedback} 
+                    handleSeek={planner.handleSeek} 
+                    toggleMute={planner.toggleMute} 
+                    toggleSharedState={planner.toggleSharedState} 
+                    handleCardMouseDown={planner.handleCardMouseDown} 
+                    handleCardMouseEnter={planner.handleCardMouseEnter} 
+                    handleContextMenu={(e, p, f) => { 
+                      e.preventDefault(); 
+                      e.stopPropagation(); 
+                      planner.setContextMenu({ x: e.clientX, y: e.clientY, visible: true, targetPath: p, isFolder: f }); 
+                    }} 
+                    handleItemClick={planner.handleItemClick} 
+                    setVideoDuration={planner.setVideoDuration} 
+                    setVideoTime={planner.setVideoTime} 
+                    handleCopyPath={(path) => { 
+                      navigator.clipboard.writeText(path); 
+                      planner.showToast(`${path} ${t('copied_msg', planner.language)}`, "success"); 
+                    }} 
+                    isListView={planner.gridSize === 'list'}
+                    language={planner.language}
+                  />
+                </React.Fragment>
+              ))}
             </div>
           )}
         </main>
       </div>
-      {planner.activeViewTab !== 'calendar' && <DetailPanel {...planner} API_URL={API_URL} />}
+      {planner.currentFolder && planner.activeViewTab !== 'calendar' && <DetailPanel {...planner} API_URL={API_URL} />}
       
       {planner.contextMenu.visible && (
         <div 
@@ -305,31 +306,6 @@ export default function App() {
             <span className="text-[10px] text-foreground/40 font-mono">Ctrl+V</span>
           </button>
 
-          <div className="h-[1px] bg-muted/15 my-1" />
-
-          <button 
-            onClick={() => { 
-              const targetPath = planner.contextMenu.targetPath || planner.activePath;
-              if (!targetPath) return;
-              const targetVideo = planner.videos.find(v => v.path === targetPath);
-              if (!targetVideo) return;
-              planner.setContextMenu(p => ({ ...p, visible: false }));
-              planner.toggleHidden(targetVideo);
-            }}
-            disabled={planner.contextMenu.isFolder || (!planner.contextMenu.targetPath && !planner.activePath)}
-            className="flex items-center justify-between text-xs px-2.5 py-1.5 rounded-ui-sm text-foreground/80 hover:text-foreground hover:bg-hover disabled:opacity-40 disabled:hover:bg-transparent transition cursor-pointer w-full text-left"
-          >
-            <span className="flex items-center gap-2">
-              {(() => {
-                const tp = planner.contextMenu.targetPath || planner.activePath;
-                const tv = planner.videos.find(v => v.path === tp);
-                return tv?.hidden
-                  ? <><Eye className="w-3.5 h-3.5 text-accent" /><span>Göster</span></>
-                  : <><EyeOff className="w-3.5 h-3.5 text-accent" /><span>Gizle</span></>;
-              })()}
-            </span>
-          </button>
-          
           <div className="h-[1px] bg-muted/15 my-1" />
           
           <button 
