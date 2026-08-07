@@ -700,10 +700,12 @@ export default function DetailPanel({
   }
 
   const availableHeight = window.innerHeight - 32;
-  const maxVideoHeight = availableHeight - 32;
+  const maxVideoHeight = availableHeight - 64;
   const maxVideoWidthByHeight = Math.floor((maxVideoHeight * 9) / 16);
-  const proportionalVideoWidth = Math.floor((detailWidth - 48) * 0.42);
-  const videoWidth = Math.max(130, Math.min(proportionalVideoWidth, maxVideoWidthByHeight));
+  // Reserve 150px for notes (reduced by 15% from 180px for tighter minimum panel width)
+  const proportionalVideoWidth = Math.floor((detailWidth - 48) * 0.44);
+  const videoWidth = Math.max(120, Math.min(proportionalVideoWidth, maxVideoWidthByHeight));
+  const videoHeight = Math.floor((videoWidth * 16) / 9);
 
   return (
     <div 
@@ -723,7 +725,7 @@ export default function DetailPanel({
           <SelectionList sortedSelected={sortedSelected} API_URL={API_URL} language={language} />
         ) : activeVideo ? (
           /* Single Playing Video View */
-          <div className="flex flex-col gap-2 shrink-0 animate-scale-up mb-9" style={{ width: `${videoWidth}px` }}>
+          <div className="flex flex-col gap-2 shrink-0 animate-scale-up mb-9" style={{ width: `${videoWidth}px`, height: `${videoHeight + 40}px` }}>
             <VideoPlayer
               activeVideo={activeVideo}
               API_URL={API_URL}
