@@ -153,8 +153,14 @@ export default function IntegrationsTab({ language, onClose, showToast, highligh
                 </div>
               )}
               <div className="flex flex-col min-w-0">
-                <span className="text-xs font-bold text-foreground truncate">@{bufferProfile.name}</span>
-                <span className="text-[10px] text-foreground/45 capitalize">{bufferProfile.service || 'instagram'} · Buffer</span>
+                <span className="text-xs font-bold text-foreground truncate">
+                  {bufferProfile.displayName || bufferProfile.name}
+                </span>
+                <div className="flex items-center gap-1.5 text-[10px] text-foreground/50">
+                  <span className="font-mono">{bufferProfile.username || (bufferProfile.name ? (bufferProfile.name.startsWith('@') ? bufferProfile.name : `@${bufferProfile.name}`) : '')}</span>
+                  <span>·</span>
+                  <span className="capitalize">{bufferProfile.service || 'instagram'}</span>
+                </div>
               </div>
               <div className="ml-auto shrink-0 w-2 h-2 rounded-full bg-green-500" title="Connected" />
             </div>

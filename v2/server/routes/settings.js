@@ -112,68 +112,119 @@ router.get('/buffer-profile', async (req, res) => {
   const channelId = (settings.buffer_channel_id || '').trim();
 
   if (!apiKey || !channelId) {
-    return res.json({ success: false, name: null, avatar: null, followers: null });
+    return res.json({
+      success: false,
+      error: 'Buffer API anahtarı veya Kanal ID eksik. Lütfen Ayarlar > Entegrasyonlar sekmesinden yapılandırın.',
+      name: null,
+      displayName: null,
+      username: null,
+      avatar: null,
+      followers: null
+    });
   }
 
-  const queries = [
-    `query GetChannels { channels { id name avatar service statistics { followers } } }`,
-    `query GetChannels { channels { id name avatar service type } }`
-  ];
+  let lastError = null;
 
-  for (const query of queries) {
-    try {
-      const resp = await fetch('https://api.buffer.com', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ query })
-      });
-      if (resp.ok) {
-        const body = await resp.json();
-        if (body.errors) continue;
-
-        const channels = body.data?.channels || [];
-        let match = channels.find(c => c.id === channelId);
-        if (!match) {
-          match = channels.find(c => (c.service || '').toLowerCase() === 'instagram');
-        }
-        if (match) {
-          const stats = match.statistics || {};
-          return res.json({
-            success: true,
-            name: match.name,
-            avatar: match.avatar,
-            service: match.service || match.type,
-            followers: stats.followers || null
-          });
-        }
-        break;
-      }
-    } catch {}
-  }
-
+  // 1. Try querying the channel directly by ID via GraphQL
   try {
-    const resp = await fetch(`https://api.bufferapp.com/1/profiles.json?access_token=${encodeURIComponent(apiKey)}`);
+    const resp = await fetch('https://api.buffer.com', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        query: `query GetChannel { channel(input: { id: "${channelId}" }) { id name displayName avatar service externalLink } }`
+      })
+    });
+
     if (resp.ok) {
-      const profiles = await resp.json();
-      const match = profiles.find(p => p.id === channelId);
-      if (match) {
-        const stats = match.statistics || {};
-        const followers = stats.followers || match.followers_count || null;
+      const body = await resp.json();
+      if (body.errors && body.errors.length > 0) {
+        lastError = body.errors[0].message;
+      } else if (body.data?.channel) {
+        const ch = body.data.channel;
+        const rawUsername = (ch.name || '').trim();
+        const displayName = (ch.displayName || ch.name || '').trim();
+        const username = rawUsername ? (rawUsername.startsWith('@') ? rawUsername : `@${rawUsername}`) : '';
         return res.json({
           success: true,
-          name: match.formatted_username || match.username,
-          avatar: match.avatar_https || match.avatar,
-          service: match.service,
-          followers
+          name: displayName || rawUsername,
+          displayName: displayName || rawUsername,
+          username: username || (displayName ? `@${displayName}` : ''),
+          avatar: ch.avatar || null,
+          service: ch.service || 'instagram',
+          externalLink: ch.externalLink || null
         });
       }
+    } else {
+      lastError = `HTTP ${resp.status}: Buffer API isteği başarısız oldu.`;
     }
-  } catch {}
+  } catch (err) {
+    lastError = err.message;
+  }
 
-  res.json({ success: false, name: null, avatar: null, followers: null });
+  // 2. Try fetching account organizations and listing channels
+  try {
+    const accResp = await fetch('https://api.buffer.com', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        query: `query GetAccountOrgs { account { organizations { id } } }`
+      })
+    });
+
+    if (accResp.ok) {
+      const accBody = await accResp.json();
+      const orgs = accBody.data?.account?.organizations || [];
+      for (const org of orgs) {
+        const chResp = await fetch('https://api.buffer.com', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            query: `query GetOrgChannels { channels(input: { organizationId: "${org.id}" }) { id name displayName avatar service externalLink } }`
+          })
+        });
+        if (chResp.ok) {
+          const chBody = await chResp.json();
+          const channels = chBody.data?.channels || [];
+          const match = channels.find(c => c.id === channelId) || channels.find(c => (c.service || '').toLowerCase() === 'instagram');
+          if (match) {
+            const rawUsername = (match.name || '').trim();
+            const displayName = (match.displayName || match.name || '').trim();
+            const username = rawUsername ? (rawUsername.startsWith('@') ? rawUsername : `@${rawUsername}`) : '';
+            return res.json({
+              success: true,
+              name: displayName || rawUsername,
+              displayName: displayName || rawUsername,
+              username: username || (displayName ? `@${displayName}` : ''),
+              avatar: match.avatar || null,
+              service: match.service || 'instagram',
+              externalLink: match.externalLink || null
+            });
+          }
+        }
+      }
+    }
+  } catch (err) {
+    if (!lastError) lastError = err.message;
+  }
+
+  res.json({
+    success: false,
+    error: lastError || 'Hesap bilgilerine ulaşılamıyor. Lütfen Buffer hesap izinlerini veya API anahtarını kontrol edin.',
+    name: null,
+    displayName: null,
+    username: null,
+    avatar: null,
+    followers: null
+  });
 });
 
 // POST /api/settings/test-cloudinary

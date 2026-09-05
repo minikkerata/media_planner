@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Loader2, Calendar, Share2, X, Check, AlertTriangle } from 'lucide-react';
+import { Loader2, Calendar, Share2, X, Check, AlertTriangle, User } from 'lucide-react';
 import Modal from './ui/Modal';
 import Button from './ui/Button';
 import Input from './ui/Input';
 import { api } from '../services/api';
 import { t } from '../utils/translations';
+import { useBufferProfile } from '../hooks/useBufferProfile';
 
 export default function UploadModal({ 
   isOpen, 
@@ -32,6 +33,7 @@ export default function UploadModal({
   const [isHovering, setIsHovering] = useState(false);
   const [publishStatus, setPublishStatus] = useState('idle'); // 'idle' | 'publishing' | 'error'
   const [errorMessage, setErrorMessage] = useState('');
+  const { profile: bufferProfile, loading: isProfileLoading, error: profileError } = useBufferProfile();
   const [publishSteps, setPublishSteps] = useState([
     { id: 'file', label: 'Dosya doğrulama', status: 'idle' },
     { id: 'cloudinary', label: 'Cloudinary bulut sunucusuna yükleme', status: 'idle' },
@@ -397,6 +399,73 @@ export default function UploadModal({
           )}
         </div>
         <span className="text-[11px] text-foreground/45 mt-4 truncate max-w-full font-mono">{activeVideo.name}</span>
+
+        {/* Connected Channel / Account Card */}
+        <div className="w-full mt-auto pt-4 border-t border-foreground/5 flex flex-col gap-2">
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-foreground/40 px-0.5 flex items-center justify-between">
+            <span>{language === 'tr' ? 'Paylaşılacak Hesap' : 'Target Account'}</span>
+            {bufferProfile?.service && (
+              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-purple-500/10 text-purple-400 capitalize">
+                {bufferProfile.service}
+              </span>
+            )}
+          </div>
+
+          {isProfileLoading && !bufferProfile ? (
+            <div className="flex items-center gap-2.5 p-2 rounded-xl bg-foreground/[0.02] border border-foreground/5 animate-pulse">
+              <div className="w-9 h-9 rounded-full bg-foreground/10 shrink-0" />
+              <div className="flex flex-col gap-1.5 min-w-0 flex-1">
+                <div className="h-3 w-20 bg-foreground/10 rounded" />
+                <div className="h-2.5 w-14 bg-foreground/10 rounded" />
+              </div>
+            </div>
+          ) : bufferProfile && (bufferProfile.name || bufferProfile.displayName || bufferProfile.username) ? (
+            <div className="flex items-center gap-2.5 p-2 rounded-xl bg-gradient-to-r from-purple-500/[0.06] to-pink-500/[0.06] border border-purple-500/15 transition group">
+              {bufferProfile.avatar ? (
+                <img
+                  src={bufferProfile.avatar}
+                  alt={bufferProfile.displayName || bufferProfile.name || 'Account Avatar'}
+                  className="w-9 h-9 rounded-full object-cover ring-2 ring-purple-500/25 shrink-0"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+              ) : null}
+              <div
+                className={`w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 items-center justify-center shrink-0 text-white font-bold text-xs ring-1 ring-white/20 shadow-sm ${bufferProfile.avatar ? 'hidden' : 'flex'}`}
+              >
+                {(bufferProfile.displayName || bufferProfile.name || 'B')[0]?.toUpperCase()}
+              </div>
+
+              <div className="flex flex-col min-w-0 flex-1">
+                <span className="text-xs font-semibold text-foreground truncate leading-tight">
+                  {bufferProfile.displayName || bufferProfile.name}
+                </span>
+                <span className="text-[10px] text-foreground/50 truncate font-mono leading-tight mt-0.5">
+                  {bufferProfile.username || (bufferProfile.name ? (bufferProfile.name.startsWith('@') ? bufferProfile.name : `@${bufferProfile.name}`) : '')}
+                </span>
+              </div>
+
+              <div className="w-2 h-2 rounded-full bg-emerald-500 shrink-0 shadow-sm" title={language === 'tr' ? 'Bağlı' : 'Connected'} />
+            </div>
+          ) : profileError ? (
+            <div className="flex flex-col gap-1.5 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[11px] animate-in fade-in duration-150">
+              <div className="flex items-center gap-1.5 font-semibold text-amber-300">
+                <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+                <span>{language === 'tr' ? 'Hesap İzinlerini Kontrol Edin' : 'Check Account Permissions'}</span>
+              </div>
+              <p className="text-[10px] text-amber-300/80 leading-snug">
+                {profileError}
+              </p>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 p-2.5 rounded-xl bg-foreground/[0.02] border border-dashed border-foreground/10 text-foreground/40 text-[11px]">
+              <User className="w-4 h-4 shrink-0 text-foreground/30" />
+              <span className="truncate">{language === 'tr' ? 'Bağlı hesap bulunamadı' : 'No account connected'}</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Right Column: Form (Details & Actions) */}
