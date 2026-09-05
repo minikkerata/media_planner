@@ -66,7 +66,7 @@ export default function ConnectedAccountBadge({ className = '', language = 'tr' 
         <span className="text-xs font-semibold text-foreground truncate leading-tight">
           {displayName || username}
         </span>
-        {!isSame && username ? (
+        {username ? (
           <span className="text-[10px] text-foreground/50 truncate font-mono leading-tight mt-0.5">
             {username}
           </span>

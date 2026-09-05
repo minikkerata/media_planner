@@ -108,34 +108,6 @@ export default function CalendarHeader({ currentDate, setCurrentDate, calendarVi
 
   return (
     <div className="flex items-center gap-2.5">
-
-      {/* Instagram Profile Badge — left of Today */}
-      {bufferProfile?.name && (
-        <div className="flex items-center gap-2 pr-2.5 border-r border-muted/15 select-none">
-          {/* Avatar */}
-          {bufferProfile.avatar ? (
-            <img
-              src={bufferProfile.avatar}
-              alt={bufferProfile.name}
-              className="w-7 h-7 rounded-full object-cover ring-1 ring-purple-500/40 shrink-0"
-            />
-          ) : (
-            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shrink-0">
-              <span className="text-white text-[10px] font-bold">{bufferProfile.name[0]?.toUpperCase()}</span>
-            </div>
-          )}
-          {/* Name + followers */}
-          <div className="flex flex-col leading-none min-w-0">
-            <span className="text-[11px] font-bold text-foreground truncate max-w-[110px]">@{bufferProfile.name}</span>
-            {bufferProfile.followers != null && (
-              <span className="text-[9px] text-foreground/45 mt-0.5">
-                {Number(bufferProfile.followers).toLocaleString()} {language === 'tr' ? 'takipçi' : 'followers'}
-              </span>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* Today */}
       <button
         onClick={() => setCurrentDate(new Date())}

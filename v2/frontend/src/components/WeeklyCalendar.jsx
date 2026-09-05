@@ -5,6 +5,7 @@ import { t } from '../utils/translations';
 import VideoCard from './VideoCard';
 import Modal from './ui/Modal';
 import Button from './ui/Button';
+import ConnectedAccountBadge from './ConnectedAccountBadge';
 
 
 /* ─── Mini card component for the calendar grid ─── */
@@ -692,6 +693,28 @@ export default function WeeklyCalendar({
         ) : (
           renderMonthlyCalendar()
         )}
+      </div>
+
+      {/* Bottom Row: Connected Account Badge + Video Paylaş Button */}
+      <div className="shrink-0 flex items-center justify-between px-6 py-2.5 bg-surface/90 border-t border-muted/10 backdrop-blur select-none">
+        {/* Left: Connected Account Badge (same component as modal) */}
+        <div className="flex items-center min-w-0 max-w-sm">
+          <ConnectedAccountBadge language={language} />
+        </div>
+
+        {/* Right: Publish Video Button */}
+        <button
+          onClick={() => {
+            if (setSelectorCell) {
+              const today = new Date();
+              setSelectorCell({ day: today, hour: 9, smartTime: null });
+            }
+          }}
+          className="text-xs font-bold text-accent-foreground bg-accent hover:opacity-90 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer shadow-sm flex items-center gap-1.5 select-none shrink-0"
+        >
+          <Plus size={14} strokeWidth={2.5} />
+          <span>{language === 'tr' ? 'Video Paylaş' : 'Publish Video'}</span>
+        </button>
       </div>
 
       {/* Unshared Videos Selector Modal */}
