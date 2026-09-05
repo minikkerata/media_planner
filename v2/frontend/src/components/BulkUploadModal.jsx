@@ -4,6 +4,7 @@ import Modal from './ui/Modal';
 import Button from './ui/Button';
 import { api } from '../services/api';
 import { t } from '../utils/translations';
+import ConnectedAccountBadge from './ConnectedAccountBadge';
 
 export default function BulkUploadModal({ isOpen, onClose, selectedVideos, planner, language }) {
   const [activeIdx, setActiveIdx] = useState(0);
@@ -213,7 +214,9 @@ export default function BulkUploadModal({ isOpen, onClose, selectedVideos, plann
               />
             )}
           </div>
-          <span className="text-[10px] text-foreground/45 mt-4 truncate max-w-full font-mono">{activeVideo.name}</span>
+          {/* Connected Account Badge directly below video player */}
+          <ConnectedAccountBadge language={language || planner?.language || 'tr'} className="mt-2.5" />
+          <span className="text-[10px] text-foreground/45 mt-1 truncate max-w-full font-mono">{activeVideo.name}</span>
         </div>
 
         {/* Right Column: Editable description text box */}
