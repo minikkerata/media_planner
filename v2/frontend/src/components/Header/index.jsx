@@ -139,20 +139,6 @@ export default function Header(props) {
 
             {activeViewTab === 'calendar' ? (
               <>
-                {/* Publish Video */}
-                <button
-                  onClick={() => {
-                    if (setCalendarSelectorCell) {
-                      const today = new Date();
-                      setCalendarSelectorCell({ day: today, hour: 9, smartTime: null });
-                    }
-                  }}
-                  className="text-xs font-bold text-accent-foreground bg-accent hover:opacity-90 px-3 py-1.5 rounded-lg transition-all cursor-pointer shadow-sm flex items-center gap-1.5 select-none"
-                >
-                  <Plus size={13} strokeWidth={2.5} />
-                  <span>{language === 'tr' ? 'Video Paylaş' : 'Publish Video'}</span>
-                </button>
-
                 {/* View dropdown (ghost) */}
                 <SelectDropdown
                   ghost
