@@ -13,9 +13,16 @@ export default function BulkUploadModal({ isOpen, onClose, selectedVideos, plann
   const [intervalHours, setIntervalHours] = useState(1);
   const [sharedToday, setSharedToday] = useState(false);
 
+  const getLocalDateString = (d = new Date()) => {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+
+  const [startDate, setStartDate] = useState(getLocalDateString);
+
   useEffect(() => {
     if (isOpen && selectedVideos.length > 0) {
       setActiveIdx(0);
+      setStartDate(getLocalDateString());
     }
   }, [isOpen, selectedVideos.length]);
 
@@ -53,7 +60,7 @@ export default function BulkUploadModal({ isOpen, onClose, selectedVideos, plann
   };
 
   const handleStartPublish = () => {
-    planner.startPublishQueue(selectedVideos, intervalHours);
+    planner.startPublishQueue(selectedVideos, intervalHours, startDate);
   };
 
   const isUploading = planner.uploadStatus === 'publishing';
@@ -65,18 +72,28 @@ export default function BulkUploadModal({ isOpen, onClose, selectedVideos, plann
     let targetTimeStr = queuedItem ? queuedItem.scheduleTime : null;
     
     if (!planner.uploadStatus || planner.uploadStatus === 'idle') {
-      if (sharedToday) {
-        const dt = new Date();
-        dt.setHours(dt.getHours() + (idx + 1) * intervalHours);
-        targetTimeStr = dt.toISOString();
-      } else {
-        if (idx === 0) {
-          targetTimeStr = null;
-        } else {
+      const todayStr = getLocalDateString();
+      const isTargetToday = !startDate || startDate === todayStr;
+
+      if (isTargetToday) {
+        if (sharedToday) {
           const dt = new Date();
-          dt.setHours(dt.getHours() + idx * intervalHours);
+          dt.setHours(dt.getHours() + (idx + 1) * intervalHours);
           targetTimeStr = dt.toISOString();
+        } else {
+          if (idx === 0) {
+            targetTimeStr = null;
+          } else {
+            const dt = new Date();
+            dt.setHours(dt.getHours() + idx * intervalHours);
+            targetTimeStr = dt.toISOString();
+          }
         }
+      } else {
+        const [year, month, day] = startDate.split('-').map(Number);
+        const dt = new Date(year, month - 1, day, 9, 0, 0);
+        dt.setHours(dt.getHours() + idx * intervalHours);
+        targetTimeStr = dt.toISOString();
       }
     }
     
@@ -275,22 +292,38 @@ export default function BulkUploadModal({ isOpen, onClose, selectedVideos, plann
         <div className="flex gap-3 justify-between items-center w-full">
           {planner.uploadStatus === 'idle' ? (
             <>
-              {/* Interval Selection */}
-              <div className="flex items-center gap-2.5 animate-in fade-in slide-in-from-left-2 duration-200">
-                <span className="text-xs text-foreground/60 font-bold uppercase tracking-wider">Paylaşım Aralığı:</span>
-                <select
-                  value={intervalHours}
-                  onChange={(e) => setIntervalHours(parseInt(e.target.value))}
-                  className="bg-foreground/[0.03] border border-muted/10 text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-accent/40 text-foreground font-semibold cursor-pointer hover:bg-foreground/[0.05] transition"
-                >
-                  <option value={1} className="bg-modal-surface text-foreground">1 Saat Aralıklarla</option>
-                  <option value={2} className="bg-modal-surface text-foreground">2 Saat Aralıklarla</option>
-                  <option value={3} className="bg-modal-surface text-foreground">3 Saat Aralıklarla</option>
-                  <option value={4} className="bg-modal-surface text-foreground">4 Saat Aralıklarla</option>
-                  <option value={6} className="bg-modal-surface text-foreground">6 Saat Aralıklarla</option>
-                  <option value={12} className="bg-modal-surface text-foreground">12 Saat Aralıklarla</option>
-                  <option value={24} className="bg-modal-surface text-foreground">24 Saat (1 Gün) Aralıklarla</option>
-                </select>
+              {/* Interval & Date Selection */}
+              <div className="flex flex-wrap items-center gap-4 animate-in fade-in slide-in-from-left-2 duration-200">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-foreground/60 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <Calendar size={13} className="text-foreground/50" />
+                    Başlangıç Günü:
+                  </span>
+                  <input
+                    type="date"
+                    value={startDate}
+                    min={getLocalDateString()}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="bg-foreground/[0.03] border border-muted/10 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-accent/40 text-foreground font-semibold cursor-pointer hover:bg-foreground/[0.05] transition"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-foreground/60 font-bold uppercase tracking-wider">Aralık:</span>
+                  <select
+                    value={intervalHours}
+                    onChange={(e) => setIntervalHours(parseInt(e.target.value))}
+                    className="bg-foreground/[0.03] border border-muted/10 text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-accent/40 text-foreground font-semibold cursor-pointer hover:bg-foreground/[0.05] transition"
+                  >
+                    <option value={1} className="bg-modal-surface text-foreground">1 Saat Aralıklarla</option>
+                    <option value={2} className="bg-modal-surface text-foreground">2 Saat Aralıklarla</option>
+                    <option value={3} className="bg-modal-surface text-foreground">3 Saat Aralıklarla</option>
+                    <option value={4} className="bg-modal-surface text-foreground">4 Saat Aralıklarla</option>
+                    <option value={6} className="bg-modal-surface text-foreground">6 Saat Aralıklarla</option>
+                    <option value={12} className="bg-modal-surface text-foreground">12 Saat Aralıklarla</option>
+                    <option value={24} className="bg-modal-surface text-foreground">24 Saat (1 Gün) Aralıklarla</option>
+                  </select>
+                </div>
               </div>
 
               <div className="flex gap-3 justify-end items-center ml-auto">

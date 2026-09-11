@@ -13,7 +13,7 @@ export function useUploadQueue(videos, setVideos, showToast, triggerCompletedFee
   const [uploadingPath, setUploadingPath] = useState(null);
   const isPublishCancelledRef = useRef(false);
 
-  const startPublishQueue = async (selectedVideos, intervalHours = 1) => {
+  const startPublishQueue = async (selectedVideos, intervalHours = 1, startDate = null) => {
     if (!selectedVideos || selectedVideos.length === 0) return;
 
     if (setProcessToast) {
@@ -27,33 +27,46 @@ export function useUploadQueue(videos, setVideos, showToast, triggerCompletedFee
       });
     }
 
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const isTargetToday = !startDate || startDate === todayStr;
+
     let sharedToday = false;
-    try {
-      const checkRes = await api.checkSharedToday();
-      if (checkRes && checkRes.success) {
-        sharedToday = checkRes.shared_today;
+    if (isTargetToday) {
+      try {
+        const checkRes = await api.checkSharedToday();
+        if (checkRes && checkRes.success) {
+          sharedToday = checkRes.shared_today;
+        }
+      } catch (err) {
+        console.error("Failed to check if shared today:", err);
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        sharedToday = videos.some(v => v.shared && v.updated_at >= startOfToday);
       }
-    } catch (err) {
-      console.error("Failed to check if shared today:", err);
-      const now = new Date();
-      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-      sharedToday = videos.some(v => v.shared && v.updated_at >= startOfToday);
     }
 
     const queueWithSchedules = selectedVideos.map((video, idx) => {
       let scheduleTimeStr = null;
-      if (sharedToday) {
-        const dt = new Date();
-        dt.setHours(dt.getHours() + (idx + 1) * intervalHours);
-        scheduleTimeStr = dt.toISOString();
-      } else {
-        if (idx === 0) {
-          scheduleTimeStr = null;
-        } else {
+      if (isTargetToday) {
+        if (sharedToday) {
           const dt = new Date();
-          dt.setHours(dt.getHours() + idx * intervalHours);
+          dt.setHours(dt.getHours() + (idx + 1) * intervalHours);
           scheduleTimeStr = dt.toISOString();
+        } else {
+          if (idx === 0) {
+            scheduleTimeStr = null;
+          } else {
+            const dt = new Date();
+            dt.setHours(dt.getHours() + idx * intervalHours);
+            scheduleTimeStr = dt.toISOString();
+          }
         }
+      } else {
+        // Future date: start at 09:00 AM on the selected date
+        const [year, month, day] = startDate.split('-').map(Number);
+        const dt = new Date(year, month - 1, day, 9, 0, 0);
+        dt.setHours(dt.getHours() + idx * intervalHours);
+        scheduleTimeStr = dt.toISOString();
       }
       return { ...video, scheduleTime: scheduleTimeStr };
     });
